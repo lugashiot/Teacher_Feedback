@@ -6,8 +6,6 @@ from email.mime.text import MIMEText
 import configparser
 
 config = configparser.ConfigParser()
-# config.read("config.ini")           # for pi
-config.read("../../config.ini")     # for pc
 
 
 class EmailHandler:
@@ -24,8 +22,7 @@ class EmailHandler:
         msg['To'] = send_to
         msg['Date'] = datetime.now().ctime()
 
-        # file = open("API/feedback/templates/student_email_content.html", "r")   # for pi
-        file = open("templates/student_email_content.html", "r")                # for pc
+        file = open(student_email_content_path, "r")
 
         ue = u"\u00FC"
         oe = u"\u00F6"
@@ -114,8 +111,14 @@ class Teacher:
 
 if __name__ == "__main__":
     input("Start Test: Press Enter")
+    config.read("../../config.ini")
+    student_email_content_path = "templates/student_email_content.html"
+
     class1 = Class("4CHEL")
     teacher1 = Teacher("Gilbert.Senn")
     teacher1.add_class(class1)
     teacher1.send_emails()
     #teacher1.send_emails(classname=class1.name)
+else:
+    config.read("config.ini")
+    student_email_content_path = "API/feedback/templates/student_email_content.html"
