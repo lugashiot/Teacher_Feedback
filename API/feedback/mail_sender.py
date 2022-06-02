@@ -117,5 +117,5 @@ if __name__ == "__main__":
     class1 = Class("4CHEL")
     teacher1 = Teacher("Gilbert.Senn")
     teacher1.add_class(class1)
-    teacher1.send_emails()     # to all
+    teacher1.send_emails()
     #teacher1.send_emails(classname=class1.name)
