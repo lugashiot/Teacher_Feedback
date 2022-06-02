@@ -1,5 +1,7 @@
 from typing import List
-import mariadb, sys
+import mariadb
+import sys
+
 
 class DBHandler():
     def __init__(self) -> None:
