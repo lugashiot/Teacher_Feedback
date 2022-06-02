@@ -2,5 +2,5 @@
 
 This Github is used for a school project.  
   
-Credit: Pockstaller Lucas and Tobias Eder  
-Teacher: Alexander Jäger  
+Credit: Pockstaller Lucas and Eder Tobias  
+Teacher: Jäger
