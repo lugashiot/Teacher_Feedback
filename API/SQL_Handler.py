@@ -141,3 +141,4 @@ if __name__ == "__main__":
     print(Handle.get_teacher_by_username("Christian.Hilpold", "Email"))
     print(Handle.get_class_assignments(8))
     #print(Handle.get_answers_for_class(1, "4CHEL"))
+    #print(Handle.is_UUID_Used("aeeeaa69420-42069ae"))
