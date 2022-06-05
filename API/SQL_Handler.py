@@ -37,9 +37,10 @@ class DBHandler():
 
 
 # UUIDs
-    def write_uuid(self, uuid : str, teacher_id : int, school_class : str):
+    def write_uuids(self, uuid_list : list, teacher_id : int, school_class : str):
         #sql INSERT INTO `UUIDs`(UUID, Teacher_ID, School_Class, UUID_Used) VALUES (uuid, teacher_id, school_class, uuid_used)
-        self.cur.execute("INSERT INTO `UUIDs` (UUID, Teacher_ID, School_Class) VALUES (?, ?, ?)", (uuid, teacher_id, school_class))
+        for uuid in uuid_list:
+            self.cur.execute("INSERT INTO `UUIDs` (UUID, Teacher_ID, School_Class) VALUES (?, ?, ?)", (uuid, teacher_id, school_class))
         return "write_uuid done"
 
     def write_answers(self, uuid : str, answer_1 : str, answer_2 : str, answer_3 : str, answer_4 : str):
@@ -83,6 +84,26 @@ class DBHandler():
             answer_list_list.append(answer_list)
         return answer_list_list
 
+    def get_all_uuids(self):
+        #sql Select UUID FROM `UUIDs`
+        self.cur.execute("SELECT UUID FROM `UUIDs`")
+        uuid_list = []
+        for out in self.cur:
+            uuid_list.append(str(out[0]))
+        return uuid_list
+
+    def get_teacher_id_by_uuid(self, uuid):
+        #sql Select Teacher_ID FROM `UUIDs` WHERE UUID = uuid
+        self.cur.execute("SELECT Teacher_ID FROM `UUIDs` WHERE UUID = ?", (uuid, ))
+        for out in self.cur:
+            return out[0]
+
+    def get_school_class_by_uuid(self, uuid):
+        #sql Select Teacher_ID FROM `UUIDs` WHERE UUID = uuid
+        self.cur.execute("SELECT School_Class FROM `UUIDs` WHERE UUID = ?", (uuid, ))
+        for out in self.cur:
+            return out[0]
+
 
 # Teachers_Classes
     def write_teacher_class_assignment(self, teacher_id : int, school_class : str):
@@ -116,6 +137,14 @@ class DBHandler():
         self.cur.execute("Select * FROM `Teachers` WHERE Username = ?;", (username, ))
         for out in self.cur:
             return self.teacher_formatter(out, wanted_key)
+
+    def get_all_teachers_username(self):
+        #sql Select Username FROM `Teachers`
+        self.cur.execute("Select Username FROM `Teachers`")
+        teacher_list = []
+        for out in self.cur:
+            teacher_list.append(str(out[0]))
+        return teacher_list
     
     def teacher_formatter(self, out, wanted_key):
         teacher = {

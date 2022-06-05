@@ -1,12 +1,14 @@
-import uuid
+import uuid, sys
 from datetime import datetime
 from smtplib import SMTP
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import configparser
+sys.path.append('/home/pi/Feedback/API')
+from SQL_Handler import DBHandler
 
 config = configparser.ConfigParser()
-
+Handle = DBHandler()
 
 class EmailHandler:
     def __init__(self) -> None:
@@ -46,19 +48,28 @@ class Class:
     def __init__(self, name) -> None:
         self.name = name
         self.students = []
-        self.load_students()
+        self.load_students_from_database()
 
-    def load_students(self):
-        f = None
+    def load_students_from_file(self):
         try:
             f = open(f"{self.name}.txt", "r").read()
+            emails = f.split(",")
+            self.students = emails
         except:
             try:
                 f = open(f"API/feedback/{self.name}.txt", "r").read()
+                emails = f.split(",")
+                self.students = emails
             except:
-                print("ERROR: Couldn't load students")
-        emails = f.split(",")
-        self.students = emails
+                #print("ERROR: Couldn't load students")
+                pass
+        
+    def load_students_from_database(self):
+        self.students = Handle.get_class_mails(self.name)
+        if self.students == []:
+            #print(f"No Emails available for {self.name}")
+            pass
+        return
 
     # Do NOT run this method itself, only run the Teacher.send_emails()
     def send_emails(self, teacher) -> dict:
@@ -75,18 +86,15 @@ class Class:
                 id = uuid.uuid4()
                 msg = email_handler.build_email(student_email, id, teacher)
                 server.sendmail(email_handler.user, msg['To'], msg.as_string())  # sent from, send to, email text
-                temp_uuid_list.append(id)
-                print(f"Feedback link to {student_email} was sent! UUID: {id}")
+                temp_uuid_list.append(str(id))
+                #print(f"Feedback link to {student_email} was sent! UUID: {id}")
             temp_dict["uuid_list"] = temp_uuid_list
-        print(f"All emails to class {self.name} were sent by {teacher}!")
-
+        #print(f"All emails to class {self.name} were sent by {teacher}!")
         return temp_dict
 
 
 class Teacher:
     def __init__(self, username) -> None:
-        self.forename = ""
-        self.lastname = ""
         self.username = username
         self.classes = []
 
@@ -94,17 +102,18 @@ class Teacher:
         self.classes.append(temp_class)
 
     def send_emails(self, classname="all"):
+        teacher_id = Handle.get_teacher_by_username(self.username, "Teacher_ID")
         if classname == "all":
             for c in self.classes:
-                c.send_emails(self.username)
-                print("saved dict somewhere lol")
-            print(f"All Emails to all classes of {self.username} were sent!")
+                sent_dict = c.send_emails(self.username)
+                Handle.write_uuids(sent_dict["uuid_list"], teacher_id, c.name)
+            #print(f"All Emails to all classes of {self.username} were sent!")
             return True
         for c in self.classes:
             if c.name == classname:
-                c.send_emails(self.username)
-                print("saved dict somewhere lol")
-                print(f"All Emails to {classname} were sent!")
+                sent_dict = c.send_emails(self.username)
+                Handle.write_uuids(sent_dict["uuid_list"], teacher_id, c.name)
+                #print(f"All Emails to {classname} were sent!")
                 return True
         return False
 
@@ -115,6 +124,7 @@ if __name__ == "__main__":
     student_email_content_path = "templates/student_email_content.html"
 
     class1 = Class("4CHEL")
+    class1.load_students_from_file()
     teacher1 = Teacher("Gilbert.Senn")
     teacher1.add_class(class1)
     teacher1.send_emails()
