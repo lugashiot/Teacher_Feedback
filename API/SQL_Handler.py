@@ -1,9 +1,8 @@
-from typing import List
 import mariadb
 import sys
 
 
-class DBHandler:
+class DBHandler():
     def __init__(self) -> None:
         try:
             conn = mariadb.connect(
@@ -81,7 +80,7 @@ class DBHandler:
         self.cur.execute("INSERT INTO `Teachers_Classes` (Assignment_ID, Teacher_ID, School_Class) VALUES (NULL, ?, ?);", (teacher_id, school_class))
         return
 
-    def get_class_assignments(self, teacher_id : int ) -> List:
+    def get_class_assignments(self, teacher_id : int ) -> list:
         #sql Select School_Class FROM Teachers_Classes WHERE Teacher_ID = teacher_id
         self.cur.execute("Select School_Class FROM `Teachers_Classes` WHERE Teacher_ID = '?';", (teacher_id))
         class_list = []
