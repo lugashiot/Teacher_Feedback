@@ -24,8 +24,8 @@ class DBHandler():
     def write_class_mails(self, school_class : str, mail_list : list):
         for mail in mail_list:
             #sql INSERT INTO `Classes_Emails` (Email_ID, School_Class, Email) VALUES (NULL, school_class, mail)
-            self.cur.execute("INSERT INTO `Classes_Emails` (Email_ID, School_Class, Email) VALUES (NULL, ?, ?);", (school_class, mail))
-        return
+            self.cur.execute("INSERT INTO `Classes_Emails` (School_Class, Email) VALUES (?, ?);", (school_class, mail))
+        return "write_class_mails done"
     
     def get_class_mails(self, school_class : str) -> list:
         mail_list = []
@@ -37,21 +37,23 @@ class DBHandler():
 
 
 # UUIDs
-    def write_UUID(self, uuid : str, teacher_id : int, school_class : str, uuid_used = False):
+    def write_uuid(self, uuid : str, teacher_id : int, school_class : str):
         #sql INSERT INTO `UUIDs`(UUID, Teacher_ID, School_Class, UUID_Used) VALUES (uuid, teacher_id, school_class, uuid_used)
-        self.cur.execute("INSERT INTO `UUIDs` (UUID, Teacher_ID, School_Class, UUID_Used, Answer_1, Answer_2, Answer_3, Answer_4) VALUES (?, ?, ?, ?, '0', '0', '0', '0');", (uuid, teacher_id, school_class, uuid_used))
-        return
+        self.cur.execute("INSERT INTO `UUIDs` (UUID, Teacher_ID, School_Class) VALUES (?, ?, ?)", (uuid, teacher_id, school_class))
+        return "write_uuid done"
 
-    def write_Answers(self, uuid : str, answer_1 : str, answer_2 : str, answer_3 : str, answer_4 : str):
+    def write_answers(self, uuid : str, answer_1 : str, answer_2 : str, answer_3 : str, answer_4 : str):
         #sql UPDATE `UUIDs` SET (UUID_Used = True, `Answer_1` = answer_1, `Answer_2` = answer_2, `Answer_3` = answer_3, `Answer_4` = answer_4)
-        self.cur.execute("UPDATE `UUIDs` SET (UUID_Used = True, `Answer_1` = ?, `Answer_2` = ?, `Answer_3` = ?, `Answer_4` = ?) WHERE UUID = '?';", (answer_1, answer_2, answer_3, answer_4, uuid))
-        return
+        self.cur.execute("UPDATE `UUIDs` SET UUID_Used = 1, Answer_1 = ?, Answer_2 = ?, Answer_3 = ?, Answer_4 = ? WHERE UUID = ?", (answer_1, answer_2, answer_3, answer_4, uuid))
+        return "write_answers done"
     
-    def is_UUID_Used(self, uuid : str):
+    def is_uuid_used(self, uuid : str) -> bool:
         #sql SELECT UUID_Used FROM `UUIDs` WHERE UUID = uuid
         self.cur.execute("SELECT UUID_Used FROM `UUIDs` WHERE UUID = ?;", (uuid, ))
         for out in self.cur:
-            return out[0]
+            if out[0] == 1:
+                return True
+            return False
 
     def get_answers_by_uuid(self, uuid : str) -> list:
         #sql SELECT Answer_1,Answer_2,Answer_3,Answer_4 FROM `UUIDs` WHERE UUID = uuid
@@ -61,7 +63,7 @@ class DBHandler():
             for answer in out:
                 answer_list.append(int(answer))
             # if an unvalid/unfilled answer is in the answerset, give back an empty one
-            if '0' in answer_list:
+            if 0 in answer_list:
                 return []
             return answer_list
 
@@ -76,7 +78,7 @@ class DBHandler():
             for answer in out:
                 answer_list.append(int(answer))
             # if any answer in the answerset is 0, dont use it
-            if '0' in answer_list:
+            if 0 in answer_list:
                 continue
             answer_list_list.append(answer_list)
         return answer_list_list
@@ -86,7 +88,7 @@ class DBHandler():
     def write_teacher_class_assignment(self, teacher_id : int, school_class : str):
         #sql INSERT INTO `Teachers_Classes` (Assignment_ID, Teacher_ID, School_Class) VALUES (NULL, teacher_id, school_class)
         self.cur.execute("INSERT INTO `Teachers_Classes` (Assignment_ID, Teacher_ID, School_Class) VALUES (NULL, ?, ?);", (teacher_id, school_class))
-        return
+        return "write_teacher_class_assignment done"
 
     def get_class_assignments(self, teacher_id : int ) -> list:
         #sql Select School_Class FROM Teachers_Classes WHERE Teacher_ID = teacher_id
@@ -101,7 +103,7 @@ class DBHandler():
     def write_teacher(self, username : str, forename : str, lastname : str, email : str):
         #sql INSERT INTO `Teachers` (Teacher_ID, Username, Forename, Lastname, Email) VALUES (NULL, username, forename, lastname, email)
         self.cur.execute("INSERT INTO `Teachers` (Teacher_ID, Username, Forename, Lastname, Email) VALUES (NULL, ?, ?, ?, ?);", (username, forename, lastname, email))
-        return
+        return "write_teacher done"
 
     def get_teacher_by_id(self, teacher_id, wanted_key = ""):
         #sql Select * FROM `Teachers` WHERE Teacher_ID = teacher_id
