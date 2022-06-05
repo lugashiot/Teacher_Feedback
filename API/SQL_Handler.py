@@ -27,7 +27,7 @@ class DBHandler():
             self.cur.execute("INSERT INTO `Classes_Emails` (Email_ID, School_Class, Email) VALUES (NULL, ?, ?);", (school_class, mail))
         return
     
-    def get_class_mails(self, school_class : str) -> List:
+    def get_class_mails(self, school_class : str) -> list:
         mail_list = []
         #sql Select Email FROM Classes_Emails WHERE School_Class = 'school_class'
         self.cur.execute("Select Email FROM `Classes_Emails` WHERE School_Class = '?';", (school_class))
