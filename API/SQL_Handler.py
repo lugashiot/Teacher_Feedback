@@ -37,15 +37,15 @@ class DBHandler():
 
 
 # UUIDs
-    def write_uuids(self, uuid_list : list, teacher_id : int, school_class : str):
+    def write_uuids(self, uuid_list : list, teacher_id : int, school_class : str, time : int):
         #sql INSERT INTO `UUIDs`(UUID, Teacher_ID, School_Class, UUID_Used) VALUES (uuid, teacher_id, school_class, uuid_used)
         for uuid in uuid_list:
-            self.cur.execute("INSERT INTO `UUIDs` (UUID, Teacher_ID, School_Class) VALUES (?, ?, ?)", (uuid, teacher_id, school_class))
+            self.cur.execute("INSERT INTO `UUIDs` (UUID, Teacher_ID, School_Class, Sent_Time) VALUES (?, ?, ?, ?)", (uuid, teacher_id, school_class, time))
         return "write_uuid done"
 
-    def write_answers(self, uuid : str, answer_1 : str, answer_2 : str, answer_3 : str, answer_4 : str):
+    def write_answers(self, uuid : str, answer_1 : str, answer_2 : str, answer_3 : str, answer_4 : str, time : int):
         #sql UPDATE `UUIDs` SET (UUID_Used = True, `Answer_1` = answer_1, `Answer_2` = answer_2, `Answer_3` = answer_3, `Answer_4` = answer_4)
-        self.cur.execute("UPDATE `UUIDs` SET UUID_Used = 1, Answer_1 = ?, Answer_2 = ?, Answer_3 = ?, Answer_4 = ? WHERE UUID = ?", (answer_1, answer_2, answer_3, answer_4, uuid))
+        self.cur.execute("UPDATE `UUIDs` SET UUID_Used = 1, Answer_1 = ?, Answer_2 = ?, Answer_3 = ?, Answer_4 = ?, Answered_Time = ? WHERE UUID = ?", (answer_1, answer_2, answer_3, answer_4, time, uuid))
         return "write_answers done"
     
     def is_uuid_used(self, uuid : str) -> bool:

@@ -1,4 +1,5 @@
 import os, sys
+from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .forms import RatingForm1, RatingForm2, RatingForm3, RatingForm4
@@ -6,10 +7,6 @@ from . import mail_sender as MS
 sys.path.append('/home/pi/Feedback/API')
 from SQL_Handler import DBHandler
 
-
-class1 = MS.Class("4CHEL")
-teacher1 = MS.Teacher("Gilbert.Senn")
-teacher1.add_class(class1)
 Handle = DBHandler()
 
 def feedback_page(request):
@@ -55,7 +52,7 @@ def feedback_page(request):
             
             if Handle.is_uuid_used(uuid):
                 return render(request, 'error_rocket_page.html', {'error_message': "You can't vote twice, cheater"})
-            Handle.write_answers(uuid, Answers[0], Answers[1], Answers[2], Answers[3])
+            Handle.write_answers(uuid, Answers[0], Answers[1], Answers[2], Answers[3], datetime.now().ctime())
             return HttpResponseRedirect('/feedback/success/')
 
 def uuid_used_page(request):
@@ -84,9 +81,8 @@ def send_mails(request):
             if username == input_teacher:
                 teacher = create_backend()
                 flag = teacher.send_emails(input_class)
+        # if something went wrong at sending the mails
         if not flag:
-            return render(request, 'error_rocket_page.html', {'error_message': input_teacher + ";" + input_class})
-            return render(request, 'error_rocket_page.html', {'error_message': "Either the Teacher given doesn't exist, or something else went wrong at sending the mails."})
+            return render(request, 'error_rocket_page.html', {'error_message': "The Teacher or the class given don't exist"})
         return HttpResponseRedirect('/feedback/success/')
     return render(request, 'error_rocket_page.html', {'error_message': "HTTP Request was not type GET"})
-

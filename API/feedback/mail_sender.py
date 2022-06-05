@@ -106,13 +106,13 @@ class Teacher:
         if classname == "all":
             for c in self.classes:
                 sent_dict = c.send_emails(self.username)
-                Handle.write_uuids(sent_dict["uuid_list"], teacher_id, c.name)
+                Handle.write_uuids(sent_dict["uuid_list"], teacher_id, c.name, datetime.now().ctime())
             #print(f"All Emails to all classes of {self.username} were sent!")
             return True
         for c in self.classes:
             if c.name == classname:
                 sent_dict = c.send_emails(self.username)
-                Handle.write_uuids(sent_dict["uuid_list"], teacher_id, c.name)
+                Handle.write_uuids(sent_dict["uuid_list"], teacher_id, c.name, datetime.now().ctime())
                 #print(f"All Emails to {classname} were sent!")
                 return True
         return False
