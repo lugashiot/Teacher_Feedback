@@ -6,109 +6,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/299933539175235584/976257097958297660/htl-icon.ico">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <!--Load the AJAX API-->
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <script type="text/javascript">
-            google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawChart);
-
-            function drawChart() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Question');
-                data.addColumn('number', 'Answer');
-                data.addRows([
-                    ['{{q0a0}}', {{q0a0_val}}],
-                    ['{{q0a1}}', {{q0a1_val}}],
-                    ['{{q0a2}}', {{q0a2_val}}],
-                    ['{{q0a3}}', {{q0a3_val}}]
-            ]);
-
-            var options = {'title':'{{q0}}',
-                           'width':400,
-                           'height':300};
-
-            var chart = new google.visualization.PieChart(document.getElementById('chart_q0'));
-            chart.draw(data, options);
-          }
-        </script>
-        <script type="text/javascript">
-            google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawChart);
-
-            function drawChart() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Question');
-                data.addColumn('number', 'Answer');
-                data.addRows([
-                    ['{{q1a0}}', {{q1a0_val}}],
-                    ['{{q1a1}}', {{q1a1_val}}],
-                    ['{{q1a2}}', {{q1a2_val}}],
-                    ['{{q1a3}}', {{q1a3_val}}]
-            ]);
-
-            var options = {'title':'{{q1}}',
-                           'width':400,
-                           'height':300};
-
-            var chart = new google.visualization.PieChart(document.getElementById('chart_q1'));
-            chart.draw(data, options);
-          }
-        </script>
-        <script type="text/javascript">
-            google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawChart);
-
-            function drawChart() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Question');
-                data.addColumn('number', 'Answer');
-                data.addRows([
-                    ['{{q2a0}}', {{q2a0_val}}],
-                    ['{{q2a1}}', {{q2a1_val}}],
-                    ['{{q2a2}}', {{q2a2_val}}],
-                    ['{{q2a3}}', {{q2a3_val}}]
-            ]);
-
-            var options = {'title':'{{q2}}',
-                           'width':400,
-                           'height':300};
-
-            var chart = new google.visualization.PieChart(document.getElementById('chart_q2'));
-            chart.draw(data, options);
-          }
-        </script>
-        <script type="text/javascript">
-            google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawChart);
-
-            function drawChart() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Question');
-                data.addColumn('number', 'Answer');
-                data.addRows([
-                    ['{{q3a0}}', {{q3a0_val}}],
-                    ['{{q3a1}}', {{q3a1_val}}],
-                    ['{{q3a2}}', {{q3a2_val}}],
-                    ['{{q3a3}}', {{q3a3_val}}]
-            ]);
-
-            var options = {'title':'{{q3}}',
-                           'width':400,
-                           'height':300};
-
-            var chart = new google.visualization.PieChart(document.getElementById('chart_q3'));
-            chart.draw(data, options);
-          }
-        </script>
     </head>
 <body>
     {% if user.is_authenticated %}
     <div class="container-fluid">
         <h1>{{user.username}}</h1>
-        <div id="chart_q0"></div>
-        <div id="chart_q1"></div>
-        <div id="chart_q2"></div>
-        <div id="chart_q3"></div>
+
     </div>
     {% else %}
     <meta http-equiv="Refresh" content="0; url=/teacher/login_user" />
