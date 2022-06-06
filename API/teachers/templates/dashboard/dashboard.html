@@ -10,12 +10,13 @@
 <body>
     {% if user.is_authenticated %}
     <div class="container-fluid">
-        <h1>{{user.username}}</h1>
-        <h1>{{classes}}</h1>
-
+        <h1>Username: {{user.username}}</h1>
+        {% for class in classes %}
+            <button type="button" class="btn btn-secondary">{{ class }}</button>
+        {% endfor %}
     </div>
     {% else %}
-    <meta http-equiv="Refresh" content="0; url=/teacher/login_user" />
+    <meta http-equiv="Refresh" content="0; url=/teacher/login" />
     {% endif %}
 </body>
 </html>

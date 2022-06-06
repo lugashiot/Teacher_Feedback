@@ -60,4 +60,4 @@ def results(request):
 
 
 def redirect_login(request):
-    return HttpResponseRedirect('/teacher/login_user/')
+    return HttpResponseRedirect('/teacher/login/')
