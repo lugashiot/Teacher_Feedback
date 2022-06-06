@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from SQL_Handler import DBHandler
+
+db = DBHandler()
 
 
 def login_user(request):
@@ -20,7 +23,15 @@ def login_user(request):
 
 
 def dashboard(request):
-    return render(request, "dashboard/dashboard.html", {
+    if request.user.is_authenticated():
+        username = request.user.username
+        teacher_id = db.get_teacher_by_username(username, wanted_key="Teacher_ID")
+        teacher_classes = db.get_class_assignments(teacher_id)
+        return render(request, "dashboard/dashboard.html", {'classes': teacher_classes})
+
+
+def results(request):
+    return render(request, "dashboard/results.html", {
         # question0
         'q0': "Question0",
         'q0a0': "q0a0", 'q0a0_val': 8,
@@ -45,7 +56,7 @@ def dashboard(request):
         'q3a1': "q3a1", 'q3a1_val': 0,
         'q3a2': "q3a2", 'q3a2_val': 0,
         'q3a3': "q3a3", 'q3a3_val': 10,
-        })
+    })
 
 
 def redirect_login(request):
