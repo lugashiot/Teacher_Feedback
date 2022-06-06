@@ -17,7 +17,7 @@ def login_user(request):
             return HttpResponseRedirect("/teacher/dashboard")
         else:
             messages.success(request, "There was an error logging in, try again...")
-            return HttpResponseRedirect('/teacher/login_user/')
+            return HttpResponseRedirect('/teacher/login/')
     else:
         return render(request, "registration/login.html")
 
