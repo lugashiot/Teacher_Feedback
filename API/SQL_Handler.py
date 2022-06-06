@@ -162,14 +162,14 @@ class DBHandler:
 
 
 if __name__ == "__main__":
-    Handle = DBHandler()
+    db = DBHandler()
     print("handled")
 
-    print(Handle.get_class_mails("4CHEL"))
-    x = Handle.get_teacher_by_id(8)
+    print(db.get_class_mails("4CHEL"))
+    x = db.get_teacher_by_id(8)
     print(x)
     print(x["Forename"])
-    print(Handle.get_teacher_by_username("Christian.Hilpold", "Email"))
-    print(Handle.get_class_assignments(8))
+    print(db.get_teacher_by_username("Christian.Hilpold", "Email"))
+    print(db.get_class_assignments(8))
     #print(Handle.get_answers_for_class(1, "4CHEL"))
     #print(Handle.is_UUID_Used("aeeeaa69420-42069ae"))
