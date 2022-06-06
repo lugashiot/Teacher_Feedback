@@ -1,14 +1,14 @@
-import uuid, sys
+import os
+import uuid
+import sys
 from datetime import datetime
 from smtplib import SMTP
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import configparser
-sys.path.append('/home/pi/Feedback/API')
-from SQL_Handler import DBHandler
 
 config = configparser.ConfigParser()
-Handle = DBHandler()
+
 
 class EmailHandler:
     def __init__(self) -> None:
@@ -18,6 +18,7 @@ class EmailHandler:
 
     def build_email(self, send_to, uuid, teacher: str):
         teacher_no_dot = teacher.replace(".", " ")
+
         msg = MIMEMultipart("alternative")
         msg['Subject'] = f"Feedback für {teacher_no_dot}"
         msg['From'] = "HTL-Feedback-Bot@htlinn.tech"
@@ -48,7 +49,7 @@ class Class:
     def __init__(self, name) -> None:
         self.name = name
         self.students = []
-        self.load_students_from_database()
+        self.load_students_from_db()
 
     def load_students_from_file(self):
         try:
@@ -64,8 +65,8 @@ class Class:
                 #print("ERROR: Couldn't load students")
                 pass
         
-    def load_students_from_database(self):
-        self.students = Handle.get_class_mails(self.name)
+    def load_students_from_db(self):
+        self.students = db.get_class_mails(self.name)
         if self.students == []:
             #print(f"No Emails available for {self.name}")
             pass
@@ -101,34 +102,45 @@ class Teacher:
     def add_class(self, temp_class: Class):
         self.classes.append(temp_class)
 
+    def get_classes_from_db(self):
+        pass
+
     def send_emails(self, classname="all"):
-        teacher_id = Handle.get_teacher_by_username(self.username, "Teacher_ID")
+        teacher_id = db.get_teacher_by_username(self.username, "Teacher_ID")
         if classname == "all":
             for c in self.classes:
                 sent_dict = c.send_emails(self.username)
-                Handle.write_uuids(sent_dict["uuid_list"], teacher_id, c.name, datetime.now().ctime())
+                db.write_uuids(sent_dict["uuid_list"], teacher_id, c.name, datetime.now().ctime())
             #print(f"All Emails to all classes of {self.username} were sent!")
             return True
         for c in self.classes:
             if c.name == classname:
                 sent_dict = c.send_emails(self.username)
-                Handle.write_uuids(sent_dict["uuid_list"], teacher_id, c.name, datetime.now().ctime())
+                db.write_uuids(sent_dict["uuid_list"], teacher_id, c.name, datetime.now().ctime())
                 #print(f"All Emails to {classname} were sent!")
                 return True
         return False
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":      # for testing on pc
+    sys.path.append(os.path.split(os.getcwd())[0])
+    from SQL_Handler import DBHandler
+    db = DBHandler()
     input("Start Test: Press Enter")
     config.read("../../config.ini")
     student_email_content_path = "templates/student_email_content.html"
 
     class1 = Class("4CHEL")
     class1.load_students_from_file()
+    #class1.load_students_from_db()
+    print("Loaded students:", class1.students)
     teacher1 = Teacher("Gilbert.Senn")
     teacher1.add_class(class1)
     teacher1.send_emails()
     #teacher1.send_emails(classname=class1.name)
 else:
+    sys.path.append("/home/pi/Feedback/API")
+    from SQL_Handler import DBHandler
+    db = DBHandler()
     config.read("config.ini")
     student_email_content_path = "API/feedback/templates/student_email_content.html"

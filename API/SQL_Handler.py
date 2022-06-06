@@ -2,7 +2,7 @@ import mariadb
 import sys
 
 
-class DBHandler():
+class DBHandler:
     def __init__(self) -> None:
         try:
             self.conn = mariadb.connect(
