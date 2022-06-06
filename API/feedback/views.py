@@ -52,7 +52,7 @@ def feedback_page(request):
             
             if db.is_uuid_used(uuid):
                 return render(request, 'error_rocket_page.html', {'error_message': "You can't vote twice, cheater"})
-            db.write_answers(uuid, Answers[0], Answers[1], Answers[2], Answers[3], datetime.now().ctime())
+            db.write_answers(uuid, Answers[0], Answers[1], Answers[2], Answers[3], int(datetime.now().timestamp()))
             return HttpResponseRedirect('/feedback/success/')
 
 def uuid_used_page(request):
