@@ -23,7 +23,7 @@ def login_user(request):
 
 
 def dashboard(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         username = request.user.username
         teacher_id = db.get_teacher_by_username(username, wanted_key="Teacher_ID")
         teacher_classes = db.get_class_assignments(teacher_id)
