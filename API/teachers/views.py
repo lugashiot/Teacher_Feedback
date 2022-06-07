@@ -33,7 +33,6 @@ def dashboard(request):
             return HttpResponseRedirect('/teacher/login/')
 
 
-
 def results(request):
     if request.method == "GET":
         if request.user.is_authenticated:
@@ -43,7 +42,6 @@ def results(request):
             teacher_classes = db.get_class_assignments(teacher_id)
             if requested_class in teacher_classes:
                 class_answers = db.get_answers_for_class(teacher_id, requested_class)
-                class_mails = db.get_class_mails(requested_class)
 
                 all_results = [[], [], [], []]
                 for answer in class_answers:
