@@ -1,121 +1,155 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
         <title>Teacher Dashboard</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/299933539175235584/976257097958297660/htl-icon.ico">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <!--Load the AJAX API-->
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript">
-            google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawChart);
+            var piechart_options = {
+                    width:400,
+                    height:300,
+                    is3D: true,
+                    slices: {0: {color: '#4FC14F'}, 1:{color: '#A6C24C'}, 2:{color: '#FFC84C'}, 3: {color: '#F48846'}, 4:{color: '#EB4841'}}
+                };
 
-            function drawChart() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Question');
-                data.addColumn('number', 'Answer');
-                data.addRows([
-                    ['{{q0a0}}', {{q0a0_val}}],
-                    ['{{q0a1}}', {{q0a1_val}}],
-                    ['{{q0a2}}', {{q0a2_val}}],
-                    ['{{q0a3}}', {{q0a3_val}}],
-                    ['{{q0a4}}', {{q0a4_val}}]
-            ]);
+            var barchart_options = {
+                width:400,
+                height:300,
+                legend: 'none'};
 
-            var options = {'title':'{{q0}}',
-                           'width':400,
-                           'height':300};
+            // --------------------------------------------------------------------------------------------------------
 
-            var chart = new google.visualization.PieChart(document.getElementById('chart_q0'));
-            chart.draw(data, options);
-          }
-        </script>
-        <script type="text/javascript">
-            google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawChart);
+            google.load("visualization", "1", {packages:["corechart"]});
+            google.charts.setOnLoadCallback(drawChart0);
 
-            function drawChart() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Question');
-                data.addColumn('number', 'Answer');
-                data.addRows([
-                    ['{{q1a0}}', {{q1a0_val}}],
-                    ['{{q1a1}}', {{q1a1_val}}],
-                    ['{{q1a2}}', {{q1a2_val}}],
-                    ['{{q1a3}}', {{q1a3_val}}],
-                    ['{{q1a4}}', {{q1a4_val}}]
-            ]);
+            function drawChart0() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Question', 'Answer', { role: 'style' } ],
+                    ['{{q0a0}}', {{q0a0_val}}, '#4FC14F'],
+                    ['{{q0a1}}', {{q0a1_val}}, '#A6C24C'],
+                    ['{{q0a2}}', {{q0a2_val}}, '#FFC84C'],
+                    ['{{q0a3}}', {{q0a3_val}}, '#F48846'],
+                    ['{{q0a4}}', {{q0a4_val}}, '#EB4841']
+                ]);
 
-            var options = {'title':'{{q1}}',
-                           'width':400,
-                           'height':300};
+                var piechart = new google.visualization.PieChart(document.getElementById('piechart_div_q0'));
+                piechart.draw(data, piechart_options);
 
-            var chart = new google.visualization.PieChart(document.getElementById('chart_q1'));
-            chart.draw(data, options);
-          }
-        </script>
-        <script type="text/javascript">
-            google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawChart);
+                var barchart = new google.visualization.BarChart(document.getElementById('barchart_div_q0'));
+                barchart.draw(data, barchart_options);
+            }
 
-            function drawChart() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Question');
-                data.addColumn('number', 'Answer');
-                data.addRows([
-                    ['{{q2a0}}', {{q2a0_val}}],
-                    ['{{q2a1}}', {{q2a1_val}}],
-                    ['{{q2a2}}', {{q2a2_val}}],
-                    ['{{q2a3}}', {{q2a3_val}}],
-                    ['{{q2a4}}', {{q2a4_val}}]
-            ]);
+            // --------------------------------------------------------------------------------------------------------
 
-            var options = {'title':'{{q2}}',
-                           'width':400,
-                           'height':300};
+            google.load("visualization", "1", {packages:["corechart"]});
+            google.charts.setOnLoadCallback(drawChart1);
 
-            var chart = new google.visualization.PieChart(document.getElementById('chart_q2'));
-            chart.draw(data, options);
-          }
-        </script>
-        <script type="text/javascript">
-            google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawChart);
+            function drawChart1() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Question', 'Answer', { role: 'style' } ],
+                    ['{{q1a0}}', {{q1a0_val}}, '#4FC14F'],
+                    ['{{q1a1}}', {{q1a1_val}}, '#A6C24C'],
+                    ['{{q1a2}}', {{q1a2_val}}, '#FFC84C'],
+                    ['{{q1a3}}', {{q1a3_val}}, '#F48846'],
+                    ['{{q1a4}}', {{q1a4_val}}, '#EB4841']
+                ]);
 
-            function drawChart() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Question');
-                data.addColumn('number', 'Answer');
-                data.addRows([
-                    ['{{q3a0}}', {{q3a0_val}}],
-                    ['{{q3a1}}', {{q3a1_val}}],
-                    ['{{q3a2}}', {{q3a2_val}}],
-                    ['{{q3a3}}', {{q3a3_val}}],
-                    ['{{q3a4}}', {{q3a4_val}}]
-            ]);
 
-            var options = {'title':'{{q3}}',
-                           'width':400,
-                           'height':300};
+                var piechart = new google.visualization.PieChart(document.getElementById('piechart_div_q1'));
+                piechart.draw(data, piechart_options);
 
-            var chart = new google.visualization.PieChart(document.getElementById('chart_q3'));
-            chart.draw(data, options);
-          }
+                var barchart = new google.visualization.BarChart(document.getElementById('barchart_div_q1'));
+                barchart.draw(data, barchart_options);
+            }
+
+            // --------------------------------------------------------------------------------------------------------
+
+            google.load("visualization", "1", {packages:["corechart"]});
+            google.charts.setOnLoadCallback(drawChart2);
+
+            function drawChart2() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Question', 'Answer', { role: 'style' } ],
+                    ['{{q2a0}}', {{q2a0_val}}, '#4FC14F'],
+                    ['{{q2a1}}', {{q2a1_val}}, '#A6C24C'],
+                    ['{{q2a2}}', {{q2a2_val}}, '#FFC84C'],
+                    ['{{q2a3}}', {{q2a3_val}}, '#F48846'],
+                    ['{{q2a4}}', {{q2a4_val}}, '#EB4841']
+                ]);
+
+
+                var piechart = new google.visualization.PieChart(document.getElementById('piechart_div_q2'));
+                piechart.draw(data, piechart_options);
+
+                var barchart = new google.visualization.BarChart(document.getElementById('barchart_div_q2'));
+                barchart.draw(data, barchart_options);
+            }
+
+            // --------------------------------------------------------------------------------------------------------
+
+            google.load("visualization", "1", {packages:["corechart"]});
+            google.charts.setOnLoadCallback(drawChart3);
+
+            function drawChart3() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Question', 'Answer', { role: 'style' } ],
+                    ['{{q3a0}}', {{q3a0_val}}, '#4FC14F'],
+                    ['{{q3a1}}', {{q3a1_val}}, '#A6C24C'],
+                    ['{{q3a2}}', {{q3a2_val}}, '#FFC84C'],
+                    ['{{q3a3}}', {{q3a3_val}}, '#F48846'],
+                    ['{{q3a4}}', {{q3a4_val}}, '#EB4841']
+                ]);
+
+
+                var piechart = new google.visualization.PieChart(document.getElementById('piechart_div_q3'));
+                piechart.draw(data, piechart_options);
+
+                var barchart = new google.visualization.BarChart(document.getElementById('barchart_div_q3'));
+                barchart.draw(data, barchart_options);
+            }
+
         </script>
     </head>
-<body class="bg-dark text-white">
-    {% if user.is_authenticated %}
-    <div class="container-fluid">
-        <h1>{{user.username}}</h1>
-        <div id="chart_q0"></div>
-        <div id="chart_q1"></div>
-        <div id="chart_q2"></div>
-        <div id="chart_q3"></div>
-    </div>
-    {% else %}
-    <meta http-equiv="Refresh" content="0; url=/teacher/login" />
-    {% endif %}
-</body>
+    <body>
+        <center>
+            <div class="container-fluid">
+                <table class="columns">
+                    <tr style="border: 1px solid #ccc">
+                        <h1>{{q0}}</h1>
+                        <td><div id="piechart_div_q0"></div></td>
+                        <td><div id="barchart_div_q0"></div></td>
+                    </tr>
+                </table>
+                <p></p>
+                <table class="columns">
+                    <tr style="border: 1px solid #ccc">
+                        <h1>{{q1}}</h1>
+                        <td><div id="piechart_div_q1"></div></td>
+                        <td><div id="barchart_div_q1"></div></td>
+                    </tr>
+                </table>
+                <p></p>
+                <table class="columns">
+                    <tr style="border: 1px solid #ccc">
+                        <h1>{{q1}}</h1>
+                        <td><div id="piechart_div_q2"></div></td>
+                        <td><div id="barchart_div_q2"></div></td>
+                    </tr>
+                </table>
+                <p></p>
+                <table class="columns">
+                    <tr style="border: 1px solid #ccc">
+                        <h1>{{q1}}</h1>
+                        <td><div id="piechart_div_q3"></div></td>
+                        <td><div id="barchart_div_q3"></div></td>
+                    </tr>
+                </table>
+                <p></p>
+            </div>
+            <p></p>
+        </center>
+    </body>
 </html>
+
