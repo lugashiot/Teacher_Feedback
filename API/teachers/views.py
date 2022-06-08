@@ -19,7 +19,7 @@ def login_user(request):
             messages.success(request, "There was an error logging in, try again...")
             return HttpResponseRedirect('/teacher/login/')
     else:
-        return render(request, "registration/login.html")
+        return render(request, "account/login.html")
 
 
 def dashboard(request):
