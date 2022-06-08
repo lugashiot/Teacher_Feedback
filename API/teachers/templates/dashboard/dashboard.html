@@ -9,6 +9,7 @@
     </head>
     <body class="bg-dark text-white">
         {% if user.is_authenticated %}
+        <center>
         <div class="container-fluid">
             <h1>Klassen von: {{user.username}}</h1>
             {% for class in classes %}
@@ -16,6 +17,7 @@
                 <a href="/teacher/dashboard/results/?class={{ class }}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">{{ class }}</a>
             {% endfor %}
         </div>
+        </center>
         {% else %}
         <meta http-equiv="Refresh" content="0; url=/teacher/login" />
         {% endif %}

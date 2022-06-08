@@ -1,155 +1,204 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Teacher Dashboard</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/299933539175235584/976257097958297660/htl-icon.ico">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <script type="text/javascript">
-            var piechart_options = {
-                    width:400,
-                    height:300,
-                    is3D: true,
-                    slices: {0: {color: '#4FC14F'}, 1:{color: '#A6C24C'}, 2:{color: '#FFC84C'}, 3: {color: '#F48846'}, 4:{color: '#EB4841'}}
-                };
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+      div.doughnut {
+        width:60%;
+        display: inline-block;
+      }
+      div.bar {
+        width:35%;
+        display: inline-block;
+      }
+      div.chart_row {
+        margin-top: 3%;
+        margin-bottom: 3%;
+        max-width: 1000px;
+      }
+    </style>
+  </head>
 
-            var barchart_options = {
-                width:400,
-                height:300,
-                legend: 'none'};
+  <body class="bg-dark text-white">
+    <center>
+      <div class="container-fluid">
+        <div class="chart_row">
+          <h2>{{q0}}</h2>
+          <div class="doughnut">
+            <canvas id="doughnut_chart_q0"></canvas>
+          </div>
+          <div class="bar">
+            <canvas id="bar_chart_q0"></canvas>
+          </div>
+        </div>
+        <div class="chart_row">
+          <h2>{{q1}}</h2>
+          <div class="doughnut">
+            <canvas id="doughnut_chart_q1"></canvas>
+          </div>
+          <div class="bar">
+            <canvas id="bar_chart_q1"></canvas>
+          </div>
+        </div>
+        <div class="chart_row">
+          <h2>{{q2}}</h2>
+          <div class="doughnut">
+            <canvas id="doughnut_chart_q2"></canvas>
+          </div>
+          <div class="bar">
+            <canvas id="bar_chart_q2"></canvas>
+          </div>
+        </div>
+        <div class="chart_row">
+          <h2>{{q3}}</h2>
+          <div class="doughnut">
+            <canvas id="doughnut_chart_q3"></canvas>
+          </div>
+          <div class="bar">
+            <canvas id="bar_chart_q3"></canvas>
+          </div>
+        </div>
+      </div>
+    </center>
 
-            // --------------------------------------------------------------------------------------------------------
+    <script>
+    Chart.defaults.global.defaultFontColor = "#FFFFFF";
+    Chart.defaults.global.defaultFontSize = 14;
 
-            google.load("visualization", "1", {packages:["corechart"]});
-            google.charts.setOnLoadCallback(drawChart0);
+    var barColors = [
+      '#4FC14F',
+      '#A6C24C',
+      '#FFC84C',
+      '#F48846',
+      '#EB4841'
+    ];
+    var options_doughnut = {
+      responsive: true,
+      legend: {
+        position: 'top',
+        labels: {
+          usePointStyle: true
+        }
+      }
+    }
+    var options_bar = {
+      responsive: true,
+      legend: {
+        display: false,
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            min: 0,
+            stepSize: 1
+          }
+        }],
+        xAxes: [{
+          display: false
+        }]
+      }
+    }
 
-            function drawChart0() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Question', 'Answers', { role: 'style' } ],
-                    ['{{q0a0}}', {{q0a0_val}}, '#4FC14F'],
-                    ['{{q0a1}}', {{q0a1_val}}, '#A6C24C'],
-                    ['{{q0a2}}', {{q0a2_val}}, '#FFC84C'],
-                    ['{{q0a3}}', {{q0a3_val}}, '#F48846'],
-                    ['{{q0a4}}', {{q0a4_val}}, '#EB4841']
-                ]);
+    // --------------------------------------------------------------------------------------------------------
 
-                var piechart = new google.visualization.PieChart(document.getElementById('piechart_div_q0'));
-                piechart.draw(data, piechart_options);
+    var x_q0 = ['{{q0a0}}', '{{q0a1}}', '{{q0a2}}', '{{q0a3}}', '{{q0a4}}'];
+    var y_q0 = ['{{q0a0_val}}', '{{q0a1_val}}', '{{q0a2_val}}', '{{q0a3_val}}', '{{q0a4_val}}'];
 
-                var barchart = new google.visualization.BarChart(document.getElementById('barchart_div_q0'));
-                barchart.draw(data, barchart_options);
-            }
+    var x_q1 = ['{{q1a0}}', '{{q1a1}}', '{{q1a2}}', '{{q1a3}}', '{{q1a4}}'];
+    var y_q1 = ['{{q1a0_val}}', '{{q1a1_val}}', '{{q1a2_val}}', '{{q1a3_val}}', '{{q1a4_val}}'];
 
-            // --------------------------------------------------------------------------------------------------------
+    var x_q2 = ['{{q2a0}}', '{{q2a1}}', '{{q2a2}}', '{{q2a3}}', '{{q2a4}}'];
+    var y_q2 = ['{{q2a0_val}}', '{{q2a1_val}}', '{{q2a2_val}}', '{{q2a3_val}}', '{{q2a4_val}}'];
 
-            google.load("visualization", "1", {packages:["corechart"]});
-            google.charts.setOnLoadCallback(drawChart1);
+    var x_q3 = ['{{q3a0}}', '{{q3a1}}', '{{q3a2}}', '{{q3a3}}', '{{q3a4}}'];
+    var y_q3 = ['{{q3a0_val}}', '{{q3a1_val}}', '{{q3a2_val}}', '{{q3a3_val}}', '{{q3a4_val}}'];
 
-            function drawChart1() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Question', 'Answers', { role: 'style' } ],
-                    ['{{q1a0}}', {{q1a0_val}}, '#4FC14F'],
-                    ['{{q1a1}}', {{q1a1_val}}, '#A6C24C'],
-                    ['{{q1a2}}', {{q1a2_val}}, '#FFC84C'],
-                    ['{{q1a3}}', {{q1a3_val}}, '#F48846'],
-                    ['{{q1a4}}', {{q1a4_val}}, '#EB4841']
-                ]);
+    var data_q0 = {
+      labels: x_q0,
+      datasets: [{
+        backgroundColor: barColors,
+        borderColor: '#343A40',
+        data: y_q0
+      }]
+    }
 
+    var data_q1 = {
+      labels: x_q1,
+      datasets: [{
+        backgroundColor: barColors,
+        borderColor: '#343A40',
+        data: y_q1
+      }]
+    }
 
-                var piechart = new google.visualization.PieChart(document.getElementById('piechart_div_q1'));
-                piechart.draw(data, piechart_options);
+    var data_q2 = {
+      labels: x_q2,
+      datasets: [{
+        backgroundColor: barColors,
+        borderColor: '#343A40',
+        data: y_q2
+      }]
+    }
 
-                var barchart = new google.visualization.BarChart(document.getElementById('barchart_div_q1'));
-                barchart.draw(data, barchart_options);
-            }
+    var data_q3 = {
+      labels: x_q3,
+      datasets: [{
+        backgroundColor: barColors,
+        borderColor: '#343A40',
+        data: y_q3
+      }]
+    }
 
-            // --------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------
 
-            google.load("visualization", "1", {packages:["corechart"]});
-            google.charts.setOnLoadCallback(drawChart2);
+    new Chart("doughnut_chart_q0", {
+      type: "doughnut",
+      data: data_q0,
+      options: options_doughnut
+    });
+    new Chart("bar_chart_q0", {
+      type: "bar",
+      data: data_q0,
+      options: options_bar
+    });
 
-            function drawChart2() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Question', 'Answers', { role: 'style' } ],
-                    ['{{q2a0}}', {{q2a0_val}}, '#4FC14F'],
-                    ['{{q2a1}}', {{q2a1_val}}, '#A6C24C'],
-                    ['{{q2a2}}', {{q2a2_val}}, '#FFC84C'],
-                    ['{{q2a3}}', {{q2a3_val}}, '#F48846'],
-                    ['{{q2a4}}', {{q2a4_val}}, '#EB4841']
-                ]);
+    new Chart("doughnut_chart_q1", {
+      type: "doughnut",
+      data: data_q1,
+      options: options_doughnut
+    });
+    new Chart("bar_chart_q1", {
+      type: "bar",
+      data: data_q1,
+      options: options_bar
+    });
 
+    new Chart("doughnut_chart_q2", {
+      type: "doughnut",
+      data: data_q2,
+      options: options_doughnut
+    });
+    new Chart("bar_chart_q2", {
+      type: "bar",
+      data: data_q2,
+      options: options_bar
+    });
 
-                var piechart = new google.visualization.PieChart(document.getElementById('piechart_div_q2'));
-                piechart.draw(data, piechart_options);
+    new Chart("doughnut_chart_q3", {
+      type: "doughnut",
+      data: data_q3,
+      options: options_doughnut
+    });
+    new Chart("bar_chart_q3", {
+      type: "bar",
+      data: data_q3,
+      options: options_bar
+    });
 
-                var barchart = new google.visualization.BarChart(document.getElementById('barchart_div_q2'));
-                barchart.draw(data, barchart_options);
-            }
+    // --------------------------------------------------------------------------------------------------------
 
-            // --------------------------------------------------------------------------------------------------------
-
-            google.load("visualization", "1", {packages:["corechart"]});
-            google.charts.setOnLoadCallback(drawChart3);
-
-            function drawChart3() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Question', 'Answers', { role: 'style' } ],
-                    ['{{q3a0}}', {{q3a0_val}}, '#4FC14F'],
-                    ['{{q3a1}}', {{q3a1_val}}, '#A6C24C'],
-                    ['{{q3a2}}', {{q3a2_val}}, '#FFC84C'],
-                    ['{{q3a3}}', {{q3a3_val}}, '#F48846'],
-                    ['{{q3a4}}', {{q3a4_val}}, '#EB4841']
-                ]);
-
-
-                var piechart = new google.visualization.PieChart(document.getElementById('piechart_div_q3'));
-                piechart.draw(data, piechart_options);
-
-                var barchart = new google.visualization.BarChart(document.getElementById('barchart_div_q3'));
-                barchart.draw(data, barchart_options);
-            }
-
-        </script>
-    </head>
-    <body>
-        <center>
-            <div class="container-fluid">
-                <table class="columns">
-                    <tr style="border: 1px solid #ccc">
-                        <h1>{{q0}}</h1>
-                        <td><div id="piechart_div_q0"></div></td>
-                        <td><div id="barchart_div_q0"></div></td>
-                    </tr>
-                </table>
-                <p></p>
-                <table class="columns">
-                    <tr style="border: 1px solid #ccc">
-                        <h1>{{q1}}</h1>
-                        <td><div id="piechart_div_q1"></div></td>
-                        <td><div id="barchart_div_q1"></div></td>
-                    </tr>
-                </table>
-                <p></p>
-                <table class="columns">
-                    <tr style="border: 1px solid #ccc">
-                        <h1>{{q1}}</h1>
-                        <td><div id="piechart_div_q2"></div></td>
-                        <td><div id="barchart_div_q2"></div></td>
-                    </tr>
-                </table>
-                <p></p>
-                <table class="columns">
-                    <tr style="border: 1px solid #ccc">
-                        <h1>{{q1}}</h1>
-                        <td><div id="piechart_div_q3"></div></td>
-                        <td><div id="barchart_div_q3"></div></td>
-                    </tr>
-                </table>
-                <p></p>
-            </div>
-            <p></p>
-        </center>
-    </body>
+    </script>
+  </body>
 </html>
-
