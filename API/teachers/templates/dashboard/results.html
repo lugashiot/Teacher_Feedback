@@ -4,7 +4,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="http://www.htlinn.tech:8080/file_hosting/htl_icon_no_bg.png">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Results from {{class}} with teacher {{teacher}}</title>
     <style>
       div.doughnut {
         width:60%;
@@ -26,6 +27,7 @@
   <body class="bg-dark text-white">
     <center>
       <div class="container-fluid">
+        <h1>Results from {{class}} with {{teacher}}</h1>
         <div class="chart_row">
           <h2>{{q0}}</h2>
           <div class="doughnut">
@@ -95,13 +97,23 @@
       },
       scales: {
         yAxes: [{
+          gridLines: {
+            color: "#616970",
+            display: true
+          },
           ticks: {
             min: 0,
             stepSize: 1
           }
         }],
         xAxes: [{
-          display: false
+          gridLines: {
+            color: "#616970",
+            display: false
+          },
+          ticks: {
+            display: false
+          }
         }]
       }
     }
