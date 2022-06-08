@@ -82,5 +82,14 @@ def results(request):
             return HttpResponseRedirect('/teacher/login/')
 
 
+def create_poll(request):
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            username = request.user.username
+            teacher_id = db.get_teacher_by_username(username, wanted_key="Teacher_ID")
+            teacher_classes = db.get_class_assignments(teacher_id)
+            return render(request, "dashboard/create_poll.html", {'classes': teacher_classes})
+
+
 def redirect_login(request):
     return HttpResponseRedirect('/teacher/login/')

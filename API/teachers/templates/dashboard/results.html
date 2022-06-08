@@ -10,8 +10,9 @@
         display: inline-block;
       }
       div.bar {
-        width:35%;
+        width:39%;
         display: inline-block;
+        margin-bottom: 2%;
       }
       div.chart_row {
         margin-top: 3%;
@@ -32,6 +33,7 @@
           <div class="bar">
             <canvas id="bar_chart_q0"></canvas>
           </div>
+          <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
         </div>
         <div class="chart_row">
           <h2>{{q1}}</h2>
@@ -41,6 +43,7 @@
           <div class="bar">
             <canvas id="bar_chart_q1"></canvas>
           </div>
+          <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
         </div>
         <div class="chart_row">
           <h2>{{q2}}</h2>
@@ -50,6 +53,7 @@
           <div class="bar">
             <canvas id="bar_chart_q2"></canvas>
           </div>
+          <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
         </div>
         <div class="chart_row">
           <h2>{{q3}}</h2>
@@ -196,9 +200,6 @@
       data: data_q3,
       options: options_bar
     });
-
-    // --------------------------------------------------------------------------------------------------------
-
     </script>
   </body>
 </html>
