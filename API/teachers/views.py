@@ -84,13 +84,38 @@ def results(request):
             return HttpResponseRedirect('/teacher/login/')
 
 
+class Question:
+    def __init__(self, q, a0, a1, a2, a3, a4):
+        self.q = q
+        self.a0 = a0
+        self.a1 = a1
+        self.a2 = a2
+        self.a3 = a3
+        self.a4 = a4
+
+
 def create_poll(request):
     if request.method == "GET":
         if request.user.is_authenticated:
             username = request.user.username
             teacher_id = db.get_teacher_by_username(username, wanted_key="Teacher_ID")
             teacher_classes = db.get_class_assignments(teacher_id)
-            return render(request, "dashboard/create_poll.html", {'classes': teacher_classes})
+
+            questions = [Question("Test Frage 1", "ok", "ok", "ok", "ok", "ok"),
+                         Question("Test Frage 2", "ok", "ok", "ok", "ok", "ok")]
+
+            return render(request, "dashboard/create_poll.html", {'questions': questions})
+        else:
+            return HttpResponseRedirect('/teacher/login/')
+    if request.method == "POST":
+        q = request.POST['q_inp']
+        a0 = request.POST['a0_inp']
+        a1 = request.POST['a1_inp']
+        a2 = request.POST['a2_inp']
+        a3 = request.POST['a3_inp']
+        a4 = request.POST['a4_inp']
+
+        return render(request, 'error_rocket_page.html', {'error_message': str(q) + str(a0) + str(a1) + str(a2) + str(a3) + str(a4)})
 
 
 def redirect_login(request):

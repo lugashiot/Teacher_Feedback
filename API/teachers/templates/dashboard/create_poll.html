@@ -3,88 +3,80 @@
   <head>
     <title>Teacher Dashboard</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="icon" type="image/png" href="http://www.htlinn.tech:8080/file_hosting/htl_icon_no_bg.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   </head>
   <body class="bg-dark text-white">
     <div class="container-fluid">
-        <h3 class="mt-3">Wählen Sie Ihre Fragen aus</h3>
-        <div class="row">
+      <h3 class="mt-3">Wählen Sie Ihre Fragen aus</h3>
+      <div class="row">
+        <div class="col-8 container">
+          <div class="card-columns mt-3 mr-4" style="column-count:2">
 
-            <div class="col-8 container">
-                <div class="card-columns mt-3 mr-4" style="column-count: 2;">
-                  <div class="card bg-secondary">
-                    <div class="card-body">
-                      <h5 class="card-title">1Wie verständlich ist der im Unterricht behandelte Stoff?</h5>
-                      <p class="card-text">Jor | nar | blah blah | allar | asdoasdoasd</p>
-                      <a href="#" class="btn btn-primary">Select</a>
-                    </div>
-                  </div>
-                  <div class="card bg-secondary">
-                    <div class="card-body">
-                      <h5 class="card-title">2Wie verständlich ist der im Unterricht behandelte Stoff?</h5>
-                      <p class="card-text">Jor | nar | blah blah | allar | asdoasdoasd</p>
-                      <a href="#" class="btn btn-primary">Select</a>
-                    </div>
-                  </div>
-                  <div class="card bg-secondary">
-                    <div class="card-body">
-                      <h5 class="card-title">3Wie verständlich ist der im Unterricht behandelte Stoff?</h5>
-                      <p class="card-text">Jor | nar | blah blah | allar | asdoasdoasd</p>
-                      <a href="#" class="btn btn-primary">Select</a>
-                    </div>
-                  </div>
-                  <div class="card bg-secondary">
-                    <div class="card-body">
-                      <h5 class="card-title">4Wie verstänasdasdasdasdasdadasdasdasdasdasdasddlich ist der im Unterricht behandelte Stoff?</h5>
-                      <p class="card-text">Jor | nar | blah blah | allar | asdoasdoasd</p>
-                      <a href="#" class="btn btn-primary">Select</a>
-                    </div>
-                  </div>
-                  <div class="card bg-secondary">
-                    <div class="card-body">
-                      <h5 class="card-title">5Wie verständlich ist der asldjfnlasjkdhflkjasnhcmksdjhfkxhsd ckhagsd kjfh gskdajhgvf akcjhgdk jahsgdf akjhfsdk jfhg sakjdhgf kasdghf kajhdgsf kjasgdf kajgsdf kjhasd kjfhgasd kjhfgak djghfaskdgh  im Unterricht behandelte Stoff?</h5>
-                      <p class="card-text">Jor | nar | blah blah | allar | asdoasdoasd</p>
-                      <a href="#" class="btn btn-primary">Select</a>
-                    </div>
-                  </div>
-                  <div class="card bg-secondary">
-                    <div class="card-body">
-                      <h5 class="card-title">6Wie verständlich ist der im Unterricht behandelte Stoff?</h5>
-                      <p class="card-text">Jor | nar | blah blah | allar | asdoasdoasd</p>
-                      <a href="#" class="btn btn-primary">Select</a>
-                    </div>
-                  </div>
-                  <div class="card bg-secondary">
-                    <div class="card-body">
-                      <h5 class="card-title">7Wie verständlich ist der im Unterricht behandelte Stoff?</h5>
-                      <p class="card-text">Jor | nar | blah blah | allar | asdoasdoasd</p>
-                      <a href="#" class="btn btn-primary">Select</a>
-                    </div>
-                  </div>
+            {% for question in questions %}
+              <div class="card bg-secondary">
+                <div class="card-body">
+                  <h5 class="card-title">{{question.q}}</h5>
+                  <p class="card-text">{{question.a0}} | {{question.a1}} | {{question.a2}} |  | </p>
+                  <a href="#" class="btn btn-primary">Select</a>
                 </div>
-            </div>
+              </div>
+            {% endfor %}
 
-            <div class="col-4 container">
-               <div class="my-3">
-                 <div class="card bg-secondary">
-                   <h3 class="card-header">Fragen für {{class}}</h3>
-                   <div class="card-body">
-                     <h5 class="card-title">Frage blah blah bla blah?</h5>
-                     <p class="card-text">Jor | nar | lol | slakdjölaskjd öalks | asdoasdoasd</p>
-                     <h5 class="card-title">Frage blah blah bla blah?</h5>
-                     <p class="card-text">Jor | nar | lol | slakdjölaskjd öalks | asdoasdoasd</p>
-                     <h5 class="card-title">Frage blah blah bla blah?</h5>
-                     <p class="card-text">Jor | nar | lol | slakdjölaskjd öalks | asdoasdoasd</p>
-                     <h5 class="card-title">Frage blah blah bla blah?</h5>
-                     <p class="card-text">Jor | nar | lol | slakdjölaskjd öalks | asdoasdoasd</p>
-                     <a href="#" class="btn btn-primary">Starte Umfrage</a>
-                   </div>
-                 </div>
-               </div>
+            <div class="card bg-secondary">
+              <div class="card-body">
+                <h5 class="card-title">Neue Frage erstellen</h5>
+                <hr>
+                <form action="" method="post">
+                  {%csrf_token%}
+                  <label for="q_inp">Frage</label>
+                  <textarea class="form-control" id="q_inp" name="q_inp" rows="3"></textarea>
+                  <hr>
+                  <label for="a0_inp">Antwortmöglichkeiten</label>
+                  <input type="text" class="form-control" id="a0_inp" name="a0_inp" placeholder="Antwort 1">
+                  <hr>
+                  <input type="text" class="form-control" id="a1_inp" name="a1_inp" placeholder="Antwort 2">
+                  <hr>
+                  <input type="text" class="form-control" id="a2_inp" name="a2_inp" placeholder="Antwort 3">
+                  <hr>
+                  <input type="text" class="form-control" id="a3_inp" name="a3_inp" placeholder="Antwort 4">
+                  <hr>
+                  <input type="text" class="form-control" id="a4_inp" name="a4_inp" placeholder="Antwort 5">
+                  <hr>
+                  <input type="submit" class="btn btn-primary" value="Bestätigen" width="500px">
+                </form>
+              </div>
             </div>
+          </div>
         </div>
+        <div class="col-4 container">
+          <div class="my-3 mr-3" style="position:fixed!important;height:100%">
+            <div class="card bg-secondary">
+              <h3 class="card-header">Umfragen für {{class}}</h3>
+              <div class="card-body">
+                <h5 class="card-title">Wie verständlich ist der im Unterricht behandelte Stoff?</h5>
+                <p class="card-text">Jor | nar | lol | slakdjölaskjd öalks | asdoasdoasd</p>
+                <a href="#" class="btn btn-danger">Entfernen</a>
+                <hr>
+                <h5 class="card-title">Frage blah blah bla blah?</h5>
+                <p class="card-text">Jor | nar | lol | slakdjölaskjd öalks | asdoasdoasd</p>
+                <a href="#" class="btn btn-danger">Entfernen</a>
+                <hr>
+                <h5 class="card-title">Frage blah blah bla blah?</h5>
+                <p class="card-text">Jor | nar | lol | slakdjölaskjd öalks | asdoasdoasd</p>
+                <a href="#" class="btn btn-danger">Entfernen</a>
+                <hr>
+                <h5 class="card-title">Frage blah blah bla blah?</h5>
+                <p class="card-text">Jor | nar | lol | slakdjölaskjd öalks | asdoasdoasd</p>
+                <a href="#" class="btn btn-danger">Entfernen</a>
+                <hr/>
+                <a href="#" class="btn btn-primary">Starte Umfrage</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
   </body>
