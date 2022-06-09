@@ -13,6 +13,7 @@ class DBHandler:
                 port=3306,
                 database="School"
             )
+            self.conn.auto_reconnect = True
             self.conn.autocommit = True
             self.cur = self.conn.cursor()
         
