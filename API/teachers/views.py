@@ -78,6 +78,8 @@ def results(request):
                     'q3a3': "q3a3_test", 'q3a3_val': all_results[3].count(4),
                     'q3a4': "q3a4_test", 'q3a4_val': all_results[3].count(5),
                 })
+            else:
+                return HttpResponseRedirect('/teacher/dashboard/')
         else:
             return HttpResponseRedirect('/teacher/login/')
 
