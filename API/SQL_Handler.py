@@ -1,4 +1,3 @@
-import re
 import mariadb
 import sys
 
