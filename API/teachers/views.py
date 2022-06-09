@@ -93,29 +93,40 @@ class Question:
         self.a3 = a3
         self.a4 = a4
 
+    def check_if_filled_correctly(self):
+        if self.q is not "" and self.a0 is not "" and self.a1 is not "" and self.a2 is not "" and self.a3 is not "" and self.a4 is not "":
+            return True
+        return False
+
 
 def create_poll(request):
+    questions_temp = [
+        Question("Test Frage 1  long fucking text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok"),
+        Question("Test Frage 2  long fucking text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok"),
+        Question("Test Frage 3  long fucking text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok"),
+        Question("Test Frage 4  long fucking text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok"),
+        Question("Test Frage 5  long fucking text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok"), ]
+
     if request.method == "GET":
         if request.user.is_authenticated:
             username = request.user.username
             teacher_id = db.get_teacher_by_username(username, wanted_key="Teacher_ID")
             teacher_classes = db.get_class_assignments(teacher_id)
 
-            questions = [Question("Test Frage 1", "ok", "ok", "ok", "ok", "ok"),
-                         Question("Test Frage 2", "ok", "ok", "ok", "ok", "ok")]
-
-            return render(request, "dashboard/create_poll.html", {'questions': questions})
+            #return render(request, "dashboard/create_poll.html", {'questions': db.load_questions_for_teacher(...)})    # todo load premade questions
+            return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'class': "4CHEL"})   # todo richtige klasse übergeben
         else:
             return HttpResponseRedirect('/teacher/login/')
-    if request.method == "POST":
-        q = request.POST['q_inp']
-        a0 = request.POST['a0_inp']
-        a1 = request.POST['a1_inp']
-        a2 = request.POST['a2_inp']
-        a3 = request.POST['a3_inp']
-        a4 = request.POST['a4_inp']
 
-        return render(request, 'error_rocket_page.html', {'error_message': str(q) + str(a0) + str(a1) + str(a2) + str(a3) + str(a4)})
+    if request.method == "POST":
+        if "q_inp" in request.POST:
+            new_question = Question(request.POST["q_inp"], request.POST["a0_inp"], request.POST["a1_inp"], request.POST["a2_inp"], request.POST["a3_inp"], request.POST["a4_inp"])
+            if new_question.check_if_filled_correctly():
+                if new_question.q not in [a.q for a in questions_temp]:
+                    questions_temp.append(new_question)
+                return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'class': "4CHEL"})   # todo richtige klasse übergeben
+            else:
+                return HttpResponseRedirect('/')    # todo push error message
 
 
 def redirect_login(request):
