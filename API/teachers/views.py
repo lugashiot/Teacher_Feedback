@@ -85,27 +85,29 @@ def results(request):
 
 
 class Question:
-    def __init__(self, q, a0, a1, a2, a3, a4):
+    def __init__(self, q, a0, a1, a2, a3, a4, btn_name):
         self.q = q
         self.a0 = a0
         self.a1 = a1
         self.a2 = a2
         self.a3 = a3
         self.a4 = a4
+        self.btn_name = btn_name
 
     def check_if_filled_correctly(self):
-        if self.q is not "" and self.a0 is not "" and self.a1 is not "" and self.a2 is not "" and self.a3 is not "" and self.a4 is not "":
+        if self.q != "" and self.a0 != "" and self.a1 != "" and self.a2 != "" and self.a3 != "" and self.a4 != "" and self.btn_name != "":
             return True
         return False
 
 
 def create_poll(request):
     questions_temp = [
-        Question("Test Frage 1  long fucking text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok"),
-        Question("Test Frage 2  long fucking text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok"),
-        Question("Test Frage 3  long fucking text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok"),
-        Question("Test Frage 4  long fucking text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok"),
-        Question("Test Frage 5  long fucking text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok"), ]
+        Question("Test Frage 1  long  text", "Hallo", "ok", "ok", "okkkkkkkkkkkk", "ok", 0),
+        Question("Test Frage 2  long  text ajsdf öadlksfj alkdsj fökadsj fölkad fölkasdflkjasd lfk", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", 1),
+        Question("Test Frage 3  long  text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", 2),
+        Question("Test Frage 4  long  text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", 3),
+        Question("Test Frage 5  long  text 1234k jkaljfalsdkjflkjd öfalkj dskflj aösdlkfj aösldkfj alökdsjf 56789123456789", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", 4),]
+    questions_selected = []   # todo database shit für des
 
     if request.method == "GET":
         if request.user.is_authenticated:
@@ -114,20 +116,29 @@ def create_poll(request):
             teacher_classes = db.get_class_assignments(teacher_id)
 
             #return render(request, "dashboard/create_poll.html", {'questions': db.load_questions_for_teacher(...)})    # todo load premade questions
-            return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'class': "4CHEL"})   # todo richtige klasse übergeben
+            return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'questions_selected':questions_selected, 'class': "4CHEL"})   # todo richtige klasse übergeben
         else:
             return HttpResponseRedirect('/teacher/login/')
 
     if request.method == "POST":
+        for btn in [str(q.btn_name) for q in questions_temp]:
+            if btn in request.POST:
+                if request.POST[btn] == "select_question":
+                    questions_selected.append(questions_temp[int(btn)])
+                    return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'questions_selected':questions_selected, 'class': "4CHEL"})   # todo richtige klasse übergeben
+
         if "q_inp" in request.POST:
             new_question = Question(request.POST["q_inp"], request.POST["a0_inp"], request.POST["a1_inp"], request.POST["a2_inp"], request.POST["a3_inp"], request.POST["a4_inp"])
             if new_question.check_if_filled_correctly():
                 if new_question.q not in [a.q for a in questions_temp]:
                     questions_temp.append(new_question)
-                return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'class': "4CHEL"})   # todo richtige klasse übergeben
+                return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'questions_selected':questions_selected, 'class': "4CHEL"})   # todo richtige klasse übergeben
             else:
-                return HttpResponseRedirect('/')    # todo push error message
+                return HttpResponseRedirect('/')    # todo push error message popup (frage nicht gültig) oder so
+
+        return render(request, 'error_rocket_page.html', {'error_message': str(request.POST)})
 
 
 def redirect_login(request):
+    # todo if autenticated to dashboard
     return HttpResponseRedirect('/teacher/login/')
