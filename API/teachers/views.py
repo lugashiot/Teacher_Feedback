@@ -114,8 +114,8 @@ questions_selected = []   # todo database shit für des
 
 
 def create_poll(request):
-    def return_():
-        return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'questions_selected': questions_selected, 'class': "4CHEL", 'error': "okok"})  # todo richtige klasse übergeben
+    def return_(error_msg=""):
+        return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'questions_selected': questions_selected, 'class': "4CHEL", 'error': error_msg})  # todo richtige klasse übergeben
 
     if request.method == "GET":
         if request.user.is_authenticated:
@@ -136,10 +136,10 @@ def create_poll(request):
                             questions_selected.append(questions_temp[int(btn)])
                             return return_()
                         else:
-                            return HttpResponseRedirect('/')  # todo push error message popup (Sie können diese Frage nur einmal auswählen) oder so
+                            return return_("Sie können diese Frage nur einmal auswählen!")  # todo push error message popup (Sie können diese Frage nur einmal auswählen) oder so
 
                     else:
-                        return HttpResponseRedirect('/')    # todo push error message popup (Sie können nur 4 Fragen auswählen) oder so
+                        return return_("Sie können nur 4 Fragen auswählen!")    # todo push error message popup (Sie können nur 4 Fragen auswählen) oder so
                 elif request.POST[btn] == "deselect_question":
                     for q in questions_selected:
                         if str(q.btn_name) == btn:
@@ -153,7 +153,7 @@ def create_poll(request):
                     questions_temp.append(new_question)
                 return return_()
             else:
-                return HttpResponseRedirect('/')    # todo push error message popup (Frage nicht gültig) oder so
+                return return_("Frage nicht gültig!")    # todo push error message popup (Frage nicht gültig) oder so
 
         return render(request, 'error_rocket_page.html', {'error_message': str(request.POST)})
 
