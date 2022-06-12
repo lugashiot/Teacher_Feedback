@@ -9,10 +9,10 @@
   </head>
   <body class="bg-dark text-white">
     <div class="container-fluid">
-      <h3 class="mt-3">Wählen Sie Ihre Fragen aus</h3>
+      <h3 class="mt-3">Wählen Sie eine Ihre Fragen aus</h3>
       <div class="row">
         <div class="col-8 container">
-          <div class="card-columns mt-3 mr-4" style="column-count:2">
+          <div class="card-columns mt-3 mr-3" style="column-count:2">
 
             {% for question in questions %}
               <form action="" method="post" class="card bg-secondary">
@@ -52,19 +52,20 @@
           </div>
         </div>
         <div class="col-4 container">
-          <div class="my-3 mr-3" style="position:fixed!important;height:100%">
-            <div class="card bg-secondary">
+          <div class="mw-100 my-3 mr-3"> <!-- zum fixieren  style="position:fixed!important;height:100%" -->
+            <form action="" method="post" class="card bg-secondary">
+              {%csrf_token%}
               <h3 class="card-header">Umfragen für {{class}}</h3>
               <div class="card-body">
                 {% for question in questions_selected %}
                   <h5 class="card-title">{{question.q}}</h5>
                   <p class="card-text">{{question.a0}} | {{question.a1}} | {{question.a2}} | {{question.a3}} | {{question.a4}}</p>
-                  <a href="#" class="btn btn-danger">Entfernen</a>
+                  <input type="submit" class="btn btn-primary" name="{{question.btn_name}}" value="deselect_question" width="500px">
                   <hr>
                 {% endfor %}
                 <a href="#" class="btn btn-primary">Starte Umfrage</a>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
