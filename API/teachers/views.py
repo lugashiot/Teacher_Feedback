@@ -85,14 +85,18 @@ def results(request):
 
 
 class Question:
-    def __init__(self, q, a0, a1, a2, a3, a4, btn_name):
+    def __init__(self, q, a0, a1, a2, a3, a4, btn_name="auto"):
         self.q = q
         self.a0 = a0
         self.a1 = a1
         self.a2 = a2
         self.a3 = a3
         self.a4 = a4
-        self.btn_name = btn_name
+        if btn_name == "auto":
+            self.btn_name = str(int([q.btn_name for q in questions_temp][-1])+1)
+        else:
+            self.btn_name = btn_name
+
 
     def check_if_filled_correctly(self):
         if self.q != "" and self.a0 != "" and self.a1 != "" and self.a2 != "" and self.a3 != "" and self.a4 != "" and self.btn_name != "":
@@ -101,16 +105,17 @@ class Question:
 
 
 questions_temp = [
-    Question("Test Frage 1  long  text", "Hallo", "ok", "ok", "okkkkkkkkkkkk", "ok", 0),
-    Question("Test Frage 2  long  text ajsdf öadlksfj alkdsj fökadsj fölkad fölkasdflkjasd lfk", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", 1),
-    Question("Test Frage 3  long  text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", 2),
-    Question("Test Frage 4  long  text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", 3),
-    Question("Test Frage 5  long  text 1234k jkaljfalsdkjflkjd öfalkj dskflj aösdlkfj aösldkfj alökdsjf 56789123456789", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", 4),]
+    Question("Test Frage 1  long  text", "Hallo", "ok", "ok", "okkkkkkkkkkkk", "ok", "0"),
+    Question("Test Frage 2  long  text ajsdf öadlksfj alkdsj fökadsj fölkad fölkasdflkjasd lfk", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", "1"),
+    Question("Test Frage 3  long  text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", "2"),
+    Question("Test Frage 4  long  text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", "3"),
+    Question("Test Frage 5  long  text 1234k jkaljfalsdkjflkjd öfalkj dskflj aösdlkfj aösldkfj alökdsjf 56789123456789", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", "4"),]
 questions_selected = []   # todo database shit für des
+
 
 def create_poll(request):
     def return_():
-        return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'questions_selected': questions_selected, 'class': "4CHEL"})  # todo richtige klasse übergeben
+        return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'questions_selected': questions_selected, 'class': "4CHEL", 'error': "okok"})  # todo richtige klasse übergeben
 
     if request.method == "GET":
         if request.user.is_authenticated:
@@ -142,13 +147,13 @@ def create_poll(request):
                             return return_()
 
         if "q_inp" in request.POST:
-            new_question = Question(request.POST["q_inp"], request.POST["a0_inp"], request.POST["a1_inp"], request.POST["a2_inp"], request.POST["a3_inp"], request.POST["a4_inp"])
+            new_question = Question(request.POST["q_inp"], request.POST["a0_inp"], request.POST["a1_inp"], request.POST["a2_inp"], request.POST["a3_inp"], request.POST["a4_inp"], "auto")
             if new_question.check_if_filled_correctly():
                 if new_question.q not in [a.q for a in questions_temp]:
                     questions_temp.append(new_question)
                 return return_()
             else:
-                return HttpResponseRedirect('/')    # todo push error message popup (frage nicht gültig) oder so
+                return HttpResponseRedirect('/')    # todo push error message popup (Frage nicht gültig) oder so
 
         return render(request, 'error_rocket_page.html', {'error_message': str(request.POST)})
 
