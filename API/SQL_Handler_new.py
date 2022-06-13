@@ -194,7 +194,28 @@ class Polls():
         except mariadb.Error as e:
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)
+    
+    def write_poll(self, teacher_id : int, poll_name : str, assigment_id_1 : int, assigment_id_2 : int, assigment_id_3 : int, assigment_id_4 : int, assigment_id_5 : int, question_id_1 : int, question_id_2 : int, question_id_3 : int, question_id_4 : int, question_id_5 : int, question_id_6 : int, poll_time : int):
+        #sql INSERT INTO `Polls` (Teacher_ID, Poll_Name, Ass_1, Ass_2, Ass_3, Ass_4, Ass_5, Q_ID_1, Q_ID_2, Q_ID_3, Q_ID_4, Q_ID_5, Q_ID_6, Poll_Time) VALUES ()
+        self.cur.execute("INSERT INTO `Polls` (Teacher_ID, Poll_Name, Ass_1, Ass_2, Ass_3, Ass_4, Ass_5, Q_ID_1, Q_ID_2, Q_ID_3, Q_ID_4, Q_ID_5, Q_ID_6, Poll_Time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (teacher_id, poll_name, assigment_id_1, assigment_id_2, assigment_id_3, assigment_id_4, assigment_id_5, question_id_1, question_id_2, question_id_3, question_id_4, question_id_5, question_id_6, poll_time))
+        return "Polls.write_poll done"
 
+    def get_polls_by_teacher(self, teacher_id : int):
+        #sql Select Poll_ID,Teacher_ID,Poll_Name,Ass_1,Ass_2,Ass_3,Ass_4,Ass_5,Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6,Poll_Time FROM `Polls` WHERE Teacher_ID = teacher_id
+        self.cur.execute("Select Poll_ID,Teacher_ID,Poll_Name,Ass_1,Ass_2,Ass_3,Ass_4,Ass_5,Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6,Poll_Time FROM `Polls` WHERE Teacher_ID = ?", (teacher_id, ))
+        poll_list = []
+        for out in self.cur:
+            poll_list.append([int(out[0]), int(out[1]), str(out[2]), int(out[3]), int(out[4]), int(out[5]), int(out[6]), int(out[7]), int(out[8]), int(out[9]), int(out[10]), int(out[11]), int(out[12]), int(out[13]), int(out[14])])
+        return poll_list
+
+    def get_questions_by_id(self, poll_id : int):
+        #sql Select Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6 FROM `Polls` WHERE Poll_ID = poll_id
+        self.cur.execute("Select Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6 FROM `Polls` WHERE Poll_ID = ?", (poll_id, ))
+        question_ids = []
+        for out in self.cur:
+            for qid in out:
+                question_ids.append(int(qid))
+            return question_ids
 
 # UUIDs
 class UUIDs():
@@ -254,7 +275,6 @@ class UUIDs():
         return False
             
 
-
 # Questions
 class Questions():
     def __init__(self) -> None:
@@ -274,11 +294,35 @@ class Questions():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)
 
-    def write_question(self):
-        #sql INSERT INTO
-        self.cur.execute()
+    def write_question(self, teacher_id : int, question_text : str, answer_option_1 : str, answer_option_2 : str, answer_option_3 : str, answer_option_4 : str, answer_option_5 : str, question_public = 0):
+        #sql INSERT INTO `Questions` (Teacher_ID, Question_Text, Ans_Opt_1, Ans_Opt_2, Ans_Opt_3, Ans_Opt_4, Ans_Opt_5, Question_Public) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        self.cur.execute("INSERT INTO `Questions` (Teacher_ID, Question_Text, Ans_Opt_1, Ans_Opt_2, Ans_Opt_3, Ans_Opt_4, Ans_Opt_5, Question_Public) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (teacher_id, question_text, answer_option_1, answer_option_2, answer_option_3, answer_option_4, answer_option_5, question_public))
         return "Questions.write_question done"
+    
+    def get_questions_by_teacher(self, teacher_id: int):
+        #sql Select Question_ID,Question_Text,Ans_Opt_1,Ans_Opt_2,Ans_Opt_3,Ans_Opt_4,Ans_Opt_5 FROM `Questions` WHERE Teacher_ID = teacher_id
+        self.cur.execute("Select Question_ID,Question_Text,Ans_Opt_1,Ans_Opt_2,Ans_Opt_3,Ans_Opt_4,Ans_Opt_5,Teacher_ID FROM `Questions` WHERE Teacher_ID = ?", (teacher_id, ))
+        question_list = []
+        for out in self.cur:
+            question_list.append([int(out[0]), str(out[1]), str(out[2]), str(out[3]), str(out[4]), str(out[5]), str(out[6]), int(out[7])])  
+        return question_list    
+        # Question_ID, Question_Text, Ans_Opt_1, Ans_Opt_2, Ans_Opt_3, Ans_Opt_4, Ans_Opt_5, Teacher_ID
 
+    def get_question_by_id(self, question_id : int):
+        #sql Select Question_ID,Question_Text,Ans_Opt_1,Ans_Opt_2,Ans_Opt_3,Ans_Opt_4,Ans_Opt_5,Teacher_ID FROM `Questions` WHERE Question_ID = question_id
+        self.cur.execute("Select Question_ID,Question_Text,Ans_Opt_1,Ans_Opt_2,Ans_Opt_3,Ans_Opt_4,Ans_Opt_5,Teacher_ID FROM `Questions` WHERE Question_ID = ?", (question_id, ))
+        for out in self.cur:    
+            return [int(out[0]), str(out[1]), str(out[2]), str(out[3]), str(out[4]), str(out[5]), str(out[6]), int(out[7])]  
+            # Question_ID, Question_Text, Ans_Opt_1, Ans_Opt_2, Ans_Opt_3, Ans_Opt_4, Ans_Opt_5, Teacher_ID
+    
+    def get_public_questions(self):
+        #sql Select Question_ID,Question_Text,Ans_Opt_1,Ans_Opt_2,Ans_Opt_3,Ans_Opt_4,Ans_Opt_5,Teacher_ID FROM `Questions` WHERE Question_Public = 1
+        self.cur.execute("Select Question_ID,Question_Text,Ans_Opt_1,Ans_Opt_2,Ans_Opt_3,Ans_Opt_4,Ans_Opt_5,Teacher_ID FROM `Questions` WHERE Question_Public = 1")
+        question_list = []
+        for out in self.cur:
+            question_list.append([int(out[0]), str(out[1]), str(out[2]), str(out[3]), str(out[4]), str(out[5]), str(out[6]), int(out[7])])
+        return question_list    
+        # Question_ID, Question_Text, Ans_Opt_1, Ans_Opt_2, Ans_Opt_3, Ans_Opt_4, Ans_Opt_5, Teacher_ID
 
 
 if __name__ == "__main__":
