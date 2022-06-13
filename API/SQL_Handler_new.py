@@ -1,3 +1,4 @@
+from typing import Optional
 import mariadb
 import sys
 
@@ -110,28 +111,28 @@ class Teachers_Assignments():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)    
 
-    def write_assignment(self, teacher_id : int, school_class : str, subject : str):
-        #sql INSERT INTO `Teachers_Assignments` (Assignment_ID, Teacher_ID, School_Class, Subject) VALUES (NULL, teacher_id, school_class, subject)
-        self.cur.execute("INSERT INTO `Teachers_Assignments` (Assignment_ID, Teacher_ID, School_Class, Subject) VALUES (NULL, ?, ?, ?);", (teacher_id, school_class, subject))
+    def write_assignment(self, teacher_id : int, school_class : str):
+        #sql INSERT INTO `Teachers_Assignments` (Assignment_ID, Teacher_ID, School_Class) VALUES (NULL, teacher_id, school_class)
+        self.cur.execute("INSERT INTO `Teachers_Assignments` (Assignment_ID, Teacher_ID, School_Class) VALUES (NULL, ?, ?);", (teacher_id, school_class))
         return "Teachers_Assignments.write_assignment done"
 
     def get_assignments_from_teacher(self, teacher_id : int) -> list:
-        #sql Select School_Class,Subject FROM `Teachers_Assignments` WHERE Teacher_ID = teacher_id
-        self.cur.execute("Select School_Class,Subject FROM `Teachers_Assignments` WHERE Teacher_ID = ?;", (teacher_id, ))
+        #sql Select School_Class FROM `Teachers_Assignments` WHERE Teacher_ID = teacher_id
+        self.cur.execute("Select School_Class FROM `Teachers_Assignments` WHERE Teacher_ID = ?;", (teacher_id, ))
         assignment_list = []
         for out in self.cur:
-            assignment_list.append(str(out[0]) + " - " + str(out[1]))   # example: ["4CHEL - MTRS", "4CHEL - Labor"]
+            assignment_list.append(str(out[0]))   # example: ["4CHEL", "3CHEL"]
         return assignment_list
     
-    def get_assignment_id(self, teacher_id : int, school_class : str, subject : str) -> int:
-        #sql Select Assignment_ID FROM `Teachers_Assignments` WHERE Teacher_ID = teacher_id AND School_Class = school_class AND Subject = subject
-        self.cur.execute("Select Assignment_ID FROM `Teachers_Assignments` WHERE Teacher_ID = ? AND School_Class = ? AND Subject = ?", (teacher_id, school_class, subject))
+    def get_assignment_id(self, teacher_id : int, school_class : str) -> int:
+        #sql Select Assignment_ID FROM `Teachers_Assignments` WHERE Teacher_ID = teacher_id AND School_Class = school_class
+        self.cur.execute("Select Assignment_ID FROM `Teachers_Assignments` WHERE Teacher_ID = ? AND School_Class = ?", (teacher_id, school_class))
         for out in self.cur:
             return int(out[0])
 
     def get_assignment_by_id(self, assignment_id : int) -> list:
         #sql Select Assignment_ID,Teacher_ID,School_Class,Subject FROM `Teachers_Assignments` WHERE Assignment_ID = assignment_id
-        self.cur.execute("Select Assignment_ID,Teacher_ID,School_Class,Subject FROM `Teachers_Assignments` WHERE Assignment_ID = ?", (assignment_id, ))
+        self.cur.execute("Select Assignment_ID,Teacher_ID,School_Class FROM `Teachers_Assignments` WHERE Assignment_ID = ?", (assignment_id, ))
         for out in self.cur:
             return list(out)
 
@@ -214,8 +215,45 @@ class UUIDs():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)    
 
-    def write_UUID(self, uuid : str, poll_id : int, sent_time : int):
-        #sql INSERT INTO `UUIDs`(UUID, Poll_ID, UUID_Used) VALUES (uuid, poll_id, uuid_used)
+    def write_uuid(self, uuid : str, poll_id : int, sent_time : int):   # Dont use this one in mail_sender @edar
+        #sql INSERT INTO `UUIDs`(UUID, Poll_ID, Sent_Time) VALUES (uuid, poll_id, sent_time)
+        self.cur.execute("INSERT INTO `UUIDs`(UUID, Poll_ID, Sent_Time) VALUES (?, ?, ?)", (uuid, poll_id, sent_time))
+        return "UUIDs.write_UUID done"
+
+    def write_uuids(self, uuid_list : list, poll_id : int, sent_time : int):
+        for uuid in uuid_list:
+            #sql INSERT INTO `UUIDs`(UUID, Poll_ID, Sent_Time) VALUES (uuid, poll_id, sent_time)
+            self.cur.execute("INSERT INTO `UUIDs`(UUID, Poll_ID, Sent_Time) VALUES (?, ?, ?)", (uuid, poll_id, sent_time))
+        return "UUIDs.write_UUIDs done"
+    
+    def write_answers(self, uuid, answer_1 : int, answer_2 : int, answer_3 : int, answer_4 : int, answer_5 : Optional[int], answer_6 : Optional[int], answer_textfield : Optional[str], answered_time : int):
+        #sql UPDATE `UUIDs` SET (UUID_Used = True, Answer_1 = answer_1, Answer_2 = answer_2, Answer_3 = answer_3, Answer_4 = answer_4, Answer_5 = answer_5, Answer_6 = Answer_6, Answer_Textfield = answer_text_field, Answered_Time = answered_time)
+        self.cur.execute("UPDATE `UUIDs` SET (UUID_Used = 1, Answer_1 = ?, Answer_2 = ?, Answer_3 = ?, Answer_4 = ?, Answer_5 = ?, Answer_6 = ?, Answer_Textfield = ?, Answered_Time = ?) WHERE UUID = ?", (answer_1, answer_2, answer_3, answer_4, answer_5, answer_6, answer_textfield, answered_time, uuid))
+        return "UUIDs.write_Answers done"
+    
+    def get_answer_by_uuid(self, uuid):
+        #sql Select Answer_1,Answer_2,Answer_3,Answer_4,Answer_5,Answer_6,Answer_Textfield FROM `UUIDs` WHERE UUID = uuid
+        self.cur.execute("Answer_1,Answer_2,Answer_3,Answer_4,Answer_5,Answer_6,Answer_Textfield FROM `UUIDs` WHERE UUID = ?", (uuid, ))
+        for out in self.cur:
+            return [int(out[0]), int(out[1]), int(out[2]), int(out[3]), int(out[4]), int(out[5]), str(out[6])] # 6th is textfield
+
+    def get_answers_by_poll_id(self, poll_id : int):
+        #sql Select 
+        self.cur.execute("Select Answer_1,Answer_2,Answer_3,Answer_4,Answer_5,Answer_6,Answer_Textfield FROM `UUIDs` WHERE Poll_ID = ?", (poll_id, ))
+        answer_list = []
+        for out in self.cur:
+            answer_list.append([int(out[0]), int(out[1]), int(out[2]), int(out[3]), int(out[4]), int(out[5]), str(out[6])]) # 6th is textfield
+        return answer_list
+
+    def is_used(self, uuid : int):
+        #sql Select UUID_Used FROM `UUIDs` WHERE UUID = uuid
+        self.cur.execute("Select UUID_Used FROM `UUIDs` WHERE UUID = ?", (uuid, ))
+        for out in self.cur:    
+            if out[0] == 1:
+                return True
+        return False
+            
+
 
 # Questions
 class Questions():
@@ -234,7 +272,12 @@ class Questions():
         
         except mariadb.Error as e:
             print(f"Error connecting to MariaDB Platform: {e}")
-            sys.exit(1)    
+            sys.exit(1)
+
+    def write_question(self):
+        #sql INSERT INTO
+        self.cur.execute()
+        return "Questions.write_question done"
 
 
 
