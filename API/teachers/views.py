@@ -113,7 +113,7 @@ questions_selected = []   # todo database shit für des
 
 def create_poll(request):
     def return_(error_msg=""):
-        return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'questions_selected': questions_selected, 'class': "4CHEL", 'error': error_msg})  # todo richtige klasse übergeben
+        return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'questions_selected': questions_selected, 'survey_name': "MTRS 3. und 4. Klasse", 'error': error_msg})  # todo richtige klasse übergeben
 
     if request.method == "GET":
         if request.user.is_authenticated:
@@ -147,7 +147,7 @@ def create_poll(request):
             new_question = Question(request.POST["q_inp"], request.POST["a0_inp"], request.POST["a1_inp"], request.POST["a2_inp"], request.POST["a3_inp"], request.POST["a4_inp"], "auto")
             if new_question.check_if_filled_correctly():
                 if new_question.q not in [a.q for a in questions_temp]:
-                    questions_temp.append(new_question)
+                    questions_temp.append(new_question)     # in db für fragen eintragen (private)
                 return return_()
             else:
                 return return_("Frage nicht gültig!")
