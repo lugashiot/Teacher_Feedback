@@ -217,6 +217,7 @@ class Polls():
                 question_ids.append(int(qid))
             return question_ids
 
+
 # UUIDs
 class UUIDs():
     def __init__(self) -> None:
@@ -247,7 +248,7 @@ class UUIDs():
             self.cur.execute("INSERT INTO `UUIDs`(UUID, Poll_ID, Sent_Time) VALUES (?, ?, ?)", (uuid, poll_id, sent_time))
         return "UUIDs.write_UUIDs done"
     
-    def write_answers(self, uuid, answer_1 : int, answer_2 : int, answer_3 : int, answer_4 : int, answer_5 : Optional[int], answer_6 : Optional[int], answer_textfield : Optional[str], answered_time : int):
+    def write_answers(self, uuid : str, answer_1 : int, answer_2 : int, answer_3 : int, answer_4 : int, answer_5 : Optional[int], answer_6 : Optional[int], answer_textfield : Optional[str], answered_time : int):
         #sql UPDATE `UUIDs` SET (UUID_Used = True, Answer_1 = answer_1, Answer_2 = answer_2, Answer_3 = answer_3, Answer_4 = answer_4, Answer_5 = answer_5, Answer_6 = Answer_6, Answer_Textfield = answer_text_field, Answered_Time = answered_time)
         self.cur.execute("UPDATE `UUIDs` SET (UUID_Used = 1, Answer_1 = ?, Answer_2 = ?, Answer_3 = ?, Answer_4 = ?, Answer_5 = ?, Answer_6 = ?, Answer_Textfield = ?, Answered_Time = ?) WHERE UUID = ?", (answer_1, answer_2, answer_3, answer_4, answer_5, answer_6, answer_textfield, answered_time, uuid))
         return "UUIDs.write_Answers done"
@@ -266,7 +267,7 @@ class UUIDs():
             answer_list.append([int(out[0]), int(out[1]), int(out[2]), int(out[3]), int(out[4]), int(out[5]), str(out[6])]) # 6th is textfield
         return answer_list
 
-    def is_used(self, uuid : int):
+    def is_used(self, uuid : str):
         #sql Select UUID_Used FROM `UUIDs` WHERE UUID = uuid
         self.cur.execute("Select UUID_Used FROM `UUIDs` WHERE UUID = ?", (uuid, ))
         for out in self.cur:    
@@ -328,13 +329,13 @@ class Questions():
 if __name__ == "__main__":
     db = DBHandler()
     print("handled")
-    db.Teachers.write_teacher()
     
-    print(db.get_class_mails("4CHEL"))
-    x = db.get_teacher_by_id(8)
-    print(x)
-    print(x["Forename"])
-    print(db.get_teacher_by_username("Christian.Hilpold", "Email"))
-    print(db.get_class_assignments(8))
-    #print(Handle.get_answers_for_class(1, "4CHEL"))
-    #print(Handle.is_UUID_Used("aeeeaa69420-42069ae"))
+    print(db.Teachers.get_all_teachers_username())
+    print(db.Classes_Emails.get_class_mails("4CHEL"))
+    #x = db.Teachers.get_teacher_by_id(8)
+    #print(x)
+    #print(x["Forename"])
+    #print(db.Teachers.get_teacher_by_username("Christian.Hilpold", "Email"))
+    #print(db.Teachers_Assignments.get_assignments_from_teacher(8))
+    #print(db.UUIDs.get_answers_by_poll_id(17))
+    #print(db.UUIDs.is_used("aeeeaa69420-42069ae"))
