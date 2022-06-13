@@ -11,14 +11,6 @@
   <body class="bg-dark text-white">
     <div class="container-fluid">
       <h3 class="mt-3">Wählen Sie eine Ihre Fragen aus</h3>
-      {% if error != "" %}
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-          {{error}}
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      {% endif %}
 
       <div class="row">
         <div class="col-8 container">
@@ -30,7 +22,7 @@
                 <div class="card-body">
                   <h5 class="card-title">{{question.q}}</h5>
                   <p class="card-text">{{question.a0}} | {{question.a1}} | {{question.a2}} | {{question.a3}} | {{question.a4}}</p>
-                  <input type="submit" class="btn btn-primary" name="{{question.btn_name}}" value="select_question" width="500px">
+                  <input type="submit" class="btn btn-primary" name="{{question.btn_name}}" value="Hinzufügen" width="500px">
                 </div>
               </form>
             {% endfor %}
@@ -62,7 +54,17 @@
           </div>
         </div>
         <div class="col-4 container">
-          <div class="mw-100 my-3 mr-3"> <!-- zum fixieren  style="position:fixed!important;height:100%" -->
+
+        {% if error != "" %}
+          <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+            {{error}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endif %}
+
+          <div class="mw-100 my-3"> <!-- zum fixieren  style="position:fixed!important;height:100%" -->
             <form action="" method="post" class="card bg-secondary">
               {%csrf_token%}
               <h3 class="card-header">Umfragen für {{class}}</h3>
@@ -70,7 +72,7 @@
                 {% for question in questions_selected %}
                   <h5 class="card-title">{{question.q}}</h5>
                   <p class="card-text">{{question.a0}} | {{question.a1}} | {{question.a2}} | {{question.a3}} | {{question.a4}}</p>
-                  <input type="submit" class="btn btn-primary" name="{{question.btn_name}}" value="deselect_question" width="500px">
+                  <input type="submit" class="btn btn-danger" name="{{question.btn_name}}" value="Entfernen" width="500px">
                   <hr>
                 {% endfor %}
                 <a href="#" class="btn btn-primary">Starte Umfrage</a>

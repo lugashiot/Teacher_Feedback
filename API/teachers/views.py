@@ -27,8 +27,8 @@ def dashboard(request):
         if request.user.is_authenticated:
             username = request.user.username
             teacher_id = db.get_teacher_by_username(username, wanted_key="Teacher_ID")
-            teacher_classes = db.get_class_assignments(teacher_id)
-            return render(request, "dashboard/dashboard.html", {'classes': teacher_classes})
+            teacher_surveys = db.get_class_assignments(teacher_id)      # todo neue db mit umfragen statt klassen implementieren
+            return render(request, "dashboard/dashboard.html", {'surveys': teacher_surveys})
         else:
             return HttpResponseRedirect('/teacher/login/')
 
@@ -97,7 +97,6 @@ class Question:
         else:
             self.btn_name = btn_name
 
-
     def check_if_filled_correctly(self):
         if self.q != "" and self.a0 != "" and self.a1 != "" and self.a2 != "" and self.a3 != "" and self.a4 != "" and self.btn_name != "":
             return True
@@ -130,17 +129,17 @@ def create_poll(request):
     if request.method == "POST":
         for btn in [str(q.btn_name) for q in questions_temp]:
             if btn in request.POST:
-                if request.POST[btn] == "select_question":
+                if request.POST[btn] == "Hinzufügen":
                     if len(questions_selected) < 4:
                         if questions_temp[int(btn)] not in questions_selected:
                             questions_selected.append(questions_temp[int(btn)])
                             return return_()
                         else:
-                            return return_("Sie können diese Frage nur einmal auswählen!")  # todo push error message popup (Sie können diese Frage nur einmal auswählen) oder so
+                            return return_("Sie können diese Frage nur einmal auswählen!")
 
                     else:
-                        return return_("Sie können nur 4 Fragen auswählen!")    # todo push error message popup (Sie können nur 4 Fragen auswählen) oder so
-                elif request.POST[btn] == "deselect_question":
+                        return return_("Sie können nur 4 Fragen auswählen!")
+                elif request.POST[btn] == "Entfernen":
                     for q in questions_selected:
                         if str(q.btn_name) == btn:
                             questions_selected.pop(questions_selected.index(q))
@@ -153,11 +152,13 @@ def create_poll(request):
                     questions_temp.append(new_question)
                 return return_()
             else:
-                return return_("Frage nicht gültig!")    # todo push error message popup (Frage nicht gültig) oder so
+                return return_("Frage nicht gültig!")
 
-        return render(request, 'error_rocket_page.html', {'error_message': str(request.POST)})
+        return return_(str(request.POST))
 
 
 def redirect_login(request):
-    # todo if autenticated to dashboard
-    return HttpResponseRedirect('/teacher/login/')
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/teacher/dashboard/')
+    else:
+        return HttpResponseRedirect('/teacher/login/')

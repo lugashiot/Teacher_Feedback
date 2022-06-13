@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Teacher Dashboard</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" type="image/png" href="http://www.htlinn.tech:8080/file_hosting/htl_icon_no_bg.png">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    </head>
-    <body class="bg-dark text-white">
-        {% if user.is_authenticated %}
-        <center>
-        <div class="container-fluid">
-            <h1>Klassen von: {{user.username}}</h1>
-            {% for class in classes %}
-                <p></p>
-                <a href="/teacher/dashboard/results/?class={{ class }}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">{{ class }}</a>
-            {% endfor %}
+  <head>
+    <title>Teacher Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="icon" type="image/png" href="http://www.htlinn.tech:8080/file_hosting/htl_icon_no_bg.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  </head>
+  <body class="bg-dark text-white">
+    {% if user.is_authenticated %}
+      <div class="container-fluid">
+        <div class = "row">
+          <div class = "col-4 my-3">
+            <form action="" method="post" class="card bg-secondary">
+              {%csrf_token%}
+              <h3 class="card-header">Umfragen von: {{user.username}}</h3>
+              <div class="card-body">
+                {% for survey in surveys %}
+                  <a href="/teacher/dashboard/results/?class={{survey}}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">{{survey}}</a>
+                {% endfor %}
+              </div>
+            </form>
+          </div>
         </div>
-        </center>
-        {% else %}
-        <meta http-equiv="Refresh" content="0; url=/teacher/login" />
-        {% endif %}
-    </body>
+
+      </div>
+    {% else %}
+      <meta http-equiv="Refresh" content="0; url=/teacher/login">
+    {% endif %}
+  </body>
 </html>
