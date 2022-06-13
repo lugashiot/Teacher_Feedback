@@ -1,3 +1,4 @@
+from typing import Optional
 import mariadb
 import sys
 
@@ -214,12 +215,44 @@ class UUIDs():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)    
 
-    def write_UUID(self, uuid : str, poll_id : int, sent_time : int):
+    def write_uuid(self, uuid : str, poll_id : int, sent_time : int):   # Dont use this one in mail_sender @edar
         #sql INSERT INTO `UUIDs`(UUID, Poll_ID, Sent_Time) VALUES (uuid, poll_id, sent_time)
         self.cur.execute("INSERT INTO `UUIDs`(UUID, Poll_ID, Sent_Time) VALUES (?, ?, ?)", (uuid, poll_id, sent_time))
-        return
+        return "UUIDs.write_UUID done"
 
+    def write_uuids(self, uuid_list : list, poll_id : int, sent_time : int):
+        for uuid in uuid_list:
+            #sql INSERT INTO `UUIDs`(UUID, Poll_ID, Sent_Time) VALUES (uuid, poll_id, sent_time)
+            self.cur.execute("INSERT INTO `UUIDs`(UUID, Poll_ID, Sent_Time) VALUES (?, ?, ?)", (uuid, poll_id, sent_time))
+        return "UUIDs.write_UUIDs done"
     
+    def write_answers(self, uuid, answer_1 : int, answer_2 : int, answer_3 : int, answer_4 : int, answer_5 : Optional[int], answer_6 : Optional[int], answer_textfield : Optional[str], answered_time : int):
+        #sql UPDATE `UUIDs` SET (UUID_Used = True, Answer_1 = answer_1, Answer_2 = answer_2, Answer_3 = answer_3, Answer_4 = answer_4, Answer_5 = answer_5, Answer_6 = Answer_6, Answer_Textfield = answer_text_field, Answered_Time = answered_time)
+        self.cur.execute("UPDATE `UUIDs` SET (UUID_Used = 1, Answer_1 = ?, Answer_2 = ?, Answer_3 = ?, Answer_4 = ?, Answer_5 = ?, Answer_6 = ?, Answer_Textfield = ?, Answered_Time = ?) WHERE UUID = ?", (answer_1, answer_2, answer_3, answer_4, answer_5, answer_6, answer_textfield, answered_time, uuid))
+        return "UUIDs.write_Answers done"
+    
+    def get_answer_by_uuid(self):
+        #sql Select 
+        self.cur.execute()
+        for out in self.cur:
+            return [int(out[0]), int(out[1]), int(out[2]), int(out[3]), int(out[4]), int(out[5]), str(out[6])] # 6th is textfield
+
+    def get_answers_by_poll_id(self):
+        #sql Select Answer_1,Answer_2,Answer_3,Answer_4,Answer_5,Answer_6,Answer_Textfield
+        self.cur.execute()
+        answer_list = []
+        for out in self.cur:
+            answer_list.append([int(out[0]), int(out[1]), int(out[2]), int(out[3]), int(out[4]), int(out[5]), str(out[6])]) # 6th is textfield
+        return answer_list
+
+    def is_used(self, uuid : int):
+        #sql Select UUID_Used FROM `UUIDs` WHERE UUID = uuid
+        self.cur.execute("Select UUID_Used FROM `UUIDs` WHERE UUID = ?", (uuid, ))
+        for out in self.cur:    
+            if out[0] == 1:
+                return True
+        return False
+            
 
 
 # Questions
