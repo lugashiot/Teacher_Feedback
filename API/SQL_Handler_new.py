@@ -231,15 +231,15 @@ class UUIDs():
         self.cur.execute("UPDATE `UUIDs` SET (UUID_Used = 1, Answer_1 = ?, Answer_2 = ?, Answer_3 = ?, Answer_4 = ?, Answer_5 = ?, Answer_6 = ?, Answer_Textfield = ?, Answered_Time = ?) WHERE UUID = ?", (answer_1, answer_2, answer_3, answer_4, answer_5, answer_6, answer_textfield, answered_time, uuid))
         return "UUIDs.write_Answers done"
     
-    def get_answer_by_uuid(self):
-        #sql Select 
-        self.cur.execute()
+    def get_answer_by_uuid(self, uuid):
+        #sql Select Answer_1,Answer_2,Answer_3,Answer_4,Answer_5,Answer_6,Answer_Textfield FROM `UUIDs` WHERE UUID = uuid
+        self.cur.execute("Answer_1,Answer_2,Answer_3,Answer_4,Answer_5,Answer_6,Answer_Textfield FROM `UUIDs` WHERE UUID = ?", (uuid, ))
         for out in self.cur:
             return [int(out[0]), int(out[1]), int(out[2]), int(out[3]), int(out[4]), int(out[5]), str(out[6])] # 6th is textfield
 
-    def get_answers_by_poll_id(self):
-        #sql Select Answer_1,Answer_2,Answer_3,Answer_4,Answer_5,Answer_6,Answer_Textfield
-        self.cur.execute()
+    def get_answers_by_poll_id(self, poll_id : int):
+        #sql Select 
+        self.cur.execute("Select Answer_1,Answer_2,Answer_3,Answer_4,Answer_5,Answer_6,Answer_Textfield FROM `UUIDs` WHERE Poll_ID = ?", (poll_id, ))
         answer_list = []
         for out in self.cur:
             answer_list.append([int(out[0]), int(out[1]), int(out[2]), int(out[3]), int(out[4]), int(out[5]), str(out[6])]) # 6th is textfield
@@ -273,6 +273,11 @@ class Questions():
         except mariadb.Error as e:
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)
+
+    def write_question(self):
+        #sql INSERT INTO
+        self.cur.execute()
+        return "Questions.write_question done"
 
 
 
