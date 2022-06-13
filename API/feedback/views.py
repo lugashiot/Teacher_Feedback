@@ -49,7 +49,7 @@ def feedback_page(request):
                 if "rating" in key:
                     value = int(data_dict[key][0])
                     Answers.append(str(value))
-            
+
             if db.is_uuid_used(uuid):
                 return render(request, 'error_rocket_page.html', {'error_message': "You can't vote twice, cheater"})
             db.write_answers(uuid, Answers[0], Answers[1], Answers[2], Answers[3], datetime.now())
@@ -74,7 +74,7 @@ def send_mails(request):
         input_teacher = request.GET.get("teacher")
         input_class = request.GET.get("class")
         if input_teacher is None:
-            return render(request, 'error_rocket_page.html', {'error_message':"No Teacher was given"})
+            return render(request, 'error_rocket_page.html', {'error_message': "No Teacher was given"})
         if input_class is None:
             input_class = "all"
         for username in db.get_all_teachers_username():

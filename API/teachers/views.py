@@ -104,11 +104,10 @@ class Question:
 
 
 questions_temp = [
-    Question("Test Frage 1  long  text", "Hallo", "ok", "ok", "okkkkkkkkkkkk", "ok", "0"),
-    Question("Test Frage 2  long  text ajsdf öadlksfj alkdsj fökadsj fölkad fölkasdflkjasd lfk", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", "1"),
-    Question("Test Frage 3  long  text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", "2"),
-    Question("Test Frage 4  long  text", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", "3"),
-    Question("Test Frage 5  long  text 1234k jkaljfalsdkjflkjd öfalkj dskflj aösdlkfj aösldkfj alökdsjf 56789123456789", "ok  lol lel saaaaassss", "ok", "ok", "okkkkkkkkkkkk", "ok", "4"),]
+    Question("Wie gut findest du den Unterricht von dieser Lehrperson?", "sehr gut", "gut", "ok", "weniger gut", "nicht guts", "0"),
+    Question("Wie gut kommst du im Unterricht von dieser Lehrperson mit?", "sehr leicht verständlich", "gut verständlich", "verständlich", "schwer verständlich", "nicht verständlich", "1"),
+    Question("Wie verständlich ist der im Unterricht behandelte Stoff?", "sehr gering", "gering", "akzeptabel", "übermäßig", "zu viel", "2"),
+    Question("Wie hoch ist dein (Zeit-)Aufwand zuhause um im Unterricht dabei zu bleiben? (Lernen + Hü)", "ok", "ok", "ok", "ok", "ok", "3"),]
 questions_selected = []   # todo database shit für des
 
 
@@ -136,7 +135,6 @@ def create_poll(request):
                             return return_()
                         else:
                             return return_("Sie können diese Frage nur einmal auswählen!")
-
                     else:
                         return return_("Sie können nur 4 Fragen auswählen!")
                 elif request.POST[btn] == "Entfernen":
