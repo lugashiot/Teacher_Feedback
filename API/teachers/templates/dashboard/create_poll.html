@@ -54,7 +54,7 @@
         <div class="mw-100 my-3"> <!-- zum fixieren  style="position:fixed!important;height:100%" -->
           <form action="" method="post" class="card bg-secondary">
             {%csrf_token%}
-            <h3 class="card-header">Umfrage: {{survey_name}}</h3>
+            <h3 class="card-header">Umfrage: {{poll_name}}</h3>
             <div class="card-body">
               {% for question in questions_selected %}
                 <h5 class="card-title">{{question.q}}</h5>

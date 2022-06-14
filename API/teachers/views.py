@@ -26,9 +26,9 @@ def dashboard(request):
     if request.method == "GET":
         if request.user.is_authenticated:
             username = request.user.username
-            teacher_id = db.get_teacher_by_username(username, wanted_key="Teacher_ID")
-            teacher_surveys = db.get_class_assignments(teacher_id)      # todo neue db mit umfragen statt klassen implementieren
-            return render(request, "dashboard/dashboard.html", {'surveys': teacher_surveys})
+            teacher_id = db.Teachers.get_teacher_by_username(username, wanted_key="Teacher_ID")
+            teacher_polls = db.Polls.get_polls_by_teacher(teacher_id)
+            return render(request, "dashboard/dashboard.html", {'polls': teacher_polls})
         else:
             return HttpResponseRedirect('/teacher/login/')
 
@@ -36,15 +36,16 @@ def dashboard(request):
 def results(request):
     if request.method == "GET":
         if request.user.is_authenticated:
-            requested_class = request.GET.get("name")
+            requested_poll_id = request.GET.get("poll_id")
             username = request.user.username
-            teacher_id = db.get_teacher_by_username(username, wanted_key="Teacher_ID")
-            teacher_surveys = db.get_class_assignments(teacher_id)  # todo neuer db command
-            if requested_class in teacher_surveys:
-                survey_answers = db.get_answers_for_class(teacher_id, requested_class)  # todo neuer db command
+            teacher_id = db.Teachers.get_teacher_by_username(username, wanted_key="Teacher_ID")
+            teacher_polls_id = db.Polls.get_polls_by_teacher(teacher_id)
+
+            if requested_poll_id in teacher_polls_id:
+                poll_answers = db.Polls.get_questions_by_id(requested_poll_id)  # todo neuer db command
 
                 all_results = [[], [], [], []]
-                for answer in survey_answers:
+                for answer in poll_answers:
                     for i in range(len(all_results)):
                         all_results[i].append(answer[i])
 
@@ -113,7 +114,7 @@ questions_selected = []   # todo database shit für des
 
 def create_poll(request):
     def return_(error_msg=""):
-        return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'questions_selected': questions_selected, 'survey_name': "MTRS 3. und 4. Klasse", 'error': error_msg})  # todo richtige klasse übergeben
+        return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'questions_selected': questions_selected, 'poll_name': "MTRS 3. und 4. Klasse", 'error': error_msg})  # todo richtige klasse übergeben
 
     if request.method == "GET":
         if request.user.is_authenticated:

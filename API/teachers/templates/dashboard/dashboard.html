@@ -10,8 +10,8 @@
           {%csrf_token%}
           <h3 class="card-header">Umfragen von: {{user.username}}</h3>
           <div class="card-body">
-            {% for survey in surveys %}
-              <a href="/teacher/dashboard/results/?name={{survey}}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">{{survey}}</a>
+            {% for poll in polls %}
+              <a href="/teacher/dashboard/results/?poll_id={{poll}}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">{{poll}}</a>
             {% endfor %}
           </div>
         </form>
