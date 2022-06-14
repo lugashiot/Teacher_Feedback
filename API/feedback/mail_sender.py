@@ -66,7 +66,7 @@ class Class:
                 pass
         
     def load_students_from_db(self):
-        self.students = db.get_class_mails(self.name)
+        self.students = db.Classes_Emails.get_class_mails(self.name)
         if self.students == []:
             #print(f"No Emails available for {self.name}")
             pass
@@ -105,18 +105,13 @@ class Teacher:
     def get_classes_from_db(self):
         pass
 
-    def send_emails(self, classname="all"):
-        teacher_id = db.get_teacher_by_username(self.username, "Teacher_ID")
-        if classname == "all":
-            for c in self.classes:
-                sent_dict = c.send_emails(self.username)
-                db.write_uuids(sent_dict["uuid_list"], teacher_id, c.name, int(datetime.now().timestamp()))
-            #print(f"All Emails to all classes of {self.username} were sent!")
-            return True
+    def send_emails(self, poll_id : int):
+        teacher_id = db.Teachers.get_teacher_by_username(self.username, "Teacher_ID")
         for c in self.classes:
             if c.name == classname:
                 sent_dict = c.send_emails(self.username)
-                db.write_uuids(sent_dict["uuid_list"], teacher_id, c.name, int(datetime.now().timestamp()))
+                db.UUIDs.write_uuids(sent_dict["uuid_list"], poll_id, int(datetime.now().timestamp()))
+                #db.write_uuids(sent_dict["uuid_list"], teacher_id, c.name, int(datetime.now().timestamp()))
                 #print(f"All Emails to {classname} were sent!")
                 return True
         return False
