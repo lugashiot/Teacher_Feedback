@@ -156,18 +156,18 @@ class Classes_Emails():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)    
 
-    def write_class_mail(self, school_class : str, email : str):
+    def write_class_email(self, school_class : str, email : str):
         #sql INSERT INTO `Classes_Emails` (Email_ID, School_Class, Email) VALUES (NULL, school_class, email)
         self.cur.execute("INSERT INTO `Classes_Emails` (Email_ID, School_Class, Email) VALUES (NULL, ?, ?)", (school_class, email))
         return "Classes_Emails.write_class_mail done"
 
-    def write_class_mails(self, school_class : str, email_list : list):
+    def write_class_emails(self, school_class : str, email_list : list):
         for email in email_list:
             #sql INSERT INTO `Classes_Emails` (Email_ID, School_Class, Email) VALUES (NULL, school_class, email)
             self.cur.execute("INSERT INTO `Classes_Emails` (School_Class, Email) VALUES (?, ?);", (school_class, email))
         return "write_class_mails done"
     
-    def get_class_mails(self, school_class : str) -> list:
+    def get_class_emails(self, school_class : str) -> list:
         #sql Select Email FROM `Classes_Emails` WHERE School_Class = school_class
         self.cur.execute("Select Email FROM `Classes_Emails` WHERE School_Class = ?", (school_class, ))
         email_list = []
@@ -331,7 +331,7 @@ if __name__ == "__main__":
     print("handled")
     
     print(db.Teachers.get_all_teachers_username())
-    print(db.Classes_Emails.get_class_mails("4CHEL"))
+    print(db.Classes_Emails.get_class_emails("4CHEL"))
     #x = db.Teachers.get_teacher_by_id(8)
     #print(x)
     #print(x["Forename"])
