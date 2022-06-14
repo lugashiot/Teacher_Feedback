@@ -41,7 +41,12 @@ if __name__ == "__main__":
     test_poll_0 = Poll(0, 0, "Test1", ["4CHEL", "3CHEL"], [q_0, q_0, q_0, q_0, q_0, q_0], [test_answer_0, test_answer_1], 0000000)
     test_poll_1 = Poll(0, 1, "Test1", ["4CHEL", "3CHEL"], [q_0, q_0, q_0, q_0, q_0, q_0], [test_answer_0, test_answer_1], 0000000)
 
-    Senn = Teacher(0, "Gilbert.Senn", [test_poll_0, test_poll_1], ["4CHEL", "3CHEL"])
+    teachers = [Teacher(0, "Gilbert.Senn", [test_poll_0, test_poll_1], ["4CHEL", "3CHEL"])]
+
+    # get teacher by id
+    for t in teachers:
+        if t.teacher_id == 0:
+            Senn = t
 
     # single values
     print(Senn.polls[0].poll_questions[0].question_text)
