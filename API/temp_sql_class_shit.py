@@ -25,8 +25,9 @@ class Poll:
 
 
 class Teacher:
-    def __init__(self, teacher_id: int, polls: list, assignments: list):
+    def __init__(self, teacher_id: int, teacher_username: str, polls: list, assignments: list):
         self.teacher_id = teacher_id
+        self.teacher_username = teacher_username
         self.polls = polls
         self.assignments = assignments
 
@@ -40,8 +41,9 @@ if __name__ == "__main__":
     test_poll_0 = Poll(0, 0, "Test1", ["4CHEL", "3CHEL"], [q_0, q_0, q_0, q_0, q_0, q_0], [test_answer_0, test_answer_1], 0000000)
     test_poll_1 = Poll(0, 1, "Test1", ["4CHEL", "3CHEL"], [q_0, q_0, q_0, q_0, q_0, q_0], [test_answer_0, test_answer_1], 0000000)
 
-    Senn = Teacher(0, [test_poll_0, test_poll_1], ["4CHEL", "3CHEL"])
+    Senn = Teacher(0, "Gilbert.Senn", [test_poll_0, test_poll_1], ["4CHEL", "3CHEL"])
 
+    # single values
     print(Senn.polls[0].poll_questions[0].question_text)
     print(Senn.polls[0].poll_questions[0].question_answer_opts)
     print()
