@@ -205,7 +205,7 @@ class Polls():
         self.cur.execute("Select Poll_ID,Teacher_ID,Poll_Name,Ass_1,Ass_2,Ass_3,Ass_4,Ass_5,Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6,Poll_Time FROM `Polls` WHERE Teacher_ID = ?", (teacher_id, ))
         poll_list = []
         for out in self.cur:
-            poll_list.append([int(out[0]), int(out[1]), str(out[2]), int(out[3]), int(out[4]), int(out[5]), int(out[6]), int(out[7]), int(out[8]), int(out[9]), int(out[10]), int(out[11]), int(out[12]), int(out[13]), int(out[14])])
+            poll_list.append([int(out[0]), int(out[1]), str(out[2]), [int(out[3]), int(out[4]), int(out[5]), int(out[6]), int(out[7])], [int(out[8]), int(out[9]), int(out[10]), int(out[11]), int(out[12]), int(out[13])], int(out[14])])
         return poll_list
 
     def get_questions_by_id(self, poll_id : int):

@@ -39,10 +39,18 @@ def results(request):
             requested_poll_id = request.GET.get("poll_id")
             username = request.user.username
             teacher_id = db.Teachers.get_teacher_by_username(username, wanted_key="Teacher_ID")
-            teacher_polls_id = db.Polls.get_polls_by_teacher(teacher_id)
+            teacher_polls = db.Polls.get_polls_by_teacher(teacher_id)
 
-            if requested_poll_id in teacher_polls_id:
-                poll_answers = db.Polls.get_questions_by_id(requested_poll_id)  # todo neuer db command
+            # Poll_ID, Teacher_ID, Poll_Name, Ass_1, Ass_2, Ass_3, Ass_4, Ass_5, Q_ID_1, Q_ID_2, Q_ID_3, Q_ID_4, Q_ID_5, Q_ID_6, Poll_Time
+            # Question_ID, Question_Text, Ans_Opt_1, Ans_Opt_2, Ans_Opt_3, Ans_Opt_4, Ans_Opt_5, Teacher_ID
+
+            if requested_poll_id in [x[1] for x in teacher_polls]:
+                question_data = db.Questions.get_questions_by_id(requested_poll_id)
+                question_answers = question_data[2]
+                question_title = question_data[1]
+                question_id = question_data[1]
+
+                # Question_ID, Question_Text, Ans_Opt_1, Ans_Opt_2, Ans_Opt_3, Ans_Opt_4, Ans_Opt_5, Teacher_ID
 
                 all_results = [[], [], [], []]
                 for answer in poll_answers:
