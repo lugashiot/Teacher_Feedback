@@ -1,6 +1,5 @@
 class Answer:
-    def __init__(self, uuid: str, answers: list, feedback_text: str):
-        self.uuid = uuid
+    def __init__(self, answers: list, feedback_text: str):
         self.answers = answers
         self.feedback_text = feedback_text
 
@@ -35,8 +34,8 @@ class Teacher:
 if __name__ == "__main__":
     q_0 = Question(0, 0, "Gay?", ["ok", "ok", "ok", "ok", "ok"])
 
-    test_answer_0 = Answer("abcd", [1, 2, 3, 4, 5, 1], "Senn Gay")
-    test_answer_1 = Answer("dcba", [2, 3, 4, 5, 1, 2], "Senn HS")
+    test_answer_0 = Answer([1, 2, 3, 4, 5, 1], "Senn Gay")
+    test_answer_1 = Answer([2, 3, 4, 5, 1, 2], "Senn HS")
 
     test_poll_0 = Poll(0, 0, "Test1", ["4CHEL", "3CHEL"], [q_0, q_0, q_0, q_0, q_0, q_0], [test_answer_0, test_answer_1], 0000000)
     test_poll_1 = Poll(0, 1, "Test1", ["4CHEL", "3CHEL"], [q_0, q_0, q_0, q_0, q_0, q_0], [test_answer_0, test_answer_1], 0000000)
