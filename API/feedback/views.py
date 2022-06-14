@@ -3,11 +3,13 @@ from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .forms import RatingForm1, RatingForm2, RatingForm3, RatingForm4
-from . import mail_sender as MS
+from . import mail_sender_new as MS
 sys.path.append('/home/pi/Feedback/API')
 from SQL_Handler import DBHandler
 
+
 db = DBHandler()
+
 
 def feedback_page(request):
     if request.method == "GET":
@@ -62,27 +64,25 @@ def success_page(request):
     return render(request, 'success_page.html')
 
 def send_mails(request):
-    def create_backend():
-        class_list = db.get_class_assignments(db.get_teacher_by_username(username, "Teacher_ID"))
-        temp_teacher = MS.Teacher(username)
-        for school_class in class_list:
-            temp_teacher.add_class(MS.Class(school_class))
-        return temp_teacher
-    
     flag = False
     if request.method == "GET":
         input_teacher = request.GET.get("teacher")
-        input_class = request.GET.get("class")
+        input_poll = request.GET.get("poll")
         if input_teacher is None:
             return render(request, 'error_rocket_page.html', {'error_message': "No Teacher was given"})
-        if input_class is None:
-            input_class = "all"
-        for username in db.get_all_teachers_username():
-            if username == input_teacher:
-                teacher = create_backend()
-                flag = teacher.send_emails(input_class)
+        if input_poll is None:
+            return render(request, 'error_rocket_page.html', {'error_message': "No Poll was given"})
+        
+        for username in db.Teachers.get_all_teachers_username():
+            if username == input_teacher:       #if teacher exists in database, not if teacher is authenticated
+                teacher_id = db.Teachers.get_teacher_by_username(username, "Teacher_ID")
+                for school_class in db.Teachers_Assignments.get_assignments_from_teacher(teacher_id):
+                    uuid_list = MS.send_mails(school_class, username)
+                    db.UUIDs.write_uuids(uuid_list, input_poll, int(datetime.now().timestamp()))
+                    flag = True
+        
         # if something went wrong at sending the mails
         if not flag:
-            return render(request, 'error_rocket_page.html', {'error_message': "The Teacher or the class given don't exist"})
+            return render(request, 'error_rocket_page.html', {'error_message': "The Teacher or the Poll given don't exist"})
         return HttpResponseRedirect('/feedback/success/')
     return render(request, 'error_rocket_page.html', {'error_message': "HTTP Request was not type GET"})
