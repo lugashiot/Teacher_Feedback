@@ -36,15 +36,15 @@ def dashboard(request):
 def results(request):
     if request.method == "GET":
         if request.user.is_authenticated:
-            requested_class = request.GET.get("class")
+            requested_class = request.GET.get("name")
             username = request.user.username
             teacher_id = db.get_teacher_by_username(username, wanted_key="Teacher_ID")
-            teacher_classes = db.get_class_assignments(teacher_id)
-            if requested_class in teacher_classes:
-                class_answers = db.get_answers_for_class(teacher_id, requested_class)
+            teacher_surveys = db.get_class_assignments(teacher_id)  # todo neuer db command
+            if requested_class in teacher_surveys:
+                survey_answers = db.get_answers_for_class(teacher_id, requested_class)  # todo neuer db command
 
                 all_results = [[], [], [], []]
-                for answer in class_answers:
+                for answer in survey_answers:
                     for i in range(len(all_results)):
                         all_results[i].append(answer[i])
 
