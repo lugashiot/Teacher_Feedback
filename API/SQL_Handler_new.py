@@ -10,8 +10,7 @@ from temp_sql_class_shit import *
 def get_teacher_object_by_username(username):
     db = DBHandler()
 
-    teacher = db.Teachers.get_teacher_by_username(username)
-    teacher_id = teacher["Teacher_ID"]
+    teacher_id = db.Teachers.get_teacher_by_username(username, "Teacher_ID")
 
     polls_db = db.Polls.get_polls_by_teacher(teacher_id)
     polls = []
@@ -27,7 +26,7 @@ def get_teacher_object_by_username(username):
         answers_db = db.UUIDs.get_answers_by_poll_id(p[0])
         answers = []
         for a in answers_db:
-            answers.append(Answer([a[0], a[1], a[2], a[3], a[4], a[5]], a[6]))
+            answers.append(Answer(answers=[a[0], a[1], a[2], a[3], a[4], a[5]], feedback_text=a[6]))
 
         polls.append(Poll(teacher_id, p[0], p[2], p[3], questions, answers, p[5]))
 
@@ -235,8 +234,15 @@ class Polls():
         poll_list = []
         for out in self.cur:
             poll_list.append([int(out[0]), int(out[1]), str(out[2]), [int(out[3]), int(out[4]), int(out[5]), int(out[6]), int(out[7])], [int(out[8]), int(out[9]), int(out[10]), int(out[11]), int(out[12]), int(out[13])], int(out[14])])
-        return poll_list
+        return poll_list 
 
+    def get_poll_by_id(self, poll_id: int):
+        #sql Select Poll_ID,Teacher_ID,Poll_Name,Ass_1,Ass_2,Ass_3,Ass_4,Ass_5,Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6,Poll_Time FROM `Polls` WHERE Teacher_ID = teacher_id
+        self.cur.execute("")
+        for out in self.cur:
+            # [Poll_ID, Teacher_ID, Poll_Name, List[Assignment_IDs], List[Question_IDs], Poll_Time]
+            return [int(out[0]), int(out[1]), str(out[2]), [int(out[3]), int(out[4]), int(out[5]), int(out[6]), int(out[7])], [int(out[8]), int(out[9]), int(out[10]), int(out[11]), int(out[12]), int(out[13])], int(out[14])]
+    
     def get_questions_by_id(self, poll_id : int):
         #sql Select Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6 FROM `Polls` WHERE Poll_ID = poll_id
         self.cur.execute("Select Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6 FROM `Polls` WHERE Poll_ID = ?", (poll_id, ))

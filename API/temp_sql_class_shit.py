@@ -1,28 +1,46 @@
+from dataclasses import dataclass, field
+from SQL_Handler_new import DBHandler
+
+db = DBHandler()
+
+
+@dataclass
 class Answer:
-    def __init__(self, answers: list, feedback_text: str):
-        self.answers = answers
-        self.feedback_text = feedback_text
+    answers: list[int]
+    feedback_text: str
 
-
+@dataclass
 class Question:
-    def __init__(self, teacher_id: int, question_id: int, question_text: str, question_answer_opts: list):
-        self.teacher_id = teacher_id
-        self.question_id = question_id
-        self.question_text = question_text
-        self.question_answer_opts = question_answer_opts
+    teacher_id: int
+    question_id: int
+    question_text: str
+    question_answer_opts: list[str]
 
-
+@dataclass
 class Poll:
-    def __init__(self, teacher_id: int, poll_id: int, poll_name: str, poll_assignments: list, poll_questions: list, poll_answers: list, poll_time: int):
-        self.teacher_id = teacher_id
-        self.poll_id = poll_id
-        self.poll_name = poll_name
-        self.poll_assignments = poll_assignments
-        self.poll_questions = poll_questions
-        self.poll_answers = poll_answers
-        self.poll_time = poll_time
+    #def __init__(self, teacher_id: int, poll_id: int, poll_name: str, poll_assignments: list, poll_questions: list, poll_answers: list, poll_time: int):
+    teacher_id: int = field(init=False)
+    poll_id: int
+    poll_name: str = field(init=False)
+    poll_assignments: list[int] = field(init=False)      # Assignments IDs
+    poll_questions: list[Question] = field(init=False)    # Question Instances
+    poll_answers: list[Answer] = field(init=False)   # Student Answer Instances
+    poll_time: int = field(init=False)
+
+    def __post_init__(self) -> None:
+        poll_data = db.Polls.get_poll_by_id(poll_id)
+        self.teacher_id = poll_data[1]
+        self.poll_name = poll_data[2]
+        self.poll_assignments = [i for i in poll_data[3] if i != 0]
+        self.poll_question_ids = poll_data[4]
+        self.poll_time = poll_data[5]
+        # TODO
+        # self.poll_questions mit Question Objekten befüllen
+        # self.uuids einführen
+        # self.poll_answers mit Antworten von den UUIDs befüllen
 
 
+@dataclass
 class Teacher:
     def __init__(self, teacher_id: int, teacher_username: str, polls: list, assignments: list):
         self.teacher_id = teacher_id
