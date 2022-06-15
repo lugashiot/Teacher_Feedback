@@ -36,11 +36,11 @@ class Poll:
     teacher_id: int = field(init=False)
     poll_name: str = field(init=False)
     poll_assignments: list[int] = field(init=False)
-    poll_question_ids: list[int] = field(init=False)
+    poll_question_ids: list[int] = field(init=False, repr=False)
     poll_questions: list[Question] = field(init=False)    # Question Instances
     poll_answers: list[Answer] = field(init=False)   # Student Answer Instances
     poll_time: int = field(init=False)
-    poll_uuids: list[str] = field(init=False)
+    poll_uuids: list[str] = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
         poll_data = db.Polls.get_poll_by_id(self.poll_id)
@@ -59,7 +59,7 @@ class Teacher:
     #def __init__(self, teacher_id: int, teacher_username: str, polls: list, assignments: list):
     teacher_username: str
     teacher_id: int = field(init=False)
-    poll_ids: list[int] = field(init=False)
+    poll_ids: list[int] = field(init=False, repr=False)
     polls: list[Poll] = field(init=False)
     assignments: list[str] = field(init=False)
 
@@ -75,4 +75,6 @@ if __name__ == "__main__":
     #print(Question(2))
     #print(Teacher("Klaus.Bichler"))
     t = Teacher("Klaus.Bichler")
+    print(t.__dict__)
+    print(t.__dict__["teacher_username"])
     print(t.polls[0].poll_questions[0].question_text)
