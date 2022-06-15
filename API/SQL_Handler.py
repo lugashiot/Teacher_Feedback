@@ -1,36 +1,9 @@
 from typing import Optional
 import mariadb
 import sys
-from temp_sql_class_shit import *
 
 # TODO 
 # Look for str lengths bc of sql bullshit
-
-
-def get_teacher_object_by_username(username):
-    db = DBHandler()
-
-    teacher_id = db.Teachers.get_teacher_by_username(username, "Teacher_ID")
-
-    polls_db = db.Polls.get_polls_by_teacher(teacher_id)
-    polls = []
-    for p in polls_db:
-        poll_questions = p[4]
-
-        questions_db = [db.Questions.get_question_by_id(x) for x in poll_questions]
-        questions = []
-        for q in questions_db:
-            questions.append(Question(teacher_id, q[0], q[1], q[2]))
-
-        # Answer_1,Answer_2,Answer_3,Answer_4,Answer_5,Answer_6,Answer_Textfield
-        answers_db = db.UUIDs.get_answers_by_poll_id(p[0])
-        answers = []
-        for a in answers_db:
-            answers.append(Answer(answers=[a[0], a[1], a[2], a[3], a[4], a[5]], feedback_text=a[6]))
-
-        polls.append(Poll(teacher_id, p[0], p[2], p[3], questions, answers, p[5]))
-
-    return Teacher(teacher_id, username, polls, db.Teachers_Assignments.get_assignments_from_teacher(teacher_id))
 
 
 class DBHandler:
