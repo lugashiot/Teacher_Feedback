@@ -312,9 +312,9 @@ class Questions():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)
 
-    def write_question(self, teacher_id : int, question_text : str, answer_option_1 : str, answer_option_2 : str, answer_option_3 : str, answer_option_4 : str, answer_option_5 : str, question_public = 0):
+    def write_question(self, teacher_id : int, question_text : str, answer_options: list, question_public = 0):
         #sql INSERT INTO `Questions` (Teacher_ID, Question_Text, Ans_Opt_1, Ans_Opt_2, Ans_Opt_3, Ans_Opt_4, Ans_Opt_5, Question_Public) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        self.cur.execute("INSERT INTO `Questions` (Teacher_ID, Question_Text, Ans_Opt_1, Ans_Opt_2, Ans_Opt_3, Ans_Opt_4, Ans_Opt_5, Question_Public) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (teacher_id, question_text, answer_option_1, answer_option_2, answer_option_3, answer_option_4, answer_option_5, question_public))
+        self.cur.execute("INSERT INTO `Questions` (Teacher_ID, Question_Text, Ans_Opt_1, Ans_Opt_2, Ans_Opt_3, Ans_Opt_4, Ans_Opt_5, Question_Public) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (teacher_id, question_text, answer_options[0], answer_options[1], answer_options[2], answer_options[3], answer_options[4], question_public))
         return "Questions.write_question done"
     
     def get_questions_by_teacher(self, teacher_id: int):
@@ -340,7 +340,7 @@ class Questions():
         for out in self.cur:
             question_list.append([int(out[0]), str(out[1]), [str(out[2]), str(out[3]), str(out[4]), str(out[5]), str(out[6])], int(out[7])])
         return question_list    
-        # Question_ID, Question_Text, Ans_Opt_1, Ans_Opt_2, Ans_Opt_3, Ans_Opt_4, Ans_Opt_5, Teacher_ID
+        # Question_ID, Question_Text, [Ans_Opts], Teacher_ID
 
 
 if __name__ == "__main__":
