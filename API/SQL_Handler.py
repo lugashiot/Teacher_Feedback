@@ -1,7 +1,7 @@
 from typing import Optional
 import mariadb
 import sys
-from SQL_Dataclasses import *
+from temp_sql_class_shit import *
 
 # TODO 
 # Look for str lengths bc of sql bullshit
@@ -349,7 +349,7 @@ class Questions():
         self.cur.execute("Select Question_ID,Question_Text,Ans_Opt_1,Ans_Opt_2,Ans_Opt_3,Ans_Opt_4,Ans_Opt_5,Teacher_ID FROM `Questions` WHERE Question_ID = ?", (question_id, ))
         for out in self.cur:
             return [int(out[0]), str(out[1]), [str(out[2]), str(out[3]), str(out[4]), str(out[5]), str(out[6])], int(out[7])]
-            # Question_ID, Question_Text, Ans_Opt_1, Ans_Opt_2, Ans_Opt_3, Ans_Opt_4, Ans_Opt_5, Teacher_ID
+            # Question_ID, Question_Text, [Ans_Opts], Teacher_ID
     
     def get_public_questions(self):
         #sql Select Question_ID,Question_Text,Ans_Opt_1,Ans_Opt_2,Ans_Opt_3,Ans_Opt_4,Ans_Opt_5,Teacher_ID FROM `Questions` WHERE Question_Public = 1
