@@ -15,6 +15,7 @@ class Answer:
         self.answers = [i for i in answer_data if type(i) == int]
         self.feedback_text = answer_data[6]
 
+
 @dataclass
 class Question:
     question_id: int
@@ -27,6 +28,7 @@ class Question:
         self.question_text = question_data[1]
         self.question_answer_opts = question_data[2]
         self.teacher_id = question_data[3]
+
 
 @dataclass
 class Poll:
@@ -70,46 +72,7 @@ class Teacher:
 
 
 if __name__ == "__main__":
-    i = 1
-    if i == 1:
-        #print(Question(2))
-        #print(Teacher("Klaus.Bichler"))
-        
-        t = Teacher("Klaus.Bichler")
-        print(t.polls[0].poll_questions[0].question_text)
-    
-    else:
-        q_0 = Question(0, 0, "Gay?", ["ok", "ok", "ok", "ok", "ok"])
-
-        test_answer_0 = Answer([1, 2, 3, 4, 5, 1], "Senn Gay")
-        test_answer_1 = Answer([2, 3, 4, 5, 1, 2], "Senn HS")
-
-        test_poll_0 = Poll(0, 0, "Test1", ["4CHEL", "3CHEL"], [q_0, q_0, q_0, q_0, q_0, q_0], [test_answer_0, test_answer_1], 0000000)
-        test_poll_1 = Poll(0, 1, "Test1", ["4CHEL", "3CHEL"], [q_0, q_0, q_0, q_0, q_0, q_0], [test_answer_0, test_answer_1], 0000000)
-
-        teachers = [Teacher(0, "Gilbert.Senn", [test_poll_0, test_poll_1], ["4CHEL", "3CHEL"])]
-
-        # get teacher by id
-        for t in teachers:
-            if t.teacher_id == 0:
-                Senn = t
-
-        # single values
-        print(Senn.polls[0].poll_questions[0].question_text)
-        print(Senn.polls[0].poll_questions[0].question_answer_opts)
-        print()
-        print(Senn.polls[0].poll_answers[0].answers)
-        print(Senn.polls[0].poll_answers[0].feedback_text)
-        print()
-
-        # get all poll answers of Senn
-        answers = [x.answers for x in Senn.polls[0].poll_answers]
-        feedback_texts = [x.feedback_text for x in Senn.polls[0].poll_answers]
-        print(answers)
-        print(feedback_texts)
-        print()
-
-        # get all poll ids of Senn
-        poll_ids = [x.poll_id for x in Senn.polls]
-        print(poll_ids)
-        print()
+    #print(Question(2))
+    #print(Teacher("Klaus.Bichler"))
+    t = Teacher("Klaus.Bichler")
+    print(t.polls[0].poll_questions[0].question_text)
