@@ -21,7 +21,7 @@ class DBHandler:
                 password="susadmin1234",
                 host="localhost",
                 port=3306,
-                database="Teacher_Feedback"
+                database="Feedback"
             )
             #self.conn.auto_reconnect = True
             #self.conn.autocommit = True
@@ -43,7 +43,7 @@ class Teachers():
                 password="susadmin1234",
                 host="localhost",
                 port=3306,
-                database="Teacher_Feedback"
+                database="Feedback"
             )
             self.conn.auto_reconnect = True
             self.conn.autocommit = True
@@ -102,7 +102,7 @@ class Teachers_Assignments():
                 password="susadmin1234",
                 host="localhost",
                 port=3306,
-                database="Teacher_Feedback"
+                database="Feedback"
             )
             self.conn.auto_reconnect = True
             self.conn.autocommit = True
@@ -147,7 +147,7 @@ class Classes_Emails():
                 password="susadmin1234",
                 host="localhost",
                 port=3306,
-                database="Teacher_Feedback"
+                database="Feedback"
             )
             self.conn.auto_reconnect = True
             self.conn.autocommit = True
@@ -186,7 +186,7 @@ class Polls():
                 password="susadmin1234",
                 host="localhost",
                 port=3306,
-                database="Teacher_Feedback"
+                database="Feedback"
             )
             self.conn.auto_reconnect = True
             self.conn.autocommit = True
@@ -206,7 +206,7 @@ class Polls():
         self.cur.execute("Select Poll_ID,Teacher_ID,Poll_Name,Ass_1,Ass_2,Ass_3,Ass_4,Ass_5,Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6,Poll_Time FROM `Polls` WHERE Teacher_ID = ?", (teacher_id, ))
         poll_list = []
         for out in self.cur:
-            poll_list.append([int(out[0]), int(out[1]), str(out[2]), [int(out[3]), int(out[4]), int(out[5]), int(out[6]), int(out[7])], [int(out[8]), int(out[9]), int(out[10]), int(out[11]), int(out[12]), int(out[13])], int(out[14])])
+            poll_list.append([int(out[0]), int(out[1]), str(out[2]), [int(out[3]), int(out[4]), int(out[5]), int(out[6]), int(out[7])], [int(out[8]), int(out[9]), int(out[10]), int(out[11]), int(out[12]), int(out[13])], int(out[14].timestamp())])
         return poll_list 
 
     def get_poll_by_id(self, poll_id: int):
@@ -214,7 +214,7 @@ class Polls():
         self.cur.execute("Select Poll_ID,Teacher_ID,Poll_Name,Ass_1,Ass_2,Ass_3,Ass_4,Ass_5,Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6,Poll_Time FROM `Polls` WHERE Poll_ID = ?", (poll_id, ))
         for out in self.cur:
             # [Poll_ID, Teacher_ID, Poll_Name, List[Assignment_IDs], List[Question_IDs], Poll_Time]
-            return [int(out[0]), int(out[1]), str(out[2]), [int(out[3]), int(out[4]), int(out[5]), int(out[6]), int(out[7])], [int(out[8]), int(out[9]), int(out[10]), int(out[11]), int(out[12]), int(out[13])], int(out[14])]
+            return [int(out[0]), int(out[1]), str(out[2]), [int(out[3]), int(out[4]), int(out[5]), int(out[6]), int(out[7])], [int(out[8]), int(out[9]), int(out[10]), int(out[11]), int(out[12]), int(out[13])], int(out[14].timestamp())]
     
     def get_questions_by_id(self, poll_id : int):
         #sql Select Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6 FROM `Polls` WHERE Poll_ID = poll_id
@@ -235,7 +235,7 @@ class UUIDs():
                 password="susadmin1234",
                 host="localhost",
                 port=3306,
-                database="Teacher_Feedback"
+                database="Feedback"
             )
             self.conn.auto_reconnect = True
             self.conn.autocommit = True
@@ -263,7 +263,7 @@ class UUIDs():
     
     def get_answer_by_uuid(self, uuid):
         #sql Select Answer_1,Answer_2,Answer_3,Answer_4,Answer_5,Answer_6,Answer_Textfield FROM `UUIDs` WHERE UUID = uuid
-        self.cur.execute("Answer_1,Answer_2,Answer_3,Answer_4,Answer_5,Answer_6,Answer_Textfield FROM `UUIDs` WHERE UUID = ?", (uuid, ))
+        self.cur.execute("Select Answer_1,Answer_2,Answer_3,Answer_4,Answer_5,Answer_6,Answer_Textfield FROM `UUIDs` WHERE UUID = ?", (uuid, ))
         for out in self.cur:
             return [int(out[0]), int(out[1]), int(out[2]), int(out[3]), int(out[4]), int(out[5]), str(out[6])] # 6th is textfield
 
@@ -302,7 +302,7 @@ class Questions():
                 password="susadmin1234",
                 host="localhost",
                 port=3306,
-                database="Teacher_Feedback"
+                database="Feedback"
             )
             self.conn.auto_reconnect = True
             self.conn.autocommit = True

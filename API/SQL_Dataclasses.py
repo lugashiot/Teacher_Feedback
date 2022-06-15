@@ -23,6 +23,7 @@ class Question:
     question_answer_opts: list[str] = field(init=False)
     
     def __post_init__(self) -> None:
+        print(f"Question ID now: {self.question_id}")
         question_data = db.Questions.get_question_by_id(self.question_id)
         self.question_text = question_data[1]
         self.question_answer_opts = question_data[2]
@@ -41,13 +42,14 @@ class Poll:
     poll_uuids: list[str] = field(init=False)
 
     def __post_init__(self) -> None:
+        print(self.poll_id)
         poll_data = db.Polls.get_poll_by_id(self.poll_id)
         self.teacher_id = poll_data[1]
         self.poll_name = poll_data[2]
         self.poll_assignments = [i for i in poll_data[3] if i != 0]
         self.poll_question_ids = poll_data[4]
         self.poll_time = poll_data[5]
-        self.poll_questions = [Question(i) for i in self.poll_question_ids]
+        self.poll_questions = [Question(i) for i in self.poll_question_ids if i != 0]
         self.poll_uuids = db.UUIDs.get_uuids_by_poll_id(self.poll_id)
         self.poll_answers = [Answer(i) for i in self.poll_uuids]
 
@@ -55,34 +57,19 @@ class Poll:
 @dataclass
 class Teacher:
     #def __init__(self, teacher_id: int, teacher_username: str, polls: list, assignments: list):
-    teacher_id: int
     teacher_username: str
-    polls: list[Poll]
-    assignments: list
+    teacher_id: int = field(init=False)
+    poll_ids: list[int] = field(init=False)
+    polls: list[Poll] = field(init=False)
+    assignments: list[str] = field(init=False)
 
-
-def get_teacher_object_by_username(username):
-    teacher_id = db.Teachers.get_teacher_by_username(username, "Teacher_ID")
-
-    polls_db = db.Polls.get_polls_by_teacher(teacher_id)
-    polls = []
-    for p in polls_db:
-        poll_questions = p[4]
-
-        questions_db = [db.Questions.get_question_by_id(x) for x in poll_questions]
-        questions = []
-        for q in questions_db:
-            questions.append(Question(teacher_id, q[0], q[1], q[2]))
-
-        # Answer_1,Answer_2,Answer_3,Answer_4,Answer_5,Answer_6,Answer_Textfield
-        answers_db = db.UUIDs.get_answers_by_poll_id(p[0])
-        answers = []
-        for a in answers_db:
-            answers.append(Answer(answers=[a[0], a[1], a[2], a[3], a[4], a[5]], feedback_text=a[6]))
-
-        polls.append(Poll(teacher_id, p[0], p[2], p[3], questions, answers, p[5]))
-
-    return Teacher(teacher_id, username, polls, db.Teachers_Assignments.get_assignments_from_teacher(teacher_id))
+    def __post_init__(self) -> None:
+        self.teacher_id = db.Teachers.get_teacher_by_username(self.teacher_username, "Teacher_ID")
+        poll_data = db.Polls.get_polls_by_teacher(self.teacher_id)
+        self.poll_ids = [x[0] for x in poll_data]
+        print("poll ids", self.poll_ids)
+        self.polls = [Poll(i) for i in self.poll_ids]
+        self.assignments = db.Teachers_Assignments.get_assignments_from_teacher(self.teacher_id)
 
 
 if __name__ == "__main__":
@@ -90,9 +77,7 @@ if __name__ == "__main__":
     if i == 1:
         print(Question(2))
         
-        pass
-    
-    
+        print(Teacher("Klaus.Bichler"))
     
     else:
         q_0 = Question(0, 0, "Gay?", ["ok", "ok", "ok", "ok", "ok"])
