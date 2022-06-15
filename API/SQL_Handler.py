@@ -275,6 +275,15 @@ class UUIDs():
             answer_list.append([int(out[0]), int(out[1]), int(out[2]), int(out[3]), int(out[4]), int(out[5]), str(out[6])]) # 6th is textfield
         return answer_list
 
+    def get_uuids_by_poll_id(self, poll_id : int):
+        #sql Select UUID FROM `UUIDs` WHERE Poll_ID = poll_id
+        self.cur.execute("Select UUID FROM `UUIDs` WHERE Poll_ID = ?", (poll_id, ))
+        uuid_list = []
+        for out in self.cur:
+            uuid_list.append(str(out[0]))
+        return uuid_list
+        
+
     def is_used(self, uuid : str):
         #sql Select UUID_Used FROM `UUIDs` WHERE UUID = uuid
         self.cur.execute("Select UUID_Used FROM `UUIDs` WHERE UUID = ?", (uuid, ))
