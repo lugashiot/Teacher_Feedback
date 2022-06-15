@@ -23,7 +23,6 @@ class Question:
     question_answer_opts: list[str] = field(init=False)
     
     def __post_init__(self) -> None:
-        print(f"Question ID now: {self.question_id}")
         question_data = db.Questions.get_question_by_id(self.question_id)
         self.question_text = question_data[1]
         self.question_answer_opts = question_data[2]
@@ -42,7 +41,6 @@ class Poll:
     poll_uuids: list[str] = field(init=False)
 
     def __post_init__(self) -> None:
-        print(self.poll_id)
         poll_data = db.Polls.get_poll_by_id(self.poll_id)
         self.teacher_id = poll_data[1]
         self.poll_name = poll_data[2]
@@ -67,7 +65,6 @@ class Teacher:
         self.teacher_id = db.Teachers.get_teacher_by_username(self.teacher_username, "Teacher_ID")
         poll_data = db.Polls.get_polls_by_teacher(self.teacher_id)
         self.poll_ids = [x[0] for x in poll_data]
-        print("poll ids", self.poll_ids)
         self.polls = [Poll(i) for i in self.poll_ids]
         self.assignments = db.Teachers_Assignments.get_assignments_from_teacher(self.teacher_id)
 
@@ -75,9 +72,11 @@ class Teacher:
 if __name__ == "__main__":
     i = 1
     if i == 1:
-        print(Question(2))
+        #print(Question(2))
+        #print(Teacher("Klaus.Bichler"))
         
-        print(Teacher("Klaus.Bichler"))
+        t = Teacher("Klaus.Bichler")
+        print(t.polls[0].poll_questions[0].question_text)
     
     else:
         q_0 = Question(0, 0, "Gay?", ["ok", "ok", "ok", "ok", "ok"])
