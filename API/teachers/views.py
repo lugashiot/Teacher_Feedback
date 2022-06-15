@@ -94,35 +94,32 @@ def results(request):
 
 
 class Question:
-    def __init__(self, q, a0, a1, a2, a3, a4, btn_name="auto"):
+    def __init__(self, q: str, a: list,  btn_name="auto", hidden_flag=False):
         self.q = q
-        self.a0 = a0
-        self.a1 = a1
-        self.a2 = a2
-        self.a3 = a3
-        self.a4 = a4
+        self.a = a
+        self.hidden_flag = hidden_flag
         if btn_name == "auto":
             self.btn_name = str(int([q.btn_name for q in questions_temp][-1])+1)
         else:
             self.btn_name = btn_name
 
     def check_if_filled_correctly(self):
-        if self.q != "" and self.a0 != "" and self.a1 != "" and self.a2 != "" and self.a3 != "" and self.a4 != "" and self.btn_name != "":
+        if self.q != "" and "" not in self.a and self.btn_name != "":
             return True
         return False
 
 
 questions_temp = [
-    Question("Wie gut findest du den Unterricht von dieser Lehrperson?", "sehr gut", "gut", "ok", "weniger gut", "nicht guts", "0"),
-    Question("Wie gut kommst du im Unterricht von dieser Lehrperson mit?", "sehr leicht verständlich", "gut verständlich", "verständlich", "schwer verständlich", "nicht verständlich", "1"),
-    Question("Wie verständlich ist der im Unterricht behandelte Stoff?", "sehr gering", "gering", "akzeptabel", "übermäßig", "zu viel", "2"),
-    Question("Wie hoch ist dein (Zeit-)Aufwand zuhause um im Unterricht dabei zu bleiben? (Lernen + Hü)", "ok", "ok", "ok", "ok", "ok", "3"),]
+    Question("Wie gut findest du den Unterricht von dieser Lehrperson?", ["sehr gut", "gut", "ok", "weniger gut", "nicht gut"], "0"),
+    Question("Wie gut kommst du im Unterricht von dieser Lehrperson mit?", ["sehr leicht verständlich", "gut verständlich", "verständlich", "schwer verständlich", "nicht verständlich"], "1"),
+    Question("Wie verständlich ist der im Unterricht behandelte Stoff?", ["sehr gering", "gering", "akzeptabel", "übermäßig", "zu viel"], "2"),
+    Question("Wie hoch ist dein (Zeit-)Aufwand zuhause um im Unterricht dabei zu bleiben? (Lernen + Hü)", ["ok", "ok", "ok", "ok", "ok"], "3")]
 questions_selected = []   # todo database shit für des
 
 
 def create_poll(request):
     def return_(error_msg=""):
-        return render(request, "dashboard/create_poll.html", {'questions': questions_temp, 'questions_selected': questions_selected, 'poll_name': "MTRS 3. und 4. Klasse", 'error': error_msg})  # todo richtige klasse übergeben
+        return render(request, "dashboard/create_poll.html", {'questions': [x for x in questions_temp if x.hidden_flag == False], 'questions_selected': questions_selected, 'poll_name': "MTRS 3. und 4. Klasse", 'error': error_msg})  # todo richtige klasse übergeben
 
     if request.method == "GET":
         if request.user.is_authenticated:
@@ -141,6 +138,7 @@ def create_poll(request):
                     if len(questions_selected) < 4:
                         if questions_temp[int(btn)] not in questions_selected:
                             questions_selected.append(questions_temp[int(btn)])
+                            questions_temp[int(btn)].hidden_flag = True
                             return return_()
                         else:
                             return return_("Sie können diese Frage nur einmal auswählen!")
@@ -148,12 +146,15 @@ def create_poll(request):
                         return return_("Sie können nur 4 Fragen auswählen!")
                 elif request.POST[btn] == "Entfernen":
                     for q in questions_selected:
-                        if str(q.btn_name) == btn:
+                        if q.btn_name == btn:
+                            for i in questions_temp:
+                                if i.btn_name == q.btn_name:
+                                    i.hidden_flag = False
                             questions_selected.pop(questions_selected.index(q))
                             return return_()
 
         if "q_inp" in request.POST:
-            new_question = Question(request.POST["q_inp"], request.POST["a0_inp"], request.POST["a1_inp"], request.POST["a2_inp"], request.POST["a3_inp"], request.POST["a4_inp"], "auto")
+            new_question = Question(request.POST["q_inp"], [request.POST["a0_inp"], request.POST["a1_inp"], request.POST["a2_inp"], request.POST["a3_inp"], request.POST["a4_inp"]], "auto")
             if new_question.check_if_filled_correctly():
                 if new_question.q not in [a.q for a in questions_temp]:
                     questions_temp.append(new_question)     # in db für fragen eintragen (private)

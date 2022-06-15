@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from SQL_Handler_new import DBHandler
+from SQL_Handler import DBHandler
 
 db = DBHandler()
 

@@ -35,7 +35,7 @@
               {%csrf_token%}
               <div class="card-body">
                 <h5 class="card-title">{{question.q}}</h5>
-                <p class="card-text">{{question.a0}} | {{question.a1}} | {{question.a2}} | {{question.a3}} | {{question.a4}}</p>
+                <p class="card-text">{{question.a.0}} | {{question.a.1}} | {{question.a.2}} | {{question.a.3}} | {{question.a.4}}</p>
                 <input type="submit" class="btn btn-dark" name="{{question.btn_name}}" value="Hinzufügen" width="500px">
               </div>
             </form>
@@ -58,7 +58,7 @@
             <div class="card-body">
               {% for question in questions_selected %}
                 <h5 class="card-title">{{question.q}}</h5>
-                <p class="card-text">{{question.a0}} | {{question.a1}} | {{question.a2}} | {{question.a3}} | {{question.a4}}</p>
+                <p class="card-text">{{question.a.0}} | {{question.a.1}} | {{question.a.2}} | {{question.a.3}} | {{question.a.4}}</p>
                 <input type="submit" class="btn btn-danger" name="{{question.btn_name}}" value="Entfernen" width="500px">
                 <hr>
               {% endfor %}
