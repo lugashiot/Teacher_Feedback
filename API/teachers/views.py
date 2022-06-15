@@ -3,6 +3,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from SQL_Handler import DBHandler
+from SQL_Dataclasses import *
+from ..SQL_Dataclasses import *
 
 db = DBHandler()
 
@@ -94,10 +96,10 @@ def results(request):
 
 
 class Question:
-    def __init__(self, q: str, a: list,  btn_name="auto", hidden_flag=False):
+    def __init__(self, q: str, a: list,  btn_name="auto", selected_flag=False):
         self.q = q
         self.a = a
-        self.hidden_flag = hidden_flag
+        self.selected_flag = selected_flag
         if btn_name == "auto":
             self.btn_name = str(int([q.btn_name for q in questions_temp][-1])+1)
         else:
@@ -119,50 +121,43 @@ questions_selected = []   # todo database shit für des
 
 def create_poll(request):
     def return_(error_msg=""):
-        return render(request, "dashboard/create_poll.html", {'questions': [x for x in questions_temp if x.hidden_flag == False], 'questions_selected': questions_selected, 'poll_name': "MTRS 3. und 4. Klasse", 'error': error_msg})  # todo richtige klasse übergeben
+        return render(request, "dashboard/create_poll.html", {'questions': [x for x in questions_temp if x.selected_flag == False], 'questions_selected': questions_selected, 'poll_name': "MTRS 3. und 4. Klasse", 'error': error_msg})  # todo richtige klasse übergeben
 
-    if request.method == "GET":
-        if request.user.is_authenticated:
-            username = request.user.username
-            teacher_id = db.get_teacher_by_username(username, wanted_key="Teacher_ID")
-            teacher_classes = db.get_class_assignments(teacher_id)
+    if request.user.is_authenticated:
+        username = request.user.username
+        if request.method == "GET":
 
             return return_()
-        else:
-            return HttpResponseRedirect('/teacher/login/')
 
-    if request.method == "POST":
-        for btn in [str(q.btn_name) for q in questions_temp]:
-            if btn in request.POST:
-                if request.POST[btn] == "Hinzufügen":
-                    if len(questions_selected) < 4:
-                        if questions_temp[int(btn)] not in questions_selected:
-                            questions_selected.append(questions_temp[int(btn)])
-                            questions_temp[int(btn)].hidden_flag = True
+        elif request.method == "POST":
+            teacher = Teacher(username)
+
+            for btn in [q.btn_name for q in questions_temp]:
+                if btn in request.POST:
+                    if request.POST[btn] == "Hinzufügen":
+                        if len([x for x in questions_temp if x.selected_flag is True]) < 6:
+                            [x for x in questions_temp if x.btn_name == btn][0].selected_flag = True
                             return return_()
                         else:
-                            return return_("Sie können diese Frage nur einmal auswählen!")
+                            return return_("Sie können nur 6 Fragen auswählen!")
+                    elif request.POST[btn] == "Entfernen":
+                        [x for x in questions_temp if x.selected_flag is True and x.btn_name == btn][0].selected_flag = False
+                        return return_()
+
+            if "q_inp" in request.POST:
+                new_question = Question(request.POST["q_inp"], [request.POST["a0_inp"], request.POST["a1_inp"], request.POST["a2_inp"], request.POST["a3_inp"], request.POST["a4_inp"]], "auto")
+                if new_question.check_if_filled_correctly():
+                    if new_question.q not in [a.q for a in questions_temp]:
+                        questions_temp.append(new_question)     # in db für fragen eintragen (private)
+                        return return_()
                     else:
-                        return return_("Sie können nur 4 Fragen auswählen!")
-                elif request.POST[btn] == "Entfernen":
-                    for q in questions_selected:
-                        if q.btn_name == btn:
-                            for i in questions_temp:
-                                if i.btn_name == q.btn_name:
-                                    i.hidden_flag = False
-                            questions_selected.pop(questions_selected.index(q))
-                            return return_()
+                        return return_("Diese Frage existiert leider schon!")
+                else:
+                    return return_("Frage nicht gültig!")
 
-        if "q_inp" in request.POST:
-            new_question = Question(request.POST["q_inp"], [request.POST["a0_inp"], request.POST["a1_inp"], request.POST["a2_inp"], request.POST["a3_inp"], request.POST["a4_inp"]], "auto")
-            if new_question.check_if_filled_correctly():
-                if new_question.q not in [a.q for a in questions_temp]:
-                    questions_temp.append(new_question)     # in db für fragen eintragen (private)
-                return return_()
-            else:
-                return return_("Frage nicht gültig!")
-
-        return return_(str(request.POST))
+            return return_(str(request.POST))
+    else:
+        return HttpResponseRedirect('/teacher/login/')
 
 
 def redirect_login(request):

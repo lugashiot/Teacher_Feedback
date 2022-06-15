@@ -59,14 +59,19 @@ class Teacher:
     #def __init__(self, teacher_id: int, teacher_username: str, polls: list, assignments: list):
     teacher_username: str
     teacher_id: int = field(init=False)
+    question_ids: list[int] = field(init=False)
+    questions: list[Question] = field(init=False)
     poll_ids: list[int] = field(init=False, repr=False)
     polls: list[Poll] = field(init=False)
     assignments: list[str] = field(init=False)
 
     def __post_init__(self) -> None:
         self.teacher_id = db.Teachers.get_teacher_by_username(self.teacher_username, "Teacher_ID")
+        question_data = db.Questions.get_questions_by_teacher(self.teacher_id)
+        self.question_ids = [i[0] for i in question_data]
+        self.questions = [Question(i) for i in self.question_ids if i != 0]
         poll_data = db.Polls.get_polls_by_teacher(self.teacher_id)
-        self.poll_ids = [x[0] for x in poll_data]
+        self.poll_ids = [i[0] for i in poll_data]
         self.polls = [Poll(i) for i in self.poll_ids]
         self.assignments = db.Teachers_Assignments.get_assignments_from_teacher(self.teacher_id)
 
