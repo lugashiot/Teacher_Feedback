@@ -245,7 +245,7 @@ class UUIDs():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)    
 
-    def write_uuid(self, uuid : str, poll_id : int, sent_time : int):   # Dont use this one in mail_sender @edar
+    def write_uuid(self, uuid : str, poll_id : int, sent_time : int):   # Dont use this one in mail_sender
         #sql INSERT INTO `UUIDs`(UUID, Poll_ID, Sent_Time) VALUES (uuid, poll_id, sent_time)
         self.cur.execute("INSERT INTO `UUIDs`(UUID, Poll_ID, Sent_Time) VALUES (?, ?, ?)", (uuid, poll_id, sent_time))
         return "UUIDs.write_UUID done"
@@ -253,7 +253,7 @@ class UUIDs():
     def write_uuids(self, uuid_list : list, poll_id : int, sent_time : int):
         for uuid in uuid_list:
             #sql INSERT INTO `UUIDs`(UUID, Poll_ID, Sent_Time) VALUES (uuid, poll_id, sent_time)
-            self.cur.execute("INSERT INTO `UUIDs`(UUID, Poll_ID, Sent_Time) VALUES (?, ?, ?)", (uuid, poll_id, sent_time))
+            self.cur.execute("INSERT INTO `UUIDs`(UUID, Poll_ID, Sent_Time) VALUES (?, ?, NULL)", (uuid, poll_id))
         return "UUIDs.write_UUIDs done"
     
     def write_answers(self, uuid : str, answer_1 : int, answer_2 : int, answer_3 : int, answer_4 : int, answer_5 : Optional[int], answer_6 : Optional[int], answer_textfield : Optional[str], answered_time : int):
