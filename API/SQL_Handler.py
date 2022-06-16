@@ -282,7 +282,14 @@ class UUIDs():
         for out in self.cur:
             uuid_list.append(str(out[0]))
         return uuid_list
-        
+
+    def get_all_uuids(self) -> list[str]:
+        uuid_list = []
+        #sql Select UUID FROM `UUIDs` WHERE 1
+        self.cur.execute("Select UUID FROM `UUIDs` WHERE 1")
+        for out in self.cur:
+            uuid_list.append(str(out[0]))
+        return uuid_list
 
     def is_used(self, uuid : str):
         #sql Select UUID_Used FROM `UUIDs` WHERE UUID = uuid
