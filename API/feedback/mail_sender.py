@@ -46,7 +46,7 @@ class Mail_Sender:
         poll_classes = self.__assignments_to_classes(poll_assignments)
         for school_class in poll_classes:
             uuid_list = self.__send_emails_by_school_class(school_class, teacher_username)
-            self.db.UUIDs.write_uuids(uuid_list, poll_id, int(datetime.now().timestamp()))
+            self.db.UUIDs.write_uuids(uuid_list, poll_id)
         return True
 
 class EmailHandler:
