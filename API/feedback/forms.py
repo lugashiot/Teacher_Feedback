@@ -18,4 +18,4 @@ class RatingForm4(forms.Form):
     rating_4 = forms.CharField(label=f'Wie hoch ist dein (Zeit-)Aufwand zuhause um im Unterricht dabei zu bleiben? (Lernen + Hü)', widget=forms.RadioSelect(choices=rates_aufw), required=True)
 
 class Textfield_Form(forms.Form):
-    text_field = forms.CharField(label=f'', required=False, widget=forms.Textarea(attrs={'cols': 30, 'rows': 5}))
+    text_field = forms.CharField(label=f'', required=False, widget=forms.Textarea(attrs={'class': "form-control", 'rows': 3}))

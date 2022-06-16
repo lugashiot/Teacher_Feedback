@@ -6,6 +6,7 @@ from .forms import RatingForm1, RatingForm2, RatingForm3, RatingForm4, Textfield
 from .mail_sender import Mail_Sender
 sys.path.append('/home/pi/Feedback/API')
 from SQL_Handler import DBHandler
+import SQL_Dataclasses as sd
 
 db = DBHandler()
 ms = Mail_Sender()
@@ -15,32 +16,36 @@ def feedback_page(request):
     if request.method == "GET":
         uuid = request.GET.get("uuid")
         
-        #uuid not in query
+        # uuid not in query
         if uuid is None:
             return render(request, 'feedback_info_page.html')
         
-        #uuid not created
+        # uuid not created
         if uuid not in db.UUIDs.get_all_uuids():
             return render(request, 'error_rocket_page.html', {'error_message': "The UUID is invalid"})
 
-        #uuid used
+        # uuid used
         if db.UUIDs.is_used(uuid):
             return HttpResponseRedirect('/feedback/uuid_used/')
         
-        #uuid unused
+        # uuid unused
         poll_id = db.UUIDs.get_poll_id_by_uuid(uuid)
-        poll_data = db.Polls.get_poll_by_id(poll_id)
-        poll_name = poll_data[2]
-        teacher_id = poll_data[1]
-        teacher_data = db.Teachers.get_teacher_by_id(teacher_id)
+        poll = sd.Poll(poll_id)  # zB poll_name, poll_questions[0,1,2,3,4,5]
+        
+        teacher_data = db.Teachers.get_teacher_by_id(poll.teacher_id)
         teacher_name = " ".join([teacher_data.get("Forename"), teacher_data.get("Lastname")])
 
         rating_1 = RatingForm1()
         rating_2 = RatingForm2()
         rating_3 = RatingForm3()
         rating_4 = RatingForm4()
+        rating_5 = "Des is aus Python rating_5"
+        rating_6 = "Des is aus Python rating_6"
         text_field = Textfield_Form()
-        return render(request, 'feedback_form_page.html', {'teacher': teacher_name, 'rating_1': rating_1, 'rating_2': rating_2, 'rating_3': rating_3, 'rating_4': rating_4, 'text_field': text_field})
+        is_hidden_5 = "hidden"        # either hidden or empty
+        is_hidden_6 = "hidden"  # either hidden or empty
+
+        return render(request, 'feedback_form_page.html', {'teacher': teacher_name, 'poll_name': poll.poll_name, 'rating_1': rating_1, 'rating_2': rating_2, 'rating_3': rating_3, 'rating_4': rating_4, 'rating_5': rating_5, 'rating_6': rating_6, 'text_field': text_field, 'is_hidden_5': is_hidden_5, 'is_hidden_6': is_hidden_6})
 
     if request.method == "POST":
         form = RatingForm1(request.POST)
