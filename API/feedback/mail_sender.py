@@ -20,6 +20,8 @@ class Mail_Sender:
     def __assignments_to_classes(self, assignment_ids: list[int]) -> list[str]:
         school_classes = []
         for assignment_id in assignment_ids:
+            if assignment_id == 0:
+                continue
             school_classes.append(self.db.Teachers_Assignments.get_assignment_by_id(assignment_id)[2])
         return school_classes
     
