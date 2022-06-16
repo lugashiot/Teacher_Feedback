@@ -28,9 +28,13 @@ def feedback_page(request):
             return HttpResponseRedirect('/feedback/uuid_used/')
         
         #uuid unused
-        teacher_id = db.get_teacher_id_by_uuid(uuid)
-        temp_teacher = db.get_teacher_by_id(teacher_id)
-        teacher_name = temp_teacher["Forename"] + " " + temp_teacher["Lastname"]
+        poll_id = db.UUIDs.get_poll_id_by_uuid(uuid)
+        poll_data = db.Polls.get_poll_by_id(poll_id)
+        poll_name = poll_data[2]
+        teacher_id = poll_data[1]
+        teacher_data = db.Teachers.get_teacher_by_id(teacher_id)
+        teacher_name = " ".join([teacher_data.get("Forename"), teacher_data.get("Lastname")])
+
         rating_1 = RatingForm1()
         rating_2 = RatingForm2()
         rating_3 = RatingForm3()
@@ -40,22 +44,28 @@ def feedback_page(request):
     if request.method == "POST":
         form = RatingForm1(request.POST)
         data_dict = dict(request.POST)
-        Answers = []
-        if form.is_valid():
-            whole_url = request.headers['Referer']
-            querys = whole_url.split("?")[1]
-            if querys.split("=")[0] == "uuid":
-                uuid = querys.split("=")[1]
-
-            for key in data_dict.keys():
-                if "rating" in key:
-                    value = int(data_dict[key][0])
-                    Answers.append(str(value))
-
-            if db.is_uuid_used(uuid):
-                return render(request, 'error_rocket_page.html', {'error_message': "You can't vote twice, cheater"})
-            db.write_answers(uuid, Answers[0], Answers[1], Answers[2], Answers[3], datetime.now())
-            return HttpResponseRedirect('/feedback/success/')
+        
+        #getting uuid from link
+        # TODO 
+        # uuid from visible/invisible not interactable textfield getn bc of link changing and stuff
+        # uuid checking if exists in database and if "GET" accessed in the last 30 mins?
+        whole_url = request.headers['Referer']
+        querys = whole_url.split("?")[1]
+        if querys.split("=")[0] == "uuid":
+            uuid = querys.split("=")[1]
+        
+        if not form.is_valid():
+            return None
+        
+        #if form is valid
+        answers = [int(data_dict[key][0]) for key in data_dict.keys() if "rating" in key]
+        #answer_text = "".join([int(data_dict[key][0]) for key in data_dict.keys() if "text_field" in key])
+        answer_text = "test text i mog eam nid lolkas"
+        
+        if db.UUIDs.is_used(uuid):
+            return render(request, 'error_rocket_page.html', {'error_message': "You can't vote twice, cheater"})
+        db.UUIDs.write_answers(uuid, answers, answer_text, datetime.now())
+        return HttpResponseRedirect('/feedback/success/')
 
 def uuid_used_page(request):
     return render(request, 'error_rocket_page.html', {'error_message': "The UUID was already used"})
