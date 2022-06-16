@@ -20,11 +20,11 @@ def feedback_page(request):
             return render(request, 'feedback_info_page.html')
         
         #uuid not created
-        if uuid not in db.get_all_uuids():
+        if uuid not in db.UUIDs.get_all_uuids():
             return render(request, 'error_rocket_page.html', {'error_message': "The UUID is invalid"})
 
         #uuid used
-        if db.is_uuid_used(uuid):
+        if db.UUIDs.is_used(uuid):
             return HttpResponseRedirect('/feedback/uuid_used/')
         
         #uuid unused

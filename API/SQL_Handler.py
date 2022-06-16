@@ -297,7 +297,7 @@ class UUIDs():
         for out in self.cur:    
             if out[0] == 1:
                 return True
-        return False
+            return False
             
 
 # Questions
