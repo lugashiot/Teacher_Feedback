@@ -6,13 +6,16 @@ rates_aufw = [('1', 'sehr gering'), ('2', 'gering'), ('3', 'akzeptabel'), ('4', 
 
 
 class RatingForm1(forms.Form):
-    rating_1 = forms.CharField(label=f'Wie gut findest du den Unterricht von dieser Lehrperson?', widget=forms.RadioSelect(choices=rates_gut))
+    rating_1 = forms.CharField(label=f'Wie gut findest du den Unterricht von dieser Lehrperson?', widget=forms.RadioSelect(choices=rates_gut), required=True)
 
 class RatingForm2(forms.Form):
-    rating_2 = forms.CharField(label=f'Wie gut kommst du im Unterricht von dieser Lehrperson mit?', widget=forms.RadioSelect(choices=rates_gut))
+    rating_2 = forms.CharField(label=f'Wie gut kommst du im Unterricht von dieser Lehrperson mit?', widget=forms.RadioSelect(choices=rates_gut), required=True)
     
 class RatingForm3(forms.Form):
-    rating_3 = forms.CharField(label=f'Wie verständlich ist der im Unterricht behandelte Stoff?', widget=forms.RadioSelect(choices=rates_verst))
+    rating_3 = forms.CharField(label=f'Wie verständlich ist der im Unterricht behandelte Stoff?', widget=forms.RadioSelect(choices=rates_verst), required=True)
 
 class RatingForm4(forms.Form):
-    rating_4 = forms.CharField(label=f'Wie hoch ist dein (Zeit-)Aufwand zuhause um im Unterricht dabei zu bleiben? (Lernen + Hü)', widget=forms.RadioSelect(choices=rates_aufw))
+    rating_4 = forms.CharField(label=f'Wie hoch ist dein (Zeit-)Aufwand zuhause um im Unterricht dabei zu bleiben? (Lernen + Hü)', widget=forms.RadioSelect(choices=rates_aufw), required=True)
+
+class Textfield_Form(forms.Form):
+    text_field = forms.CharField(label=f'', required=False, widget=forms.Textarea(attrs={'cols': 30, 'rows': 5}))

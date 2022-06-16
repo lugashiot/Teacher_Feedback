@@ -2,7 +2,7 @@ import sys
 from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .forms import RatingForm1, RatingForm2, RatingForm3, RatingForm4
+from .forms import RatingForm1, RatingForm2, RatingForm3, RatingForm4, Textfield_Form
 from .mail_sender import Mail_Sender
 sys.path.append('/home/pi/Feedback/API')
 from SQL_Handler import DBHandler
@@ -39,7 +39,8 @@ def feedback_page(request):
         rating_2 = RatingForm2()
         rating_3 = RatingForm3()
         rating_4 = RatingForm4()
-        return render(request, 'feedback_form_page.html', {'teacher': teacher_name, 'rating_1': rating_1, 'rating_2': rating_2, 'rating_3': rating_3, 'rating_4': rating_4})
+        text_field = Textfield_Form()
+        return render(request, 'feedback_form_page.html', {'teacher': teacher_name, 'rating_1': rating_1, 'rating_2': rating_2, 'rating_3': rating_3, 'rating_4': rating_4, 'text_field': text_field})
 
     if request.method == "POST":
         form = RatingForm1(request.POST)
@@ -59,8 +60,7 @@ def feedback_page(request):
         
         #if form is valid
         answers = [int(data_dict[key][0]) for key in data_dict.keys() if "rating" in key]
-        #answer_text = "".join([int(data_dict[key][0]) for key in data_dict.keys() if "text_field" in key])
-        answer_text = "test text i mog eam nid lolkas"
+        answer_text = "".join([str(data_dict[key][0]) for key in data_dict.keys() if "text_field" in key])
         
         if db.UUIDs.is_used(uuid):
             return render(request, 'error_rocket_page.html', {'error_message': "You can't vote twice, cheater"})
