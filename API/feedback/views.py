@@ -3,12 +3,12 @@ from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .forms import RatingForm1, RatingForm2, RatingForm3, RatingForm4
-from . import mail_sender_new as MS
+from .mail_sender import Mail_Sender
 sys.path.append('/home/pi/Feedback/API')
 from SQL_Handler import DBHandler
 
-
 db = DBHandler()
+ms = Mail_Sender()
 
 
 def feedback_page(request):
@@ -64,25 +64,32 @@ def success_page(request):
     return render(request, 'success_page.html')
 
 def send_mails(request):
-    flag = False
-    if request.method == "GET":
-        input_teacher = request.GET.get("teacher")
-        input_poll = request.GET.get("poll")
-        if input_teacher is None:
-            return render(request, 'error_rocket_page.html', {'error_message': "No Teacher was given"})
-        if input_poll is None:
-            return render(request, 'error_rocket_page.html', {'error_message': "No Poll was given"})
-        
-        for username in db.Teachers.get_all_teachers_username():
-            if username == input_teacher:       #if teacher exists in database, not if teacher is authenticated
-                teacher_id = db.Teachers.get_teacher_by_username(username, "Teacher_ID")
-                for school_class in db.Teachers_Assignments.get_assignments_from_teacher(teacher_id):
-                    uuid_list = MS.send_mails(school_class, username)
-                    db.UUIDs.write_uuids(uuid_list, input_poll, int(datetime.now().timestamp()))
-                    flag = True
-        
-        # if something went wrong at sending the mails
-        if not flag:
-            return render(request, 'error_rocket_page.html', {'error_message': "The Teacher or the Poll given don't exist"})
-        return HttpResponseRedirect('/feedback/success/')
-    return render(request, 'error_rocket_page.html', {'error_message': "HTTP Request was not type GET"})
+    if request.method != "GET":
+        return render(request, 'error_rocket_page.html', {'error_message': "HTTP Request was not type GET"})
+    
+    # Only if it is GET
+    input_teacher_username = request.GET.get("teacher")
+    input_poll_id = request.GET.get("poll")
+    if input_teacher_username == None:
+        return render(request, 'error_rocket_page.html', {'error_message': "No Teacher was given"})
+    if input_poll_id == None:
+        return render(request, 'error_rocket_page.html', {'error_message': "No Poll was given"})
+    
+    for db_username in db.Teachers.get_all_teachers_username():
+        #if teacher exists in database, not if teacher is authenticated
+        if db_username == input_teacher_username:       
+            teacher_id = db.Teachers.get_teacher_by_username(db_username, "Teacher_ID")
+            input_poll = db.Polls.get_poll_by_id(input_poll_id)
+            if input_poll == None:
+                return render(request, 'error_rocket_page.html', {'error_message': "The Poll given doesn't exist"})
+            # if poll creater is not the one sending the mails
+            if teacher_id != input_poll[1]:
+                return render(request, 'error_rocket_page.html', {'error_message': "This is not your Poll!"})
+            
+            # if something went wrong at sending the mails
+            if not ms.send_emails(input_poll_id, db_username):       
+                return render(request, 'error_rocket_page.html', {'error_message': "An Error occured at sending the Emails - Please contact the Administrator to fix your Problem!"})
+            
+            # if all went well
+            break
+    return HttpResponseRedirect('/feedback/success/')
