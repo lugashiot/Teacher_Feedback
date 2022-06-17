@@ -14,25 +14,39 @@
                     <img class="CToWUd" alt="HTL Logo" src="http://www.htlinn.tech:8080/file_hosting/htl_icon_no_bg.png" style="width:154px;display:block" width="154">
                 </div>
             </div>
-            <h1 class="d-flex justify-content-center my-3">Feedback für {{teacher}}</h1>
+            <h1 class="d-flex justify-content-center my-3" style="text-align: center;">{{poll_name}}</h1>
+            <h3 class="d-flex justify-content-center my-3" style="text-align: center;">Erstellt von: {{teacher}}</h3>
             <div class="container">
                 <form action="" method="post">
                     {%csrf_token%}
                     <div class="container my-3 border border-muted rounded">
                         {{rating_1}}
                     </div>
-                    <div class="container my-3 border border-muted rounded">
+                    <div class="container my-3 border border-muted rounded" {{is_hidden_2}}>
                         {{rating_2}}
                     </div>
-                    <div class="container my-3 border border-muted rounded">
+                    <div class="container my-3 border border-muted rounded" {{is_hidden_3}}>
                         {{rating_3}}
                     </div>
-                    <div class="container my-3 border border-muted rounded">
+                    <div class="container my-3 border border-muted rounded" {{is_hidden_4}}>
                         {{rating_4}}
+                    </div>
+                    <div class="container my-3 border border-muted rounded" {{is_hidden_5}}>
+                        {{rating_5}}
+                    </div>
+                    <div class="container my-3 border border-muted rounded" {{is_hidden_6}}>
+                        {{rating_6}}
+                    </div>
+                    <div class="container my-3 border border-muted rounded">
+                        <a>Bitte noch ein Feedback in Worten:</a>
+                        <p class="mt-1">{{text_field}}</p>
                     </div>
                     <input type="submit" class="btn btn-outline-success" value="Bestätigen" width="500px">
                 </form>
             </div>
+        </div>
+        <div class="container">
+        <p></p>
         </div>
     </body>
 </html>

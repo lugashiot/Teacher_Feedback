@@ -11,7 +11,7 @@
           <h3 class="card-header">Umfragen von: {{user.username}}</h3>
           <div class="card-body">
             {% for poll in polls %}
-              <a href="/teacher/dashboard/results/?poll_id={{poll}}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">{{poll}}</a>
+              <a href="/teacher/dashboard/results/?poll_id={{poll.0}}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">{{poll.2}}</a>
             {% endfor %}
           </div>
         </form>

@@ -1,23 +1,63 @@
-import os
-import uuid
-import sys
+import os, uuid, sys
 from datetime import datetime
 from smtplib import SMTP
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import configparser
+sys.path.append("/home/pi/Feedback/API")
+from SQL_Handler import DBHandler
+
 
 config = configparser.ConfigParser()
+config.read("config.ini")
+student_email_content_path = "API/feedback/templates/student_email_content.html"
 
+
+class Mail_Sender:
+    def __init__(self) -> None:
+        self.db = DBHandler()
+
+    def __assignments_to_classes(self, assignment_ids: list[int]) -> list[str]:
+        school_classes = []
+        for assignment_id in assignment_ids:
+            if assignment_id == 0:
+                continue
+            school_classes.append(self.db.Teachers_Assignments.get_assignment_by_id(assignment_id)[2])
+        return school_classes
+    
+    def __send_emails_by_school_class(self, school_class: str, teacher_username: str) -> list[str]:
+        uuid_list = []
+        with SMTP(config["email"]["server"]) as server:
+            server.login(config["email"]["address"], config["email"]["password"])
+            for email in self.db.Classes_Emails.get_class_emails(school_class):
+                id = str(uuid.uuid4())
+                msg = EmailHandler.build_email(email, id, teacher_username)
+                # TODO Try except with specific error if email doesnt exist !?
+                server.sendmail(config["email"]["address"], msg['To'], msg.as_string())  # sent from, send to, email text
+                uuid_list.append(id)
+        return uuid_list
+
+    def send_emails(self, poll_id: int, teacher_username: str):
+        """
+        Sends Emails to all Classes linked to given Poll in the Database\n
+        Teacher/User needs to be verified before calling this method!
+        """
+        poll_assignments = self.db.Polls.get_poll_by_id(poll_id)[3] # List of Assignment_IDs
+        poll_classes = self.__assignments_to_classes(poll_assignments)
+        for school_class in poll_classes:
+            uuid_list = self.__send_emails_by_school_class(school_class, teacher_username)
+            self.db.UUIDs.write_uuids(uuid_list, poll_id)
+        return True
 
 class EmailHandler:
     def __init__(self) -> None:
-        self.user = config["email"]["address"]
-        self.password = config["email"]["password"]
-        self.server = config["email"]["server"]
+        #self.user config["email"]["address"]
+        #self.password config["email"]["password"]
+        #self.server config["email"]["server"]
+        return
 
-    def build_email(self, send_to, uuid, teacher: str):
-        teacher_no_dot = teacher.replace(".", " ")
+    def build_email(send_to: str, uuid: str, teacher_username: str):
+        teacher_no_dot = teacher_username.replace(".", " ")
 
         msg = MIMEMultipart("alternative")
         msg['Subject'] = f"Feedback für {teacher_no_dot}"
@@ -35,107 +75,16 @@ class EmailHandler:
         curved_bracket_close = u"}"
 
         part1 = MIMEText(file.read().format(ue=ue, oe=oe, uuid=uuid, copyright=copyright, student=student, teacher=teacher_no_dot, curved_bracket_open=curved_bracket_open, curved_bracket_close=curved_bracket_close), "html", "utf-8")
-
         msg.attach(part1)
-
-        # msg.add_header('Content-Type', 'text/html')
-        # file = open("templates/student_email_content.html", "r")
-        # msg.set_payload(file.read())
-
         return msg
 
 
-class Class:
-    def __init__(self, name) -> None:
-        self.name = name
-        self.students = []
-        self.load_students_from_db()
-
-    def load_students_from_file(self):
-        try:
-            f = open(f"{self.name}.txt", "r").read()
-            emails = f.split(",")
-            self.students = emails
-        except:
-            try:
-                f = open(f"API/feedback/{self.name}.txt", "r").read()
-                emails = f.split(",")
-                self.students = emails
-            except:
-                #print("ERROR: Couldn't load students")
-                pass
-        
-    def load_students_from_db(self):
-        self.students = db.Classes_Emails.get_class_mails(self.name)
-        if self.students == []:
-            #print(f"No Emails available for {self.name}")
-            pass
-        return
-
-    # Do NOT run this method itself, only run the Teacher.send_emails()
-    def send_emails(self, teacher) -> dict:
-        temp_uuid_list = []
-        temp_dict = {
-            "class": self.name,
-            "teacher": teacher,
-            "uuid_list": []
-        }
-        email_handler = EmailHandler()
-        with SMTP(email_handler.server) as server:
-            server.login(email_handler.user, email_handler.password)
-            for student_email in self.students:
-                id = uuid.uuid4()
-                msg = email_handler.build_email(student_email, id, teacher)
-                server.sendmail(email_handler.user, msg['To'], msg.as_string())  # sent from, send to, email text
-                temp_uuid_list.append(str(id))
-                #print(f"Feedback link to {student_email} was sent! UUID: {id}")
-            temp_dict["uuid_list"] = temp_uuid_list
-        #print(f"All emails to class {self.name} were sent by {teacher}!")
-        return temp_dict
-
-
-class Teacher:
-    def __init__(self, username) -> None:
-        self.username = username
-        self.classes = []
-
-    def add_class(self, temp_class: Class):
-        self.classes.append(temp_class)
-
-    def get_classes_from_db(self):
-        pass
-
-    def send_emails(self, poll_id : int):
-        teacher_id = db.Teachers.get_teacher_by_username(self.username, "Teacher_ID")
-        for c in self.classes:
-            if c.name == classname:
-                sent_dict = c.send_emails(self.username)
-                db.UUIDs.write_uuids(sent_dict["uuid_list"], poll_id, int(datetime.now().timestamp()))
-                #db.write_uuids(sent_dict["uuid_list"], teacher_id, c.name, int(datetime.now().timestamp()))
-                #print(f"All Emails to {classname} were sent!")
-                return True
-        return False
-
-
-if __name__ == "__main__":      # for testing on pc
+if __name__ == "__main__":      
+    # for testing on pc
     sys.path.append(os.path.split(os.getcwd())[0])
     from SQL_Handler import DBHandler
-    db = DBHandler()
     input("Start Test: Press Enter")
     config.read("../../config.ini")
     student_email_content_path = "templates/student_email_content.html"
-
-    class1 = Class("4CHEL")
-    class1.load_students_from_file()
-    #class1.load_students_from_db()
-    print("Loaded students:", class1.students)
-    teacher1 = Teacher("Gilbert.Senn")
-    teacher1.add_class(class1)
-    teacher1.send_emails()
-    #teacher1.send_emails(classname=class1.name)
-else:
-    sys.path.append("/home/pi/Feedback/API")
-    from SQL_Handler import DBHandler
-    db = DBHandler()
-    config.read("config.ini")
-    student_email_content_path = "API/feedback/templates/student_email_content.html"
+    send_mails("4CHEL", "Klaus.Bichler")
+    Mail_Sender.sen
