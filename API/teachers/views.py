@@ -2,9 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from dataclasses import dataclass, field
 from SQL_Handler import DBHandler
 from SQL_Dataclasses import *
-from ..SQL_Dataclasses import *
+#from ..SQL_Dataclasses import *
 
 db = DBHandler()
 
@@ -36,66 +37,43 @@ def dashboard(request):
 
 
 def results(request):
-    class Result:
-        def __int__(self, q: str, a_opts: list, a_vals=[]):
-            self.q = q
-            self.a_opts = a_opts
-            self.a_vals = a_vals
-
-        def get_a_vals_from_list(self, result_list: list):
-            for i in range(1, 6):
-                self.a_vals.append(result_list.count(i))
+    @dataclass
+    class Result:    # results of one question
+        question_text: str
+        answer_opts: list
+        answer_vals: list
 
     if request.method == "GET":
         if request.user.is_authenticated:
-            requested_poll_id = request.GET.get("poll_id")
+            requested_poll_id = request.GET.get("pid")
             username = request.user.username
-            teacher_id = db.Teachers.get_teacher_by_username(username, wanted_key="Teacher_ID")
-            teacher_polls = db.Polls.get_polls_by_teacher(teacher_id)
+            teacher = Teacher(username)
 
-            if requested_poll_id in [x[1] for x in teacher_polls]:
-                question_data = db.Questions.get_questions_by_id(requested_poll_id)
-                question_answers = question_data[2]
-                question_title = question_data[1]
-                question_id = question_data[1]
+            # todo work with new dataclasses and make html dynamic
+            poll_answers = [x.poll_answers for x in teacher.polls if x.poll_id == int(requested_poll_id)][0]
+            poll_questions = [x.poll_questions for x in teacher.polls if x.poll_id == int(requested_poll_id)][0]
 
-                all_results = [[], [], [], []]
-                for answer in poll_answers:
-                    for i in range(len(all_results)):
-                        all_results[i].append(answer[i])
+            all_results=[]
+            for i in range(len(poll_questions)):
+                all_results.append(Result(question_text=poll_questions[i].question_text, answer_opts=poll_questions[i].question_answer_opts, answer_vals=[x.answers[i] for x in poll_answers]))
 
-                return render(request, "dashboard/results.html", {
-                    # question0
-                    'q0': "Question0",
-                    'q0a0': "q0a0_test", 'q0a0_val': all_results[0].count(1),
-                    'q0a1': "q0a1_test", 'q0a1_val': all_results[0].count(2),
-                    'q0a2': "q0a2_test", 'q0a2_val': all_results[0].count(3),
-                    'q0a3': "q0a3_test", 'q0a3_val': all_results[0].count(4),
-                    'q0a4': "q0a4_test", 'q0a4_val': all_results[0].count(5),
-                    # question1
-                    'q1': "Question1",
-                    'q1a0': "q1a0_test", 'q1a0_val': all_results[1].count(1),
-                    'q1a1': "q1a1_test", 'q1a1_val': all_results[1].count(2),
-                    'q1a2': "q1a2_test", 'q1a2_val': all_results[1].count(3),
-                    'q1a3': "q1a3_test", 'q1a3_val': all_results[1].count(4),
-                    'q1a4': "q1a4_test", 'q1a4_val': all_results[1].count(5),
-                    # question2
-                    'q2': "Question2",
-                    'q2a0': "q2a0_test", 'q2a0_val': all_results[2].count(1),
-                    'q2a1': "q2a1_test", 'q2a1_val': all_results[2].count(2),
-                    'q2a2': "q2a2_test", 'q2a2_val': all_results[2].count(3),
-                    'q2a3': "q2a3_test", 'q2a3_val': all_results[2].count(4),
-                    'q2a4': "q2a4_test", 'q2a4_val': all_results[2].count(5),
-                    # question3
-                    'q3': "Question3",
-                    'q3a0': "q3a0_test", 'q3a0_val': all_results[3].count(1),
-                    'q3a1': "q3a1_test", 'q3a1_val': all_results[3].count(2),
-                    'q3a2': "q3a2_test", 'q3a2_val': all_results[3].count(3),
-                    'q3a3': "q3a3_test", 'q3a3_val': all_results[3].count(4),
-                    'q3a4': "q3a4_test", 'q3a4_val': all_results[3].count(5),
-                })
-            else:
-                return HttpResponseRedirect('/teacher/dashboard/')
+            #[i for i in ...] # todo und und dann alle results als 1 liste an html und dann for und in sript dann iterieren aber ka wie (wegen namenvon html div de renamed wean muas)
+            #all_results[0].answer_opts
+            #[all_results[0].answer_vals.count(i) for i in range(1, 6)]
+            return render(request, "dashboard/results.html", {
+                # question0
+                'q0': "Question0",
+                'q0a_opts': all_results[0].answer_opts, 'q0a_vals': [all_results[0].answer_vals.count(i) for i in range(1, 6)],
+                # question1
+                'q1': "Question1",
+                'q1a_opts': all_results[1].answer_opts, 'q1a_vals': [all_results[1].answer_vals.count(i) for i in range(1, 6)],
+                # question2
+                'q2': "Question2",
+                'q2a_opts': all_results[2].answer_opts, 'q2a_vals': [all_results[2].answer_vals.count(i) for i in range(1, 6)],
+                # question3
+                'q3': "Question3",
+                'q3a_opts': all_results[3].answer_opts, 'q3a_vals': [all_results[3].answer_vals.count(i) for i in range(1, 6)],
+            })
         else:
             return HttpResponseRedirect('/teacher/login/')
 

@@ -6,6 +6,8 @@
   <center>
     <div class="container-fluid">
       <h1>Results from {{class}} with {{teacher}}</h1>
+      <h1>['{{q0a_opts.0}}', '{{q0a_opts.1}}', '{{q0a_opts.2}}', '{{q0a_opts.3}}', '{{q0a_opts.4}}']</h1>
+      <h1>['{{q0a_vals.0}}', '{{q0a_vals.1}}', '{{q0a_vals.2}}', '{{q0a_vals.3}}', '{{q0a_vals.4}}']</h1>
       <div class="chart_row">
         <h2>{{q0}}</h2>
         <div class="doughnut">
@@ -97,8 +99,8 @@
 
     // --------------------------------------------------------------------------------------------------------
 
-    var x_q0 = ['{{q0a0}}', '{{q0a1}}', '{{q0a2}}', '{{q0a3}}', '{{q0a4}}'];
-    var y_q0 = ['{{q0a0_val}}', '{{q0a1_val}}', '{{q0a2_val}}', '{{q0a3_val}}', '{{q0a4_val}}'];
+    var x_q0 = ['{{q0a_opts.0}}', '{{q0a_opts.1}}', '{{q0a_opts.2}}', '{{q0a_opts.3}}', '{{q0a_opts.4}}'];
+    var y_q0 = ['{{q0a_vals.0}}', '{{q0a_vals.1}}', '{{q0a_vals.2}}', '{{q0a_vals.3}}', '{{q0a_vals.4}}'];
 
     var x_q1 = ['{{q1a0}}', '{{q1a1}}', '{{q1a2}}', '{{q1a3}}', '{{q1a4}}'];
     var y_q1 = ['{{q1a0_val}}', '{{q1a1_val}}', '{{q1a2_val}}', '{{q1a3_val}}', '{{q1a4_val}}'];
