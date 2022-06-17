@@ -35,27 +35,21 @@ def feedback_page(request):
         teacher_data = db.Teachers.get_teacher_by_id(poll.teacher_id)
         teacher_name = " ".join([teacher_data.get("Forename"), teacher_data.get("Lastname")])
 
-        rating_1 = RatingForm1(question=[['1', 'sehr gut'], ['2', 'gut'], ['3', 'ok'], ['4', 'weniger gut'], ['5', 'nicht gut']])
-        rating_2 = RatingForm2(question=[['1', 'sehr gut'], ['2', 'gut'], ['3', 'ok'], ['4', 'weniger gut'], ['5', 'nicht gut']])
-        rating_3 = RatingForm3(question=[['1', 'sehr leicht verständlich'], ['2', 'gut verständlich'], ['3', 'verständlich'], ['4', 'schwer verständlich'], ['5', 'nicht verständlich']])
-        rating_4 = RatingForm4(question=[['1', 'sehr gering'], ['2', 'gering'], ['3', 'akzeptabel'], ['4', 'übermäßig'], ['5', 'zu viel']])
-        rating_5 = RatingForm5(question=None)
-        rating_6 = RatingForm6(question=None)
+        rating_1 = RatingForm1(question=sd.Question(poll.poll_question_ids[0]))
+        rating_2 = RatingForm2(question=sd.Question(poll.poll_question_ids[1]))
+        rating_3 = RatingForm3(question=sd.Question(poll.poll_question_ids[2]))
+        rating_4 = RatingForm4(question=sd.Question(poll.poll_question_ids[3]))
+        rating_5 = RatingForm5(question=sd.Question(poll.poll_question_ids[4]))
+        rating_6 = RatingForm6(question=sd.Question(poll.poll_question_ids[5]))
         text_field = Textfield_Form()
-        if not rating_5.fields["rating_5"].required:
-            print("False")
-            is_hidden_5 = "hidden"        # either hidden or empty
-        else:
-            print("True")
-            is_hidden_5 = ""
-        if not rating_6.fields["rating_6"].required:
-            print("False")
-            is_hidden_6 = "hidden"        # either hidden or empty
-        else:
-            print("True")
-            is_hidden_6 = ""
+        is_hidden_2, is_hidden_3, is_hidden_4, is_hidden_5, is_hidden_6 = "", "", "", "", ""
+        if not rating_2.fields["rating_2"].required: is_hidden_2 = "hidden"        # either hidden or empty
+        if not rating_3.fields["rating_3"].required: is_hidden_3 = "hidden"        # either hidden or empty
+        if not rating_4.fields["rating_4"].required: is_hidden_4 = "hidden"        # either hidden or empty
+        if not rating_5.fields["rating_5"].required: is_hidden_5 = "hidden"        # either hidden or empty
+        if not rating_6.fields["rating_6"].required: is_hidden_6 = "hidden"
 
-        return render(request, 'feedback_form_page.html', {'teacher': teacher_name, 'poll_name': poll.poll_name, 'rating_1': rating_1, 'rating_2': rating_2, 'rating_3': rating_3, 'rating_4': rating_4, 'rating_5': rating_5, 'rating_6': rating_6, 'text_field': text_field, 'is_hidden_5': is_hidden_5, 'is_hidden_6': is_hidden_6})
+        return render(request, 'feedback_form_page.html', {'teacher': teacher_name, 'poll_name': poll.poll_name, 'rating_1': rating_1, 'rating_2': rating_2, 'rating_3': rating_3, 'rating_4': rating_4, 'rating_5': rating_5, 'rating_6': rating_6, 'text_field': text_field, 'is_hidden_2': is_hidden_2, 'is_hidden_3': is_hidden_3, 'is_hidden_4': is_hidden_4, 'is_hidden_5': is_hidden_5, 'is_hidden_6': is_hidden_6})
 
     if request.method == "POST":
         form = RatingForm1(request.POST)
