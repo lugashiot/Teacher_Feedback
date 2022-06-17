@@ -46,7 +46,7 @@ def results(request):
 
     if request.method == "GET":
         if request.user.is_authenticated:
-            requested_poll_id = request.GET.get("poll_id")
+            requested_poll_id = int(request.GET.get("poll_id"))
             username = request.user.username
             teacher_id = db.Teachers.get_teacher_by_username(username, wanted_key="Teacher_ID")
             teacher_polls = db.Polls.get_polls_by_teacher(teacher_id)
