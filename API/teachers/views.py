@@ -10,29 +10,27 @@ db = DBHandler()
 
 
 def login_user(request):
-    if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect("/teacher/dashboard")
-        else:
-            messages.success(request, "There was an error logging in, try again...")
-            return HttpResponseRedirect('/teacher/login/')
-    else:
+    if request.method != "POST":
         return render(request, "account/login.html")
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(request, username=username, password=password)
+    if user is None:
+        messages.success(request, "There was an error logging in, try again...")
+        return HttpResponseRedirect('/teacher/login/')
+    login(request, user)
+    return HttpResponseRedirect("/teacher/dashboard")
 
 
 def dashboard(request):
-    if request.method == "GET":
-        if request.user.is_authenticated:
-            username = request.user.username
-            teacher_id = db.Teachers.get_teacher_by_username(username, wanted_key="Teacher_ID")
-            teacher_polls = db.Polls.get_polls_by_teacher(teacher_id)
-            return render(request, "dashboard/dashboard.html", {'polls': teacher_polls})
-        else:
-            return HttpResponseRedirect('/teacher/login/')
+    if request.method != "GET":
+        return HttpResponseRedirect('/teacher/login/')
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/teacher/login/')
+    username = request.user.username
+    teacher_id = db.Teachers.get_teacher_by_username(username, wanted_key="Teacher_ID")
+    teacher_polls = db.Polls.get_polls_by_teacher(teacher_id)
+    return render(request, "dashboard/dashboard.html", {'polls': teacher_polls})
 
 
 def results(request):
