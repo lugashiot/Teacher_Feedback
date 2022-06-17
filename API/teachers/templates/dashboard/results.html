@@ -6,9 +6,8 @@
   <center>
     <div class="container-fluid">
       <h1>Results from {{class}} with {{teacher}}</h1>
-      <h1>['{{q0a_opts.0}}', '{{q0a_opts.1}}', '{{q0a_opts.2}}', '{{q0a_opts.3}}', '{{q0a_opts.4}}']</h1>
-      <h1>['{{q0a_vals.0}}', '{{q0a_vals.1}}', '{{q0a_vals.2}}', '{{q0a_vals.3}}', '{{q0a_vals.4}}']</h1>
-      <div class="chart_row">
+
+      <div class="chart_row" {% if hidden_flags_list.0 %}hidden{% endif %}>
         <h2>{{q0}}</h2>
         <div class="doughnut">
           <canvas id="doughnut_chart_q0"></canvas>
@@ -18,7 +17,8 @@
         </div>
         <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
       </div>
-      <div class="chart_row">
+
+      <div class="chart_row" {% if hidden_flags_list.1 %}hidden{% endif %}>
         <h2>{{q1}}</h2>
         <div class="doughnut">
           <canvas id="doughnut_chart_q1"></canvas>
@@ -28,7 +28,8 @@
         </div>
         <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
       </div>
-      <div class="chart_row">
+
+      <div class="chart_row" {% if hidden_flags_list.2 %}hidden{% endif %}>
         <h2>{{q2}}</h2>
         <div class="doughnut">
           <canvas id="doughnut_chart_q2"></canvas>
@@ -38,7 +39,8 @@
         </div>
         <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
       </div>
-      <div class="chart_row">
+
+      <div class="chart_row" {% if hidden_flags_list.3 %}hidden{% endif %}>
         <h2>{{q3}}</h2>
         <div class="doughnut">
           <canvas id="doughnut_chart_q3"></canvas>
@@ -47,150 +49,228 @@
           <canvas id="bar_chart_q3"></canvas>
         </div>
       </div>
+
+      <div class="chart_row" {% if hidden_flags_list.4 %}hidden{% endif %}>
+        <h2>{{q4}}</h2>
+        <div class="doughnut">
+          <canvas id="doughnut_chart_q4"></canvas>
+        </div>
+        <div class="bar">
+          <canvas id="bar_chart_q4"></canvas>
+        </div>
+      </div>
+
+      <div class="chart_row" {% if hidden_flags_list.5 %}hidden{% endif %}>
+        <h2>{{q5}}</h2>
+        <div class="doughnut">
+          <canvas id="doughnut_chart_q5"></canvas>
+        </div>
+        <div class="bar">
+          <canvas id="bar_chart_q5"></canvas>
+        </div>
+      </div>
+
     </div>
   </center>
-  <script>
-    Chart.defaults.global.defaultFontColor = "#FFFFFF";
-    Chart.defaults.global.defaultFontSize = 14;
 
-    var barColors = [
+  <script>
+  Chart.defaults.global.defaultFontColor = "#FFFFFF";
+  Chart.defaults.global.defaultFontSize = 14;
+
+  var barColors = [
     '#4FC14F',
     '#A6C24C',
     '#FFC84C',
     '#F48846',
     '#EB4841'
-    ];
-    var options_doughnut = {
-      responsive: true,
-      legend: {
-        position: 'top',
-        labels: {
-          usePointStyle: true
+  ];
+  var options_doughnut = {
+    responsive: true,
+    legend: {
+      position: 'top',
+      labels: {
+        usePointStyle: true
+      }
+    }
+  }
+  var options_bar = {
+    responsive: true,
+    legend: {
+      display: false,
+    },
+    scales: {
+      yAxes: [{
+        gridLines: {
+          color: "#616970",
+          display: true
+        },
+        ticks: {
+          min: 0,
+          stepSize: 1
         }
-      }
-    }
-    var options_bar = {
-      responsive: true,
-      legend: {
-        display: false,
-      },
-      scales: {
-        yAxes: [{
-          gridLines: {
-            color: "#616970",
-            display: true
-          },
-          ticks: {
-            min: 0,
-            stepSize: 1
-          }
-        }],
-        xAxes: [{
-          gridLines: {
-            color: "#616970",
-            display: false
-          },
-          ticks: {
-            display: false
-          }
-        }]
-      }
-    }
-
-    // --------------------------------------------------------------------------------------------------------
-
-    var x_q0 = ['{{q0a_opts.0}}', '{{q0a_opts.1}}', '{{q0a_opts.2}}', '{{q0a_opts.3}}', '{{q0a_opts.4}}'];
-    var y_q0 = ['{{q0a_vals.0}}', '{{q0a_vals.1}}', '{{q0a_vals.2}}', '{{q0a_vals.3}}', '{{q0a_vals.4}}'];
-
-    var x_q1 = ['{{q1a0}}', '{{q1a1}}', '{{q1a2}}', '{{q1a3}}', '{{q1a4}}'];
-    var y_q1 = ['{{q1a0_val}}', '{{q1a1_val}}', '{{q1a2_val}}', '{{q1a3_val}}', '{{q1a4_val}}'];
-
-    var x_q2 = ['{{q2a0}}', '{{q2a1}}', '{{q2a2}}', '{{q2a3}}', '{{q2a4}}'];
-    var y_q2 = ['{{q2a0_val}}', '{{q2a1_val}}', '{{q2a2_val}}', '{{q2a3_val}}', '{{q2a4_val}}'];
-
-    var x_q3 = ['{{q3a0}}', '{{q3a1}}', '{{q3a2}}', '{{q3a3}}', '{{q3a4}}'];
-    var y_q3 = ['{{q3a0_val}}', '{{q3a1_val}}', '{{q3a2_val}}', '{{q3a3_val}}', '{{q3a4_val}}'];
-
-    var data_q0 = {
-      labels: x_q0,
-      datasets: [{
-        backgroundColor: barColors,
-        borderColor: '#343A40',
-        data: y_q0
+      }],
+      xAxes: [{
+        gridLines: {
+          color: "#616970",
+          display: false
+        },
+        ticks: {
+          display: false
+        }
       }]
     }
+  }
 
-    var data_q1 = {
-      labels: x_q1,
-      datasets: [{
-        backgroundColor: barColors,
-        borderColor: '#343A40',
-        data: y_q1
-      }]
-    }
+  // --------------------------------------------------------------------------------------------------------
+  var x_q0 = ['{{q0a_opts.0}}', '{{q0a_opts.1}}', '{{q0a_opts.2}}', '{{q0a_opts.3}}', '{{q0a_opts.4}}'];
+  var y_q0 = ['{{q0a_vals.0}}', '{{q0a_vals.1}}', '{{q0a_vals.2}}', '{{q0a_vals.3}}', '{{q0a_vals.4}}'];
 
-    var data_q2 = {
-      labels: x_q2,
-      datasets: [{
-        backgroundColor: barColors,
-        borderColor: '#343A40',
-        data: y_q2
-      }]
-    }
+  var data_q0 = {
+    labels: x_q0,
+    datasets: [{
+      backgroundColor: barColors,
+      borderColor: '#343A40',
+      data: y_q0
+    }]
+  }
 
-    var data_q3 = {
-      labels: x_q3,
-      datasets: [{
-        backgroundColor: barColors,
-        borderColor: '#343A40',
-        data: y_q3
-      }]
-    }
+  new Chart("doughnut_chart_q0", {
+    type: "doughnut",
+    data: data_q0,
+    options: options_doughnut
+  });
+  new Chart("bar_chart_q0", {
+    type: "bar",
+    data: data_q0,
+    options: options_bar
+  });
 
-    // --------------------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------------------
 
-    new Chart("doughnut_chart_q0", {
-      type: "doughnut",
-      data: data_q0,
-      options: options_doughnut
-    });
-      new Chart("bar_chart_q0", {
-      type: "bar",
-      data: data_q0,
-      options: options_bar
-    });
+  var x_q1 = ['{{q1a_opts.0}}', '{{q1a_opts.1}}', '{{q1a_opts.2}}', '{{q1a_opts.3}}', '{{q1a_opts.4}}'];
+  var y_q1 = ['{{q1a_vals.0}}', '{{q1a_vals.1}}', '{{q1a_vals.2}}', '{{q1a_vals.3}}', '{{q1a_vals.4}}'];
 
-    new Chart("doughnut_chart_q1", {
-      type: "doughnut",
-      data: data_q1,
-      options: options_doughnut
-    });
-    new Chart("bar_chart_q1", {
-      type: "bar",
-      data: data_q1,
-      options: options_bar
-    });
+  var data_q1 = {
+    labels: x_q1,
+    datasets: [{
+      backgroundColor: barColors,
+      borderColor: '#343A40',
+      data: y_q1
+    }]
+  }
 
-    new Chart("doughnut_chart_q2", {
-      type: "doughnut",
-      data: data_q2,
-      options: options_doughnut
-    });
-    new Chart("bar_chart_q2", {
-      type: "bar",
-      data: data_q2,
-      options: options_bar
-    });
+  new Chart("doughnut_chart_q1", {
+    type: "doughnut",
+    data: data_q1,
+    options: options_doughnut
+  });
+  new Chart("bar_chart_q1", {
+    type: "bar",
+    data: data_q1,
+    options: options_bar
+  });
 
-    new Chart("doughnut_chart_q3", {
-      type: "doughnut",
-      data: data_q3,
-      options: options_doughnut
-    });
-    new Chart("bar_chart_q3", {
-      type: "bar",
-      data: data_q3,
-      options: options_bar
-    });
+  // --------------------------------------------------------------------------------------------------------
+
+  var x_q2 = ['{{q2a_opts.0}}', '{{q2a_opts.1}}', '{{q2a_opts.2}}', '{{q2a_opts.3}}', '{{q2a_opts.4}}'];
+  var y_q2 = ['{{q2a_vals.0}}', '{{q2a_vals.1}}', '{{q2a_vals.2}}', '{{q2a_vals.3}}', '{{q2a_vals.4}}'];
+
+  var data_q2 = {
+    labels: x_q2,
+    datasets: [{
+      backgroundColor: barColors,
+      borderColor: '#343A40',
+      data: y_q2
+    }]
+  }
+
+  new Chart("doughnut_chart_q2", {
+    type: "doughnut",
+    data: data_q2,
+    options: options_doughnut
+  });
+  new Chart("bar_chart_q2", {
+    type: "bar",
+    data: data_q2,
+    options: options_bar
+  });
+
+  // --------------------------------------------------------------------------------------------------------
+
+  var x_q3 = ['{{q3a_opts.0}}', '{{q3a_opts.1}}', '{{q3a_opts.2}}', '{{q3a_opts.3}}', '{{q3a_opts.4}}'];
+  var y_q3 = ['{{q3a_vals.0}}', '{{q3a_vals.1}}', '{{q3a_vals.2}}', '{{q3a_vals.3}}', '{{q3a_vals.4}}'];
+
+  var data_q3 = {
+    labels: x_q3,
+    datasets: [{
+      backgroundColor: barColors,
+      borderColor: '#343A40',
+      data: y_q3
+    }]
+  }
+
+  new Chart("doughnut_chart_q3", {
+    type: "doughnut",
+    data: data_q3,
+    options: options_doughnut
+  });
+  new Chart("bar_chart_q3", {
+    type: "bar",
+    data: data_q3,
+    options: options_bar
+  });
+
+  // --------------------------------------------------------------------------------------------------------
+
+  var x_q4 = ['{{q4a_opts.0}}', '{{q4a_opts.1}}', '{{q4a_opts.2}}', '{{q4a_opts.3}}', '{{q4a_opts.4}}'];
+  var y_q4 = ['{{q4a_vals.0}}', '{{q4a_vals.1}}', '{{q4a_vals.2}}', '{{q4a_vals.3}}', '{{q4a_vals.4}}'];
+
+  var data_q4 = {
+    labels: x_q4,
+    datasets: [{
+      backgroundColor: barColors,
+      borderColor: '#343A40',
+      data: y_q4
+    }]
+  }
+
+  new Chart("doughnut_chart_q4", {
+    type: "doughnut",
+    data: data_q4,
+    options: options_doughnut
+  });
+  new Chart("bar_chart_q4", {
+    type: "bar",
+    data: data_q4,
+    options: options_bar
+  });
+
+  // --------------------------------------------------------------------------------------------------------
+
+  var x_q5 = ['{{q5a_opts.0}}', '{{q5a_opts.1}}', '{{q5a_opts.2}}', '{{q5a_opts.3}}', '{{q5a_opts.4}}'];
+  var y_q5 = ['{{q5a_vals.0}}', '{{q5a_vals.1}}', '{{q5a_vals.2}}', '{{q5a_vals.3}}', '{{q5a_vals.4}}'];
+
+  var data_q5 = {
+    labels: x_q5,
+    datasets: [{
+      backgroundColor: barColors,
+      borderColor: '#343A40',
+      data: y_q5
+    }]
+  }
+
+  new Chart("doughnut_chart_q5", {
+    type: "doughnut",
+    data: data_q5,
+    options: options_doughnut
+  });
+  new Chart("bar_chart_q5", {
+    type: "bar",
+    data: data_q5,
+    options: options_bar
+  });
+
+  // --------------------------------------------------------------------------------------------------------
+
   </script>
 {% endblock %}

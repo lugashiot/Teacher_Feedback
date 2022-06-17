@@ -52,25 +52,32 @@ def results(request):
             poll_questions = [x.poll_questions for x in teacher.polls if x.poll_id == requested_poll_id][0]
 
             all_results=[]
-            for i in range(len(poll_questions)):
-                all_results.append(Result(question_text=poll_questions[i].question_text, answer_opts=poll_questions[i].question_answer_opts, answer_vals=[x.answers[i] for x in poll_answers]))
+            for i in range(6):
+                try:
+                    all_results.append(Result(question_text=poll_questions[i].question_text, answer_opts=poll_questions[i].question_answer_opts, answer_vals=[x.answers[i] for x in poll_answers]))
+                except IndexError as e:
+                    all_results.append(Result(question_text="-", answer_opts=["-", "-", "-", "-", "-"], answer_vals=[0, 0, 0, 0, 0]))
 
-            #[i for i in ...] # todo und und dann alle results als 1 liste an html und dann for und in sript dann iterieren aber ka wie (wegen namenvon html div de renamed wean muas)
-            #all_results[0].answer_opts
-            #[all_results[0].answer_vals.count(i) for i in range(1, 6)]
             return render(request, "dashboard/results.html", {
+                'hidden_flags_list': [False] * len(poll_questions) + [True] * (6-len(poll_questions)),
                 # question0
-                'q0': "Question0",
+                'q0': all_results[0].question_text,
                 'q0a_opts': all_results[0].answer_opts, 'q0a_vals': [all_results[0].answer_vals.count(i) for i in range(1, 6)],
                 # question1
-                'q1': "Question1",
+                'q1': all_results[1].question_text,
                 'q1a_opts': all_results[1].answer_opts, 'q1a_vals': [all_results[1].answer_vals.count(i) for i in range(1, 6)],
                 # question2
-                'q2': "Question2",
+                'q2': all_results[2].question_text,
                 'q2a_opts': all_results[2].answer_opts, 'q2a_vals': [all_results[2].answer_vals.count(i) for i in range(1, 6)],
                 # question3
-                'q3': "Question3",
+                'q3': all_results[3].question_text,
                 'q3a_opts': all_results[3].answer_opts, 'q3a_vals': [all_results[3].answer_vals.count(i) for i in range(1, 6)],
+                # question4
+                'q4': all_results[4].question_text,
+                'q4a_opts': all_results[4].answer_opts, 'q4a_vals': [all_results[4].answer_vals.count(i) for i in range(1, 6)],
+                # question5
+                'q5': all_results[5].question_text,
+                'q5a_opts': all_results[5].answer_opts, 'q5a_vals': [all_results[5].answer_vals.count(i) for i in range(1, 6)],
             })
         else:
             return HttpResponseRedirect('/teacher/login/')
