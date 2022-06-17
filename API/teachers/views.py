@@ -83,66 +83,73 @@ def results(request):
             return HttpResponseRedirect('/teacher/login/')
 
 
-def create_poll(request):
-    class QuestionCard:
-        def __init__(self, q: str, a: list, btn_name="auto", selected_flag=False):
-            self.q = q
-            self.a = a
-            self.selected_flag = selected_flag
-            if btn_name == "auto":
-                if questions_temp:
-                    self.btn_name = str(max([int(x.btn_name) for x in questions_temp]) + 1)
-                else:
-                    self.btn_name = "0"
-            else:
-                self.btn_name = btn_name
+class QuestionCard:
+    def __init__(self, q: str, a: list, btn_name: int, selected_flag=False):
+        self.q = q
+        self.a = a
+        self.btn_name = btn_name
+        self.selected_flag = selected_flag
 
-        def check_if_filled_correctly(self):
-            if self.q != "" and "" not in self.a and self.btn_name != "":
-                return True
-            return False
+    def check_if_filled_correctly(self):
+        if self.q != "" and "" not in self.a and self.btn_name != "":
+            return True
+        return False
+
+
+class Cards:
+    def __init__(self):
+        self.question_cards = []
+
+    def add_card(self, card: QuestionCard):
+        self.question_cards.append(card)
+
+
+cards = Cards()
+
+
+def create_poll(request):
 
     def return_(error_msg=""):
-        return render(request, "dashboard/create_poll.html", {'questions': [x for x in questions_temp if x.selected_flag is False], 'questions_selected': [x for x in questions_temp if x.selected_flag is True], 'poll_name': "MTRS 3. und 4. Klasse", 'error': error_msg})  # todo richtige klasse übergeben
+        return render(request, "dashboard/create_poll.html", {'questions': [x for x in cards.question_cards if x.selected_flag is False], 'questions_selected': [x for x in cards.question_cards if x.selected_flag is True], 'poll_name': "MTRS 3. und 4. Klasse", 'error': error_msg})  # todo richtige klasse übergeben
 
     def update_questions_from_db(usr):
         teacher = Teacher(usr)
-        return [QuestionCard(teacher.questions[i].question_text, teacher.questions[i].question_answer_opts) for i in range(len(teacher.questions))]
+
+        for q in teacher.questions:
+            if q.question_id not in [x.btn_name for x in cards.question_cards]:
+                cards.add_card(QuestionCard(q.question_text, q.question_answer_opts, q.question_id))
 
     if request.user.is_authenticated:
         username = request.user.username
-        #questions_temp = [QuestionCard(x.question_text, x.question_answer_opts, str(x.question_id)) for x in [Question(i) for i in db.Questions.get_public_questions() if i != 0]] # todo load default questions
-        questions_temp = []
-        questions_temp = update_questions_from_db(username)
+        update_questions_from_db(username)
         if request.method == "GET":
 
             return return_()
 
         elif request.method == "POST":
-            for btn in [q.btn_name for q in questions_temp]:
-                if btn in request.POST:
-                    if request.POST[btn] == "Hinzufügen":
-                        if len([x for x in questions_temp if x.selected_flag is True]) < 6:
-                            [x for x in questions_temp if x.btn_name == btn][0].selected_flag = True
-                            return return_()
-                        else:
-                            return return_("Sie können nur 6 Fragen auswählen!")
-                    elif request.POST[btn] == "Entfernen":
-                        for i in [x for x in questions_temp if x.selected_flag is True and x.btn_name == btn]:
-                            i.selected_flag = False
-                        return return_()
-
             if "q_inp" in request.POST:
-                new_question = QuestionCard(request.POST["q_inp"], [request.POST["a0_inp"], request.POST["a1_inp"], request.POST["a2_inp"], request.POST["a3_inp"], request.POST["a4_inp"]], "auto")
-                if new_question.check_if_filled_correctly():
-                    if new_question.q not in [x.q for x in questions_temp]:
-                        db.Questions.write_question(db.Teachers.get_teacher_by_username(username, "Teacher_ID"), new_question.q, new_question.a, 0)
-                        questions_temp = update_questions_from_db(username)
+                q = request.POST["q_inp"]
+                a = [request.POST["a0_inp"], request.POST["a1_inp"], request.POST["a2_inp"], request.POST["a3_inp"], request.POST["a4_inp"]]
+                if q != "" and "" not in a:
+                    if q not in [x.q for x in cards.question_cards]:
+                        db.Questions.write_question(db.Teachers.get_teacher_by_username(username, "Teacher_ID"), q, a, 0)
+                        update_questions_from_db(username)
                         return return_()
                     else:
                         return return_("Diese Frage existiert leider schon!")
                 else:
                     return return_("Frage nicht gültig!")
+            else:   # has to be btn
+                card = [x for x in cards.question_cards if str(x.btn_name) in request.POST][0]
+                if request.POST[str(card.btn_name)] == "Hinzufügen":
+                    if len([x for x in cards.question_cards if x.selected_flag is True]) < 6:
+                        card.selected_flag = True
+                        return return_()
+                    else:
+                        return return_("Sie können nur 6 Fragen auswählen!")
+                elif request.POST[str(card.btn_name)] == "Entfernen":
+                    card.selected_flag = False
+                    return return_()
         return return_(str(request.POST))
     else:
         return HttpResponseRedirect('/teacher/login/')
