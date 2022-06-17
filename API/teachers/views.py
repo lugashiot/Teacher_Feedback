@@ -35,15 +35,11 @@ def dashboard(request):
 
 
 def results(request):
+    @dataclass
     class Result:
-        def __int__(self, q: str, a_opts: list, a_vals=[]):
-            self.q = q
-            self.a_opts = a_opts
-            self.a_vals = a_vals
-
-        def get_a_vals_from_list(self, result_list: list):
-            for i in range(1, 6):
-                self.a_vals.append(result_list.count(i))
+        question_text: str
+        answer_opts: list[str]
+        answer_vals: list[int]
 
     if request.method == "GET":
         if request.user.is_authenticated:
