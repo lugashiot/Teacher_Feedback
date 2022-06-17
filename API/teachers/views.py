@@ -51,7 +51,7 @@ def results(request):
             teacher_id = db.Teachers.get_teacher_by_username(username, wanted_key="Teacher_ID")
             teacher_polls = db.Polls.get_polls_by_teacher(teacher_id)
 
-            if requested_poll_id in [x[1] for x in teacher_polls]:
+            if requested_poll_id in [x[0] for x in teacher_polls]:
                 question_data = db.Questions.get_questions_by_id(requested_poll_id)
                 question_answers = question_data[2]
                 question_title = question_data[1]
