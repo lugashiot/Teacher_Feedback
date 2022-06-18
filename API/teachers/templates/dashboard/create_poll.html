@@ -14,18 +14,18 @@
               <h5 class="card-title">Neue Frage erstellen</h5>
               <hr>
               <label for="q_inp">Frage</label>
-              <textarea class="form-control" id="q_inp" name="q_inp" rows="3"></textarea>
+              <textarea class="form-control bg-dark border-dark text-white" id="q_inp" name="q_inp" rows="3"></textarea>
               <hr>
               <label for="a0_inp">Antwortmöglichkeiten</label>
-              <input type="text" class="form-control" id="a0_inp" name="a0_inp" placeholder="Antwort 1">
+              <input type="text" class="form-control bg-dark border-dark text-white" id="a0_inp" name="a0_inp" placeholder="Antwort 1">
               <hr>
-              <input type="text" class="form-control" id="a1_inp" name="a1_inp" placeholder="Antwort 2">
+              <input type="text" class="form-control bg-dark border-dark text-white" id="a1_inp" name="a1_inp" placeholder="Antwort 2">
               <hr>
-              <input type="text" class="form-control" id="a2_inp" name="a2_inp" placeholder="Antwort 3">
+              <input type="text" class="form-control bg-dark border-dark text-white" id="a2_inp" name="a2_inp" placeholder="Antwort 3">
               <hr>
-              <input type="text" class="form-control" id="a3_inp" name="a3_inp" placeholder="Antwort 4">
+              <input type="text" class="form-control bg-dark border-dark text-white" id="a3_inp" name="a3_inp" placeholder="Antwort 4">
               <hr>
-              <input type="text" class="form-control" id="a4_inp" name="a4_inp" placeholder="Antwort 5">
+              <input type="text" class="form-control bg-dark border-dark text-white" id="a4_inp" name="a4_inp" placeholder="Antwort 5">
               <hr>
               <input type="submit" class="btn btn-dark" value="Frage erstellen" width="500px">
             </div>
@@ -51,10 +51,18 @@
             </button>
           </div>
         {% endif %}
+
         <div class="mw-100 my-3"> <!-- zum fixieren  style="position:fixed!important;height:100%" -->
           <form action="" method="post" class="card bg-secondary">
             {%csrf_token%}
-            <h3 class="card-header">Umfrage: {{poll_name}}</h3>
+
+            <div class="card-header input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text bg-dark border-dark text-white">Name der Umfrage:</span>
+              </div>
+              <input type="text" class="form-control bg-dark border-dark text-white" id="poll_name_inp" name="poll_name_inp" placeholder="MTRS 3. & 4. Klassen ...">
+            </div>
+
             <div class="card-body">
               {% for question in questions_selected %}
                 <h5 class="card-title">{{question.q}}</h5>
@@ -62,8 +70,35 @@
                 <input type="submit" class="btn btn-danger" name="{{question.btn_name}}" value="Entfernen" width="500px">
                 <hr>
               {% endfor %}
-              <input type="submit" class="btn btn-success" value="Starte Umfrage" width="500px">
+              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalLong">Umfrage Senden</button>
             </div>
+
+
+            <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content bg-secondary">
+                  <div class="modal-header" style="border-bottom: 1px solid #5C636A;">
+                    <h5 class="modal-title" id="exampleModalLongTitle">An welche Klassen soll die Umfrage gesendet werden?</h5>
+                  </div>
+                  <div class="modal-body">
+                    {% for assignment in teacher_assignments %}
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="{{assignment}}" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                          {{assignment}}
+                        </label>
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div class="modal-footer" style="border-top: 1px solid #5C636A;">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                    <input type="submit" name="send_poll" class="btn btn-success" value="Starte Umfrage" width="500px">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
           </form>
         </div>
       </div>

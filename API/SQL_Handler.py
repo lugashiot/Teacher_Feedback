@@ -36,7 +36,7 @@ class DBHandler:
 
 
 # Teachers
-class Teachers():
+class Teachers:
     def __init__(self) -> None:
         try:
             self.conn = mariadb.connect(
@@ -54,7 +54,7 @@ class Teachers():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)
 
-    def write_teacher(self, username : str, forename : str, lastname : str, email : str):
+    def write_teacher(self, username: str, forename: str, lastname: str, email: str):
         #sql INSERT INTO `Teachers` (Teacher_ID, Username, Forename, Lastname, Email) VALUES (NULL, username, forename, lastname, email)
         self.cur.execute("INSERT INTO `Teachers` (Teacher_ID, Username, Forename, Lastname, Email) VALUES (NULL, ?, ?, ?, ?);", (username, forename, lastname, email))
         return "write_teacher done"
@@ -81,11 +81,11 @@ class Teachers():
     
     def teacher_formatter(self, out, wanted_key):
         teacher = {
-            "Teacher_ID" : out[0],
-            "Username" : out[1],
-            "Forename" : out[2],
-            "Lastname" : out[3],
-            "Email" : out[4]
+            "Teacher_ID": out[0],
+            "Username": out[1],
+            "Forename": out[2],
+            "Lastname": out[3],
+            "Email": out[4]
         }
 
         for key in teacher.keys():
@@ -95,7 +95,7 @@ class Teachers():
 
 
 # Teachers_Assignments
-class Teachers_Assignments():
+class Teachers_Assignments:
     def __init__(self) -> None:
         try:
             self.conn = mariadb.connect(
@@ -113,12 +113,12 @@ class Teachers_Assignments():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)    
 
-    def write_assignment(self, teacher_id : int, school_class : str):
+    def write_assignment(self, teacher_id: int, school_class: str):
         #sql INSERT INTO `Teachers_Assignments` (Assignment_ID, Teacher_ID, School_Class) VALUES (NULL, teacher_id, school_class)
         self.cur.execute("INSERT INTO `Teachers_Assignments` (Assignment_ID, Teacher_ID, School_Class) VALUES (NULL, ?, ?);", (teacher_id, school_class))
         return "Teachers_Assignments.write_assignment done"
 
-    def get_assignments_from_teacher(self, teacher_id : int) -> list:
+    def get_assignments_from_teacher(self, teacher_id: int) -> list:
         #sql Select School_Class FROM `Teachers_Assignments` WHERE Teacher_ID = teacher_id
         self.cur.execute("Select School_Class FROM `Teachers_Assignments` WHERE Teacher_ID = ?;", (teacher_id, ))
         assignment_list = []
@@ -126,13 +126,13 @@ class Teachers_Assignments():
             assignment_list.append(str(out[0]))   # example: ["4CHEL", "3CHEL"]
         return assignment_list
     
-    def get_assignment_id(self, teacher_id : int, school_class : str) -> int:
+    def get_assignment_id(self, teacher_id: int, school_class: str) -> int:
         #sql Select Assignment_ID FROM `Teachers_Assignments` WHERE Teacher_ID = teacher_id AND School_Class = school_class
         self.cur.execute("Select Assignment_ID FROM `Teachers_Assignments` WHERE Teacher_ID = ? AND School_Class = ?", (teacher_id, school_class))
         for out in self.cur:
             return int(out[0])
 
-    def get_assignment_by_id(self, assignment_id : int) -> list:
+    def get_assignment_by_id(self, assignment_id: int) -> list:
         #sql Select Assignment_ID,Teacher_ID,School_Class,Subject FROM `Teachers_Assignments` WHERE Assignment_ID = assignment_id
         self.cur.execute("Select Assignment_ID,Teacher_ID,School_Class FROM `Teachers_Assignments` WHERE Assignment_ID = ?", (assignment_id, ))
         for out in self.cur:
@@ -140,7 +140,7 @@ class Teachers_Assignments():
 
 
 # Classes_Emails
-class Classes_Emails():
+class Classes_Emails:
     def __init__(self) -> None:
         try:
             self.conn = mariadb.connect(
@@ -158,18 +158,18 @@ class Classes_Emails():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)    
 
-    def write_class_email(self, school_class : str, email : str):
+    def write_class_email(self, school_class: str, email: str):
         #sql INSERT INTO `Classes_Emails` (Email_ID, School_Class, Email) VALUES (NULL, school_class, email)
         self.cur.execute("INSERT INTO `Classes_Emails` (Email_ID, School_Class, Email) VALUES (NULL, ?, ?)", (school_class, email))
         return "Classes_Emails.write_class_mail done"
 
-    def write_class_emails(self, school_class : str, email_list : list):
+    def write_class_emails(self, school_class: str, email_list: list):
         for email in email_list:
             #sql INSERT INTO `Classes_Emails` (Email_ID, School_Class, Email) VALUES (NULL, school_class, email)
             self.cur.execute("INSERT INTO `Classes_Emails` (School_Class, Email) VALUES (?, ?);", (school_class, email))
         return "write_class_mails done"
     
-    def get_class_emails(self, school_class : str) -> list:
+    def get_class_emails(self, school_class: str) -> list:
         #sql Select Email FROM `Classes_Emails` WHERE School_Class = school_class
         self.cur.execute("Select Email FROM `Classes_Emails` WHERE School_Class = ?", (school_class, ))
         email_list = []
@@ -179,7 +179,7 @@ class Classes_Emails():
 
 
 # Polls
-class Polls():
+class Polls:
     def __init__(self) -> None:
         try:
             self.conn = mariadb.connect(
@@ -197,12 +197,12 @@ class Polls():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)
     
-    def write_poll(self, teacher_id : int, poll_name : str, assigment_id_1 : int, assigment_id_2 : int, assigment_id_3 : int, assigment_id_4 : int, assigment_id_5 : int, question_id_1 : int, question_id_2 : int, question_id_3 : int, question_id_4 : int, question_id_5 : int, question_id_6 : int):
+    def write_poll(self, teacher_id: int, poll_name: str, assigment_id_1: int, assigment_id_2: int, assigment_id_3: int, assigment_id_4: int, assigment_id_5: int, question_id_1: int, question_id_2: int, question_id_3: int, question_id_4: int, question_id_5: int, question_id_6: int):
         #sql INSERT INTO `Polls` (Teacher_ID, Poll_Name, Ass_1, Ass_2, Ass_3, Ass_4, Ass_5, Q_ID_1, Q_ID_2, Q_ID_3, Q_ID_4, Q_ID_5, Q_ID_6) VALUES ()
         self.cur.execute("INSERT INTO `Polls` (Teacher_ID, Poll_Name, Ass_1, Ass_2, Ass_3, Ass_4, Ass_5, Q_ID_1, Q_ID_2, Q_ID_3, Q_ID_4, Q_ID_5, Q_ID_6) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (teacher_id, poll_name, assigment_id_1, assigment_id_2, assigment_id_3, assigment_id_4, assigment_id_5, question_id_1, question_id_2, question_id_3, question_id_4, question_id_5, question_id_6))
         return "Polls.write_poll done"
 
-    def get_polls_by_teacher(self, teacher_id : int):
+    def get_polls_by_teacher(self, teacher_id: int):
         #sql Select Poll_ID,Teacher_ID,Poll_Name,Ass_1,Ass_2,Ass_3,Ass_4,Ass_5,Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6,Poll_Time FROM `Polls` WHERE Teacher_ID = teacher_id
         self.cur.execute("Select Poll_ID,Teacher_ID,Poll_Name,Ass_1,Ass_2,Ass_3,Ass_4,Ass_5,Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6,Poll_Time FROM `Polls` WHERE Teacher_ID = ?", (teacher_id, ))
         poll_list = []
@@ -217,7 +217,7 @@ class Polls():
             # [Poll_ID, Teacher_ID, Poll_Name, List[Assignment_IDs], List[Question_IDs], Poll_Time]
             return [int(out[0]), int(out[1]), str(out[2]), [int(out[3]), int(out[4]), int(out[5]), int(out[6]), int(out[7])], [int(out[8]), int(out[9]), int(out[10]), int(out[11]), int(out[12]), int(out[13])], int(out[14].timestamp())]
     
-    def get_questions_by_id(self, poll_id : int):
+    def get_questions_by_id(self, poll_id: int):
         #sql Select Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6 FROM `Polls` WHERE Poll_ID = poll_id
         self.cur.execute("Select Q_ID_1,Q_ID_2,Q_ID_3,Q_ID_4,Q_ID_5,Q_ID_6 FROM `Polls` WHERE Poll_ID = ?", (poll_id, ))
         question_ids = []
@@ -228,7 +228,7 @@ class Polls():
 
 
 # UUIDs
-class UUIDs():
+class UUIDs:
     def __init__(self) -> None:
         try:
             self.conn = mariadb.connect(
@@ -246,18 +246,18 @@ class UUIDs():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)    
 
-    def write_uuid(self, uuid : str, poll_id : int):   # Dont use this one in mail_sender
+    def write_uuid(self, uuid: str, poll_id: int):   # Dont use this one in mail_sender
         #sql INSERT INTO `UUIDs`(UUID, Poll_ID) VALUES (uuid, poll_id)
         self.cur.execute("INSERT INTO `UUIDs`(UUID, Poll_ID) VALUES (?, ?)", (uuid, poll_id))
         return "UUIDs.write_UUID done"
 
-    def write_uuids(self, uuid_list : list, poll_id : int):
+    def write_uuids(self, uuid_list: list, poll_id: int):
         for uuid in uuid_list:
             #sql INSERT INTO `UUIDs`(UUID, Poll_ID) VALUES (uuid, poll_id)
             self.cur.execute("INSERT INTO `UUIDs`(UUID, Poll_ID) VALUES (?, ?)", (uuid, poll_id))
         return "UUIDs.write_UUIDs done"
     
-    def write_answers(self, uuid : str, answers : list[int], answer_textfield : str, answered_time : datetime):
+    def write_answers(self, uuid: str, answers: list[int], answer_textfield: str, answered_time: datetime):
         #sql UPDATE `UUIDs` SET (UUID_Used = True, Answer_1 = answer_1, Answer_2 = answer_2, Answer_3 = answer_3, Answer_4 = answer_4, Answer_5 = answer_5, Answer_6 = Answer_6, Answer_Textfield = answer_text_field, Answered_Time = answered_time)
         if len(answers) == 4:
             self.cur.execute("UPDATE `UUIDs` SET UUID_Used = 1, Answer_1 = ?, Answer_2 = ?, Answer_3 = ?, Answer_4 = ?, Answer_Textfield = ?, Answered_Time = ? WHERE UUID = ?", (answers[0], answers[1], answers[2], answers[3], answer_textfield, answered_time, uuid))
@@ -279,7 +279,7 @@ class UUIDs():
         for out in self.cur:
             return [int(out[0]), int(out[1]), int(out[2]), int(out[3]), int(out[4]), int(out[5]), str(out[6])] # 6th is textfield
 
-    def get_answers_by_poll_id(self, poll_id : int):
+    def get_answers_by_poll_id(self, poll_id: int):
         #sql Select 
         self.cur.execute("Select Answer_1,Answer_2,Answer_3,Answer_4,Answer_5,Answer_6,Answer_Textfield FROM `UUIDs` WHERE Poll_ID = ?", (poll_id, ))
         answer_list = []
@@ -287,7 +287,7 @@ class UUIDs():
             answer_list.append([int(out[0]), int(out[1]), int(out[2]), int(out[3]), int(out[4]), int(out[5]), str(out[6])]) # 6th is textfield
         return answer_list
 
-    def get_uuids_by_poll_id(self, poll_id : int):
+    def get_uuids_by_poll_id(self, poll_id: int):
         #sql Select UUID FROM `UUIDs` WHERE Poll_ID = poll_id
         self.cur.execute("Select UUID FROM `UUIDs` WHERE Poll_ID = ?", (poll_id, ))
         uuid_list = []
@@ -303,7 +303,7 @@ class UUIDs():
             uuid_list.append(str(out[0]))
         return uuid_list
 
-    def is_used(self, uuid : str):
+    def is_used(self, uuid: str):
         #sql Select UUID_Used FROM `UUIDs` WHERE UUID = uuid
         self.cur.execute("Select UUID_Used FROM `UUIDs` WHERE UUID = ?", (uuid, ))
         for out in self.cur:    
@@ -313,7 +313,7 @@ class UUIDs():
             
 
 # Questions
-class Questions():
+class Questions:
     def __init__(self) -> None:
         try:
             self.conn = mariadb.connect(
@@ -331,7 +331,7 @@ class Questions():
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)
 
-    def write_question(self, teacher_id : int, question_text : str, answer_options: list, question_public = 0):
+    def write_question(self, teacher_id: int, question_text: str, answer_options: list, question_public = 0):
         #sql INSERT INTO `Questions` (Teacher_ID, Question_Text, Ans_Opt_1, Ans_Opt_2, Ans_Opt_3, Ans_Opt_4, Ans_Opt_5, Question_Public) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         self.cur.execute("INSERT INTO `Questions` (Teacher_ID, Question_Text, Ans_Opt_1, Ans_Opt_2, Ans_Opt_3, Ans_Opt_4, Ans_Opt_5, Question_Public) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (teacher_id, question_text, answer_options[0], answer_options[1], answer_options[2], answer_options[3], answer_options[4], question_public))
         return "Questions.write_question done"
@@ -345,7 +345,7 @@ class Questions():
         return question_list    
         # Question_ID, Question_Text, [Ans_Opts], Teacher_ID
 
-    def get_question_by_id(self, question_id : int):
+    def get_question_by_id(self, question_id: int):
         #sql Select Question_ID,Question_Text,Ans_Opt_1,Ans_Opt_2,Ans_Opt_3,Ans_Opt_4,Ans_Opt_5,Teacher_ID FROM `Questions` WHERE Question_ID = question_id
         self.cur.execute("Select Question_ID,Question_Text,Ans_Opt_1,Ans_Opt_2,Ans_Opt_3,Ans_Opt_4,Ans_Opt_5,Teacher_ID FROM `Questions` WHERE Question_ID = ?", (question_id, ))
         for out in self.cur:

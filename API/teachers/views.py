@@ -47,7 +47,7 @@ def results(request):
             username = request.user.username
             teacher = Teacher(username)
 
-            # todo work with new dataclasses and make html dynamic
+            poll_name = [x.poll_name for x in teacher.polls if x.poll_id == requested_poll_id][0]
             poll_answers = [x.poll_answers for x in teacher.polls if x.poll_id == requested_poll_id][0]
             poll_questions = [x.poll_questions for x in teacher.polls if x.poll_id == requested_poll_id][0]
 
@@ -59,6 +59,7 @@ def results(request):
                     all_results.append(Result(question_text="-", answer_opts=["-", "-", "-", "-", "-"], answer_vals=[0, 0, 0, 0, 0]))
 
             return render(request, "dashboard/results.html", {
+                'poll_name': poll_name,
                 'hidden_flags_list': [False] * len(poll_questions) + [True] * (6-len(poll_questions)),
                 # question0
                 'q0': all_results[0].question_text,
@@ -110,17 +111,20 @@ cards = Cards()
 def create_poll(request):
 
     def return_(error_msg=""):
-        return render(request, "dashboard/create_poll.html", {'questions': [x for x in cards.question_cards if x.selected_flag is False], 'questions_selected': [x for x in cards.question_cards if x.selected_flag is True], 'poll_name': "MTRS 3. und 4. Klasse", 'error': error_msg})  # todo richtige klasse übergeben
+        return render(request, "dashboard/create_poll.html", {'questions': [x for x in cards.question_cards if x.selected_flag is False],
+                                                              'questions_selected': [x for x in cards.question_cards if x.selected_flag is True],
+                                                              'teacher_assignments': teacher.assignments,
+                                                              'error': error_msg})
 
     def update_questions_from_db(usr):
         teacher = Teacher(usr)
-
         for q in teacher.questions:
             if q.question_id not in [x.btn_name for x in cards.question_cards]:
                 cards.add_card(QuestionCard(q.question_text, q.question_answer_opts, q.question_id))
 
     if request.user.is_authenticated:
         username = request.user.username
+        teacher = Teacher(username)
         update_questions_from_db(username)
         if request.method == "GET":
 
@@ -139,7 +143,10 @@ def create_poll(request):
                         return return_("Diese Frage existiert leider schon!")
                 else:
                     return return_("Frage nicht gültig!")
-            else:   # has to be btn
+            elif [x for x in teacher.assignments if x in request.POST]:
+                pass    # todo poll in db fetzn und mails senden
+
+            elif [x for x in teacher.questions if str(x.question_id) in request.POST]:
                 card = [x for x in cards.question_cards if str(x.btn_name) in request.POST][0]
                 if request.POST[str(card.btn_name)] == "Hinzufügen":
                     if len([x for x in cards.question_cards if x.selected_flag is True]) < 6:
@@ -150,6 +157,8 @@ def create_poll(request):
                 elif request.POST[str(card.btn_name)] == "Entfernen":
                     card.selected_flag = False
                     return return_()
+            else:
+                return return_("Auswahl nicht erkannt!")
         return return_(str(request.POST))
     else:
         return HttpResponseRedirect('/teacher/login/')
