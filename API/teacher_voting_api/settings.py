@@ -82,7 +82,10 @@ DATABASES = {
         'USER': 'feedback',
         'PASSWORD': 'susadmin1234',
         'HOST': 'localhost',
-        'PORT': '3306'
+        'PORT': '3306',
+        'OPTIONS': {
+          'autocommit': True,
+        },
     }
 }
 
