@@ -23,5 +23,6 @@ urlpatterns = [
     path('teacher/', include('teachers.urls')),
     path('teacher/', include('django.contrib.auth.urls')),
     path('', views.main_page),
-    path('login/', views.redirect_login)
+    path('login/', views.redirect_login),
+    path('dashboard/', views.redirect_dashboard)
 ]

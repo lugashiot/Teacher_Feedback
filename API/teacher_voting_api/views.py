@@ -7,3 +7,6 @@ def main_page(request):
 
 def redirect_login(request):
     return HttpResponseRedirect('/teacher/login/')
+
+def redirect_dashboard(request):
+    return HttpResponseRedirect('/teacher/dashboard/')
