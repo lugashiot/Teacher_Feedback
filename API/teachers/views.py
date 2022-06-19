@@ -177,7 +177,8 @@ def create_poll(request):
 
                     poll_id = db.Polls.get_poll_id_by_arguments(teacher.teacher_id, request.POST["poll_name_inp"])
                     if ms.send_emails(poll_id, teacher.teacher_username):
-                        return return_(success_msg=f"Umfrage erfolgreich an {', '.join(requested_assignments)} gesendet")
+                        #return return_(success_msg=f"Umfrage erfolgreich an {', '.join(requested_assignments)} gesendet")
+                        return HttpResponseRedirect(f"/teacher/dashboard/results/?pid={poll_id}")
                     return return_(error_msg="Fehler beim Senden der Mails aufgetreten")
 
             elif [x for x in (teacher.questions + [Question(id) for id in [1,2,3,4]]) if str(x.question_id) in request.POST]:
