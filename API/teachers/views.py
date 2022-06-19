@@ -63,7 +63,7 @@ def results(request):
                         Result(question_text="-", answer_opts=["-", "-", "-", "-", "-"], answer_vals=[0, 0, 0, 0, 0]))
 
             return render(request, "dashboard/results.html", {
-                'poll_name': poll_name,
+                'poll_name': poll_name + str([x.feedback_text for x in poll_answers]),
                 'hidden_flags_list': [False] * len(poll_questions) + [True] * (6 - len(poll_questions)),
                 # question0
                 'q0': all_results[0].question_text,
@@ -89,6 +89,8 @@ def results(request):
                 'q5': all_results[5].question_text,
                 'q5a_opts': all_results[5].answer_opts,
                 'q5a_vals': [all_results[5].answer_vals.count(i) for i in range(1, 6)],
+                # textinput
+                'texts': [x.feedback_text for x in poll_answers]
             })
         else:
             return HttpResponseRedirect('/teacher/login/')
