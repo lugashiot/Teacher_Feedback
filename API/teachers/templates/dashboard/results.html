@@ -70,10 +70,13 @@
         </div>
       </div>
 
-      <div >
-        {% for text in texts %}
-          <p>{{text}}</p>
-        {% endfor %}
+      <h2>Schriftliches Feedback</h2>
+      <div class="container mb-5 mt-3">
+        <ul class="list-group d-flex justify-content-center">
+          {% for text in texts %}
+            <li class="list-group-item bg-secondary text-white">{{text}}</li>
+          {% endfor %}
+        </ul>
       </div>
     </div>
   </center>

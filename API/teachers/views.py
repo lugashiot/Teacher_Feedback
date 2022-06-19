@@ -63,7 +63,7 @@ def results(request):
                         Result(question_text="-", answer_opts=["-", "-", "-", "-", "-"], answer_vals=[0, 0, 0, 0, 0]))
 
             return render(request, "dashboard/results.html", {
-                'poll_name': poll_name + str([x.feedback_text for x in poll_answers]),
+                'poll_name': poll_name,
                 'hidden_flags_list': [False] * len(poll_questions) + [True] * (6 - len(poll_questions)),
                 # question0
                 'q0': all_results[0].question_text,
