@@ -55,24 +55,25 @@ def feedback_page(request):
         form = RatingForm1(request.POST, question=sd.Question(0))
         data_dict = dict(request.POST)
         
+        if not form.is_valid():
+            return None
+
         #getting uuid from link
-        # TODO 
-        # uuid from visible/invisible not interactable textfield getn bc of link changing and stuff
-        # uuid checking if exists in database and if "GET" accessed in the last 30 mins?
         whole_url = request.headers['Referer']
         querys = whole_url.split("?")[1]
         if querys.split("=")[0] == "uuid":
             uuid = querys.split("=")[1]
-        
-        if not form.is_valid():
-            return None
-        
-        #if form is valid
-        answers = [int(data_dict[key][0]) for key in data_dict.keys() if "rating" in key]
-        answer_text = "".join([str(data_dict[key][0]) for key in data_dict.keys() if "text_field" in key])
-        
+        if uuid not in db.UUIDs.get_all_uuids():
+            return render(request, 'error_rocket_page.html', {'error_message': "The UUID is invalid"})
         if db.UUIDs.is_used(uuid):
             return render(request, 'error_rocket_page.html', {'error_message': "You can't vote twice, cheater"})
+        
+        # TODO 
+        # uuid check if "GET" accessed in the last 30 mins?
+
+        answers = [int(data_dict[key][0]) for key in data_dict.keys() if "rating" in key]
+        answer_text = "".join([str(data_dict[key][0]) for key in data_dict.keys() if "text_field" in key])
+
         db.UUIDs.write_answers(uuid, answers, answer_text, datetime.now())
         return HttpResponseRedirect('/feedback/success/')
 
