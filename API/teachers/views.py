@@ -172,6 +172,7 @@ def create_poll(request):
                 if len(requested_assignments) == 0:
                     return return_(error_msg="Sie müssen eine Klasse auswählen!")
                 if len(requested_assignments) > 5:
+                    print(len(requested_assignments), "übers max hinaus")
                     return return_(error_msg="Sie können maximal 5 Klassen auswählen!")
                 requested_assignment_ids = [db.Teachers_Assignments.get_assignment_id(teacher.teacher_id, x) for x in requested_assignments]
                 requested_assignment_ids += [0] * (5 - len(requested_assignments))
