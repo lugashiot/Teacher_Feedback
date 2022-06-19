@@ -52,7 +52,7 @@ def feedback_page(request):
         return render(request, 'feedback_form_page.html', {'teacher': teacher_name, 'poll_name': poll.poll_name, 'rating_1': rating_1, 'rating_2': rating_2, 'rating_3': rating_3, 'rating_4': rating_4, 'rating_5': rating_5, 'rating_6': rating_6, 'text_field': text_field, 'is_hidden_2': is_hidden_2, 'is_hidden_3': is_hidden_3, 'is_hidden_4': is_hidden_4, 'is_hidden_5': is_hidden_5, 'is_hidden_6': is_hidden_6})
 
     if request.method == "POST":
-        form = RatingForm1(request.POST)
+        form = RatingForm1(request.POST, question=sd.Question(0))
         data_dict = dict(request.POST)
         
         #getting uuid from link

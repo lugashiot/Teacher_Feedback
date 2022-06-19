@@ -265,6 +265,12 @@ class UUIDs:
     
     def write_answers(self, uuid: str, answers: list[int], answer_textfield: str, answered_time: datetime):
         #sql UPDATE `UUIDs` SET (UUID_Used = True, Answer_1 = answer_1, Answer_2 = answer_2, Answer_3 = answer_3, Answer_4 = answer_4, Answer_5 = answer_5, Answer_6 = Answer_6, Answer_Textfield = answer_text_field, Answered_Time = answered_time)
+        if len(answers) == 1:
+            self.cur.execute("UPDATE `UUIDs` SET UUID_Used = 1, Answer_1 = ?, Answer_Textfield = ?, Answered_Time = ? WHERE UUID = ?", (answers[0], answer_textfield, answered_time, uuid))
+        if len(answers) == 2:
+            self.cur.execute("UPDATE `UUIDs` SET UUID_Used = 1, Answer_1 = ?, Answer_2 = ?, Answer_Textfield = ?, Answered_Time = ? WHERE UUID = ?", (answers[0], answers[1], answer_textfield, answered_time, uuid))
+        if len(answers) == 3:
+            self.cur.execute("UPDATE `UUIDs` SET UUID_Used = 1, Answer_1 = ?, Answer_2 = ?, Answer_3 = ?, Answer_Textfield = ?, Answered_Time = ? WHERE UUID = ?", (answers[0], answers[1], answers[2], answer_textfield, answered_time, uuid))
         if len(answers) == 4:
             self.cur.execute("UPDATE `UUIDs` SET UUID_Used = 1, Answer_1 = ?, Answer_2 = ?, Answer_3 = ?, Answer_4 = ?, Answer_Textfield = ?, Answered_Time = ? WHERE UUID = ?", (answers[0], answers[1], answers[2], answers[3], answer_textfield, answered_time, uuid))
         if len(answers) == 5:
