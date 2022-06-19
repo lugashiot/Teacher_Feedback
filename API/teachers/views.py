@@ -131,7 +131,11 @@ def create_poll(request):
 
     def update_questions_from_db(usr):
         teacher = Teacher(usr)
+        default_questions = [Question(id) for id in [1,2,3,4]]
         for q in teacher.questions:
+            if q.question_id not in [x.btn_name for x in cards.question_cards]:
+                cards.add_card(QuestionCard(q.question_text, q.question_answer_opts, q.question_id))
+        for q in default_questions:
             if q.question_id not in [x.btn_name for x in cards.question_cards]:
                 cards.add_card(QuestionCard(q.question_text, q.question_answer_opts, q.question_id))
 
@@ -176,7 +180,7 @@ def create_poll(request):
                         return return_(success_msg=f"Umfrage erfolgreich an {', '.join(requested_assignments)} gesendet")
                     return return_(error_msg="Fehler beim Senden der Mails aufgetreten")
 
-            elif [x for x in teacher.questions if str(x.question_id) in request.POST]:
+            elif [x for x in (teacher.questions + [Question(id) for id in [1,2,3,4]]) if str(x.question_id) in request.POST]:
                 card = [x for x in cards.question_cards if str(x.btn_name) in request.POST][0]
                 if request.POST[str(card.btn_name)] == "Hinzufügen":
                     if len([x for x in cards.question_cards if x.selected_flag is True]) < 6:
