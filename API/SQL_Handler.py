@@ -372,6 +372,11 @@ class Questions:
             question_list.append([int(out[0]), str(out[1]), [str(out[2]), str(out[3]), str(out[4]), str(out[5]), str(out[6])], int(out[7])])
         return question_list    
         # Question_ID, Question_Text, [Ans_Opts], Teacher_ID
+    
+    def delete_teacher_from_question(self, question_id: int):
+        #sql UPDATE `Questions` SET Teacher_ID = teacher_id WHERE Question_ID = question_id
+        self.cur.execute("UPDATE `Questions` SET Teacher_ID = -7 WHERE Question_ID = ?", (question_id, ))
+        return "Questions.delete_teacher_from_question"
 
 
 if __name__ == "__main__":
