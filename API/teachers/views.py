@@ -198,8 +198,7 @@ def create_poll(request):
                     card.selected_flag = False
                     return return_()
                 elif request.POST[str(card.btn_name)] == "Löschen":
-
-
+                    db.Questions.delete_teacher_from_question(teacher.teacher_id)
                     return return_()
             else:
                 return return_(error_msg="Auswahl nicht erkannt!")
