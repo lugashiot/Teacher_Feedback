@@ -4,7 +4,7 @@ from SQL_Handler import DBHandler
 db = DBHandler()
 
 
-@dataclass
+@dataclass(Frozen=True, Order=True)
 class Answer:
     uuid: str
     answers: list[int] = field(init=False)
@@ -16,7 +16,7 @@ class Answer:
         self.feedback_text = answer_data[6]
 
 
-@dataclass
+@dataclass(Frozen=True, Order=True)
 class Question:
     question_id: int
     teacher_id: int = field(init=False)
@@ -30,7 +30,7 @@ class Question:
         self.teacher_id = question_data[3]
 
 
-@dataclass
+@dataclass(Frozen=True, Order=True)
 class Poll:
     poll_id: int
     teacher_id: int = field(init=False)
@@ -54,7 +54,7 @@ class Poll:
         self.poll_answers = [Answer(i) for i in self.poll_uuids]
 
 
-@dataclass
+@dataclass(Frozen=True, Order=True)
 class Teacher:
     #def __init__(self, teacher_id: int, teacher_username: str, polls: list, assignments: list):
     teacher_username: str
