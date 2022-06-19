@@ -30,9 +30,12 @@ def dashboard(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/teacher/login/')
     username = request.user.username
+    teacher = Teacher(username)
+
     teacher_id = db.Teachers.get_teacher_by_username(username, wanted_key="Teacher_ID")
     teacher_polls = db.Polls.get_polls_by_teacher(teacher_id)
-    return render(request, "dashboard/dashboard.html", {'polls': teacher_polls})
+
+    return render(request, "dashboard/dashboard.html", {'polls': [[x.poll_id, x.poll_name, len(x.poll_answers)] for x in teacher.polls]})
 
 
 def results(request):
