@@ -32,7 +32,7 @@ def dashboard(request):
     username = request.user.username
     teacher = Teacher(username)
 
-    return render(request, "dashboard/dashboard.html", {'polls': [[x.poll_id, x.poll_name, len([y for y in x.poll_answers if y.answers[0] != 0]), len(db.UUIDs.get_uuids_by_poll_id(x.poll_id))] for x in teacher.polls]})
+    return render(request, "dashboard/dashboard.html", {'polls': [[x.poll_id, x.poll_name, len([y for y in x.poll_answers if y.answers[0] != 0]), len(x.poll_answers)] for x in teacher.polls]})
 
 
 def results(request):
