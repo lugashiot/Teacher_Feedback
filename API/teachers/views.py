@@ -131,7 +131,11 @@ def create_poll(request):
 
     def update_questions_from_db(usr):
         teacher = Teacher(usr)
+        default_questions = [Question(id) for id in [1,2,3,4]]
         for q in teacher.questions:
+            if q.question_id not in [x.btn_name for x in cards.question_cards]:
+                cards.add_card(QuestionCard(q.question_text, q.question_answer_opts, q.question_id))
+        for q in default_questions:
             if q.question_id not in [x.btn_name for x in cards.question_cards]:
                 cards.add_card(QuestionCard(q.question_text, q.question_answer_opts, q.question_id))
 
