@@ -197,6 +197,10 @@ def create_poll(request):
                 elif request.POST[str(card.btn_name)] == "Entfernen":
                     card.selected_flag = False
                     return return_()
+                elif request.POST[str(card.btn_name)] == "Löschen":
+
+
+                    return return_()
             else:
                 return return_(error_msg="Auswahl nicht erkannt!")
         return return_(str(request.POST))

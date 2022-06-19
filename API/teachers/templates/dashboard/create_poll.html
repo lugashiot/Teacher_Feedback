@@ -36,7 +36,10 @@
               <div class="card-body">
                 <h5 class="card-title">{{question.q}}</h5>
                 <p class="card-text">{{question.a.0}} | {{question.a.1}} | {{question.a.2}} | {{question.a.3}} | {{question.a.4}}</p>
-                <input type="submit" class="btn btn-dark" name="{{question.btn_name}}" value="Hinzufügen" width="500px">
+                <div class="d-flex justify-content-between">
+                  <input type="submit" class="btn btn-dark" name="{{question.btn_name}}" value="Hinzufügen" width="500px">
+                  <input type="submit" class="btn btn-danger" name="{{question.btn_name}}" value="Löschen" width="500px">
+                </div>
               </div>
             </form>
           {% endfor %}
