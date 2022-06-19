@@ -9,19 +9,15 @@
         <form action="" method="post" class="card bg-secondary">
           {%csrf_token%}
           <h3 class="card-header">Umfragen von: {{user.username}}</h3>
-
-
           <ul class="list-group mb-3" style="list-style: none;">
             {% for poll in polls %}
               <li class="mx-3">
                 <a href="/teacher/dashboard/results/?pid={{poll.0}}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-dark text-white mt-3">{{poll.1}}
-                  <span class="badge badge-primary badge-pill">{{poll.2}}</span>
+                  <span class="badge badge-success badge-pill">{{poll.2}}/{{poll.3}}</span>
                 </a>
               </li>
             {% endfor %}
           </ul>
-
-
         </form>
       </div>
     </div>
