@@ -51,6 +51,14 @@
             </button>
           </div>
         {% endif %}
+        {% if success != "" %}
+          <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            {{success}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endif %}
 
         <div class="mw-100 my-3"> <!-- zum fixieren  style="position:fixed!important;height:100%" -->
           <form action="" method="post" class="card bg-secondary">
@@ -78,7 +86,7 @@
               <div class="modal-dialog" role="document">
                 <div class="modal-content bg-secondary">
                   <div class="modal-header" style="border-bottom: 1px solid #5C636A;">
-                    <h5 class="modal-title" id="exampleModalLongTitle">An welche Klassen soll die Umfrage gesendet werden?</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">An welche Klassen soll die Umfrage gesendet werden? (maximal 5)</h5>
                   </div>
                   <div class="modal-body">
                     {% for assignment in teacher_assignments %}
