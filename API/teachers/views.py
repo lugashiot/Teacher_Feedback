@@ -165,10 +165,9 @@ def create_poll(request):
             elif "send_poll" in request.POST:
                 if request.POST["poll_name_inp"] in [x.poll_name for x in teacher.polls]:
                     return return_(error_msg="Sie haben bereits eine Umfrage die so heißt!")
-                requested_assignments = [x for x in teacher.assignments if x in request.POST][0:5]
+                requested_assignments = [x for x in teacher.assignments if x in request.POST][0:]
                 if len(requested_assignments) == 0:
                     return return_(error_msg="Sie müssen eine Klasse auswählen!")
-                print(len(requested_assignments), "übers max hinaus")
                 if len(requested_assignments) > 5:
                     return return_(error_msg="Sie können maximal 5 Klassen auswählen!")
                 requested_assignment_ids = [db.Teachers_Assignments.get_assignment_id(teacher.teacher_id, x) for x in requested_assignments]
