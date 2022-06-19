@@ -5,10 +5,11 @@ from django.contrib import messages
 from dataclasses import dataclass, field
 from SQL_Handler import DBHandler
 from SQL_Dataclasses import *
+from mail_sender import Mail_Sender
 #from ..SQL_Dataclasses import *
 
 db = DBHandler()
-
+ms = Mail_Sender()
 
 def login_user(request):
     if request.method != "POST":
@@ -168,9 +169,10 @@ def create_poll(request):
                     for q in cards.question_cards:
                         q.selected_flag = False
 
-                    # todo mails senden
-
-                    return return_(success_msg=f"Umfrage erfolgreich an {', '.join(requested_assignments)} gesendet")
+                    poll_id = db.Polls.get_poll_id_by_arguments(teacher.teacher_id, request.POST["poll_name_inp"])
+                    if ms.send_emails(poll_id, teacher.teacher_username):
+                        return return_(success_msg=f"Umfrage erfolgreich an {', '.join(requested_assignments)} gesendet")
+                    return return_(error_msg="Fehler beim Senden der Mails aufgetreten")
 
             elif [x for x in teacher.questions if str(x.question_id) in request.POST]:
                 card = [x for x in cards.question_cards if str(x.btn_name) in request.POST][0]

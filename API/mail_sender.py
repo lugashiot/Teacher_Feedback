@@ -86,5 +86,5 @@ if __name__ == "__main__":
     input("Start Test: Press Enter")
     config.read("../../config.ini")
     student_email_content_path = "templates/student_email_content.html"
-    send_mails("4CHEL", "Klaus.Bichler")
-    Mail_Sender.sen
+    ms = Mail_Sender()
+    ms.send_emails(1, "Klaus.Bichler")

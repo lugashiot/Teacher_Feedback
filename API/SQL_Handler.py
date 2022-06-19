@@ -225,6 +225,12 @@ class Polls:
             for qid in out:
                 question_ids.append(int(qid))
             return question_ids
+    
+    def get_poll_id_by_arguments(self, teacher_id: int, poll_name: str):
+        #sql Select Poll_ID FROM `Polls` WHERE Teacher_ID = teacher_id AND Poll_Name = poll_name
+        self.cur.execute("Select Poll_ID FROM `Polls` WHERE Teacher_ID = ? AND Poll_Name = ?", (teacher_id, poll_name))
+        for out in self.cur:
+            return out[0]
 
 
 # UUIDs
