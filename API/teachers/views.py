@@ -166,22 +166,28 @@ def create_poll(request):
                 else:
                     return return_(error_msg="Frage nicht gültig!")
             elif "send_poll" in request.POST:
-                if request.POST["poll_name_inp"] not in [x.poll_id for x in teacher.polls]:
-                    requested_assignments = [x for x in teacher.assignments if x in request.POST][0:5]
-                    requested_assignment_ids = [db.Teachers_Assignments.get_assignment_id(teacher.teacher_id, x) for x in requested_assignments]
-                    requested_assignment_ids += [0] * (5 - len(requested_assignments))
+                if request.POST["poll_name_inp"] in [x.poll_name for x in teacher.polls]:
+                    return return_(error_msg="Sie haben bereits eine Umfrage die so heißt!")
+                requested_assignments = [x for x in teacher.assignments if x in request.POST][0:5]
+                if len(requested_assignments) == 0:
+                    return return_(error_msg="Sie müssen eine Klasse auswählen!")
+                if len(requested_assignments) >= 6:
+                    return return_(error_msg="Sie können maximal 5 Klassen auswählen!")
+                requested_assignment_ids = [db.Teachers_Assignments.get_assignment_id(teacher.teacher_id, x) for x in requested_assignments]
+                requested_assignment_ids += [0] * (5 - len(requested_assignments))
 
-                    question_ids = [int(x.btn_name) for x in cards.question_cards if x.selected_flag is True][0:6]
-                    question_ids += [0] * (6 - len(question_ids))
+                question_ids = [int(x.btn_name) for x in cards.question_cards if x.selected_flag is True][0:6]
+                question_ids += [0] * (6 - len(question_ids))
 
-                    db.Polls.write_poll(teacher.teacher_id, request.POST["poll_name_inp"], requested_assignment_ids[0], requested_assignment_ids[1], requested_assignment_ids[2], requested_assignment_ids[3], requested_assignment_ids[4], question_ids[0], question_ids[1], question_ids[2], question_ids[3], question_ids[4], question_ids[5])
-                    for q in cards.question_cards:
-                        q.selected_flag = False
+                db.Polls.write_poll(teacher.teacher_id, request.POST["poll_name_inp"], requested_assignment_ids[0], requested_assignment_ids[1], requested_assignment_ids[2], requested_assignment_ids[3], requested_assignment_ids[4], question_ids[0], question_ids[1], question_ids[2], question_ids[3], question_ids[4], question_ids[5])
+                for q in cards.question_cards:
+                    q.selected_flag = False
 
-                    poll_id = db.Polls.get_poll_id_by_arguments(teacher.teacher_id, request.POST["poll_name_inp"])
-                    if ms.send_emails(poll_id, teacher.teacher_username):
-                        return return_(success_msg=f"Umfrage erfolgreich an {', '.join(requested_assignments)} gesendet")
-                    return return_(error_msg="Fehler beim Senden der Mails aufgetreten")
+                poll_id = db.Polls.get_poll_id_by_arguments(teacher.teacher_id, request.POST["poll_name_inp"])
+                if ms.send_emails(poll_id, teacher.teacher_username):
+                    #return return_(success_msg=f"Umfrage erfolgreich an {', '.join(requested_assignments)} gesendet")
+                    return HttpResponseRedirect(f"/teacher/dashboard/results/?pid={poll_id}")
+                return return_(error_msg="Fehler beim Senden der Mails aufgetreten")
 
             elif [x for x in (teacher.questions + [Question(id) for id in [1,2,3,4]]) if str(x.question_id) in request.POST]:
                 card = [x for x in cards.question_cards if str(x.btn_name) in request.POST][0]
