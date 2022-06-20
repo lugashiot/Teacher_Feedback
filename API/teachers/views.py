@@ -112,7 +112,7 @@ def results(request):
             'q5a_opts': all_results[5].answer_opts,
             'q5a_vals': [all_results[5].answer_vals.count(i) for i in range(1, 6)],
             # textinput
-            'texts': [x.feedback_text for x in poll_answers if x.feedback_text != 'None']
+            'texts': [x.feedback_text for x in poll_answers if x.feedback_text != 'None' and x.feedback_text != ""]
         })
 
     elif request.method == "POST":
