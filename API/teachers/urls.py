@@ -21,8 +21,8 @@ urlpatterns = [
     #path('admin/', admin.site.urls),
     path('', views.redirect_login),
     path('login/', views.login_user),
-    path('logout/', views.logout_user),
     path('dashboard/', views.dashboard),
+    path('dashboard/logout/', views.logout_user),
     path('dashboard/results/', views.results),
     path('dashboard/create-poll/', views.create_poll),
 ]
