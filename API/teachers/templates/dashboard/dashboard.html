@@ -12,14 +12,14 @@
           {% for poll in polls %}
             <li class="mx-3">
               <a href="/teacher/dashboard/results/?pid={{poll.0}}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-dark text-white mt-3">{{poll.1}}
-                <span class="badge badge-success badge-pill">{{poll.2}}/{{poll.3}}</span>
+                <span class="badge badge-{{poll.4}} badge-pill">{{poll.2}}/{{poll.3}}</span>
               </a>
             </li>
           {% endfor %}
           {% if polls|length == 0 %}
             <li class="mx-3">
               <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-dark text-white mt-3">Keine Umfragen gefunden
-                <span class="badge badge-success badge-pill">X/X</span>
+                <span class="badge badge-danger badge-pill">X/X</span>
               </a>
             </li>
           {% endif %}

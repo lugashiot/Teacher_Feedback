@@ -35,6 +35,13 @@ def logout_user(request):
 
 
 def dashboard(request):
+    def badge_color(value: float):
+        if value >= 0.75:
+            return "success"
+        if value >= 0.5:
+            return "warning"
+        return "danger"
+    
     if request.method != "GET":
         return HttpResponseRedirect('/teacher/login/')
     if not request.user.is_authenticated:
@@ -42,7 +49,9 @@ def dashboard(request):
     username = request.user.username
     teacher = Teacher(username)
 
-    return render(request, "dashboard/dashboard.html", {'polls': [[x.poll_id, x.poll_name, len([y for y in x.poll_answers if y.answers[0] != 0]), len(x.poll_answers)] for x in teacher.polls]})
+    return render(request, "dashboard/dashboard.html", {
+        'polls': [[x.poll_id, x.poll_name, len([y for y in x.poll_answers if y.answers[0] != 0]), len(x.poll_answers), badge_color(len([y for y in x.poll_answers if y.answers[0] != 0])/len(x.poll_answers))]
+                  for x in teacher.polls]})
 
 
 def results(request):
