@@ -121,14 +121,13 @@ cards = Cards()
 
 
 def create_poll(request):
-    def return_(error_msg="", success_msg="", poll_name_val=""):
+    def return_(error_msg="", success_msg=""):
         return render(request, "dashboard/create_poll.html",
                       {'questions': [x for x in cards.question_cards if x.selected_flag is False],
                        'questions_selected': [x for x in cards.question_cards if x.selected_flag is True],
                        'teacher_assignments': teacher.assignments,
                        'error': error_msg,
-                       'success': success_msg,
-                       'poll_name_val': poll_name_val})
+                       'success': success_msg})
 
     def update_questions_from_db(usr):
         teacher = Teacher(usr)
