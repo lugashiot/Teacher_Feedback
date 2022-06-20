@@ -38,7 +38,9 @@
                 <p class="card-text">{{question.a.0}} | {{question.a.1}} | {{question.a.2}} | {{question.a.3}} | {{question.a.4}}</p>
                 <div class="d-flex justify-content-between">
                   <input type="submit" class="btn btn-dark" name="{{question.btn_name}}" value="Hinzufügen" width="500px">
-                  <input type="submit" class="btn btn-danger" name="{{question.btn_name}}" value="Löschen" width="500px">
+                  {% if question.btn_name > 4 %}
+                    <input type="submit" class="btn btn-danger" name="{{question.btn_name}}" value="Löschen" width="500px">
+                  {% endif %}
                 </div>
               </div>
             </form>

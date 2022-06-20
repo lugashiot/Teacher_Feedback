@@ -6,10 +6,12 @@ from dataclasses import dataclass, field
 from SQL_Handler import DBHandler
 from SQL_Dataclasses import *
 from mail_sender import Mail_Sender
-#from ..SQL_Dataclasses import *
+
+# from ..SQL_Dataclasses import *
 
 db = DBHandler()
 ms = Mail_Sender()
+
 
 def login_user(request):
     if request.method != "POST":
@@ -32,7 +34,9 @@ def dashboard(request):
     username = request.user.username
     teacher = Teacher(username)
 
-    return render(request, "dashboard/dashboard.html", {'polls': [[x.poll_id, x.poll_name, len([y for y in x.poll_answers if y.answers[0] != 0]), len(x.poll_answers)] for x in teacher.polls]})
+    return render(request, "dashboard/dashboard.html", {
+        'polls': [[x.poll_id, x.poll_name, len([y for y in x.poll_answers if y.answers[0] != 0]), len(x.poll_answers)]
+                  for x in teacher.polls]})
 
 
 def results(request):
@@ -42,58 +46,62 @@ def results(request):
         answer_opts: list[str]
         answer_vals: list[int]
 
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/teacher/login/')
+    username = request.user.username
     if request.method == "GET":
-        if request.user.is_authenticated:
-            requested_poll_id = int(request.GET.get("pid"))
-            username = request.user.username
-            teacher = Teacher(username)
+        requested_poll_id = int(request.GET.get("pid"))
+        teacher = Teacher(username)
 
-            poll_name = [x.poll_name for x in teacher.polls if x.poll_id == requested_poll_id][0]
-            poll_answers = [x.poll_answers for x in teacher.polls if x.poll_id == requested_poll_id][0]
-            poll_questions = [x.poll_questions for x in teacher.polls if x.poll_id == requested_poll_id][0]
+        poll_name = [x.poll_name for x in teacher.polls if x.poll_id == requested_poll_id][0]
+        poll_answers = [x.poll_answers for x in teacher.polls if x.poll_id == requested_poll_id][0]
+        poll_questions = [x.poll_questions for x in teacher.polls if x.poll_id == requested_poll_id][0]
 
-            all_results = []
-            for i in range(6):
-                try:
-                    all_results.append(Result(question_text=poll_questions[i].question_text,
-                                              answer_opts=poll_questions[i].question_answer_opts,
-                                              answer_vals=[x.answers[i] for x in poll_answers]))
-                except IndexError as e:
-                    all_results.append(
-                        Result(question_text="-", answer_opts=["-", "-", "-", "-", "-"], answer_vals=[0, 0, 0, 0, 0]))
+        all_results = []
+        for i in range(6):
+            try:
+                all_results.append(Result(question_text=poll_questions[i].question_text,
+                                          answer_opts=poll_questions[i].question_answer_opts,
+                                          answer_vals=[x.answers[i] for x in poll_answers]))
+            except IndexError as e:
+                all_results.append(
+                    Result(question_text="-", answer_opts=["-", "-", "-", "-", "-"], answer_vals=[0, 0, 0, 0, 0]))
 
-            return render(request, "dashboard/results.html", {
-                'poll_name': poll_name,
-                'hidden_flags_list': [False] * len(poll_questions) + [True] * (6 - len(poll_questions)),
-                # question0
-                'q0': all_results[0].question_text,
-                'q0a_opts': all_results[0].answer_opts,
-                'q0a_vals': [all_results[0].answer_vals.count(i) for i in range(1, 6)],
-                # question1
-                'q1': all_results[1].question_text,
-                'q1a_opts': all_results[1].answer_opts,
-                'q1a_vals': [all_results[1].answer_vals.count(i) for i in range(1, 6)],
-                # question2
-                'q2': all_results[2].question_text,
-                'q2a_opts': all_results[2].answer_opts,
-                'q2a_vals': [all_results[2].answer_vals.count(i) for i in range(1, 6)],
-                # question3
-                'q3': all_results[3].question_text,
-                'q3a_opts': all_results[3].answer_opts,
-                'q3a_vals': [all_results[3].answer_vals.count(i) for i in range(1, 6)],
-                # question4
-                'q4': all_results[4].question_text,
-                'q4a_opts': all_results[4].answer_opts,
-                'q4a_vals': [all_results[4].answer_vals.count(i) for i in range(1, 6)],
-                # question5
-                'q5': all_results[5].question_text,
-                'q5a_opts': all_results[5].answer_opts,
-                'q5a_vals': [all_results[5].answer_vals.count(i) for i in range(1, 6)],
-                # textinput
-                'texts': [x.feedback_text for x in poll_answers if x.feedback_text != 'None']
-            })
-        else:
-            return HttpResponseRedirect('/teacher/login/')
+        return render(request, "dashboard/results.html", {
+            'poll_name': poll_name,
+            'hidden_flags_list': [False] * len(poll_questions) + [True] * (6 - len(poll_questions)),
+            # question0
+            'q0': all_results[0].question_text,
+            'q0a_opts': all_results[0].answer_opts,
+            'q0a_vals': [all_results[0].answer_vals.count(i) for i in range(1, 6)],
+            # question1
+            'q1': all_results[1].question_text,
+            'q1a_opts': all_results[1].answer_opts,
+            'q1a_vals': [all_results[1].answer_vals.count(i) for i in range(1, 6)],
+            # question2
+            'q2': all_results[2].question_text,
+            'q2a_opts': all_results[2].answer_opts,
+            'q2a_vals': [all_results[2].answer_vals.count(i) for i in range(1, 6)],
+            # question3
+            'q3': all_results[3].question_text,
+            'q3a_opts': all_results[3].answer_opts,
+            'q3a_vals': [all_results[3].answer_vals.count(i) for i in range(1, 6)],
+            # question4
+            'q4': all_results[4].question_text,
+            'q4a_opts': all_results[4].answer_opts,
+            'q4a_vals': [all_results[4].answer_vals.count(i) for i in range(1, 6)],
+            # question5
+            'q5': all_results[5].question_text,
+            'q5a_opts': all_results[5].answer_opts,
+            'q5a_vals': [all_results[5].answer_vals.count(i) for i in range(1, 6)],
+            # textinput
+            'texts': [x.feedback_text for x in poll_answers if x.feedback_text != 'None']
+        })
+
+    elif request.method == "POST":
+        requested_poll_id = int(request.GET.get("pid"))
+        db.Polls.delete_poll_recursive(requested_poll_id)
+        return HttpResponseRedirect('/teacher/dashboard/')
 
 
 class QuestionCard:
@@ -132,7 +140,7 @@ def create_poll(request):
 
     def update_questions_from_db(usr):
         teacher = Teacher(usr)
-        default_questions = [Question(id) for id in [1,2,3,4]]
+        default_questions = [Question(id) for id in [1, 2, 3, 4]]
         for q in teacher.questions:
             if q.question_id not in [x.btn_name for x in cards.question_cards]:
                 cards.add_card(QuestionCard(q.question_text, q.question_answer_opts, q.question_id))
@@ -165,20 +173,24 @@ def create_poll(request):
             elif "send_poll" in request.POST:
                 if request.POST["poll_name_inp"] in [x.poll_name for x in teacher.polls]:
                     return return_(error_msg="Sie haben bereits eine Umfrage die so heißt!")
-                if len(request.POST["poll_name_inp"]) < 5:   # name der Umfrage muss 5 zeichen lang sein
+                if len(request.POST["poll_name_inp"]) < 5:  # name der Umfrage muss 5 zeichen lang sein
                     return return_(error_msg="Der Name der Umfrage muss mindestens 5 Zeichen lang sein!")
                 requested_assignments = [x for x in teacher.assignments if x in request.POST][0:5]
                 if len(requested_assignments) == 0:
                     return return_(error_msg="Sie müssen eine oder mehrere Klasse auswählen!")
                 if len(requested_assignments) > 5:
                     return return_(error_msg="Sie können maximal 5 Klassen auswählen!")
-                requested_assignment_ids = [db.Teachers_Assignments.get_assignment_id(teacher.teacher_id, x) for x in requested_assignments]
+                requested_assignment_ids = [db.Teachers_Assignments.get_assignment_id(teacher.teacher_id, x) for x in
+                                            requested_assignments]
                 requested_assignment_ids += [0] * (5 - len(requested_assignments))
 
                 question_ids = [int(x.btn_name) for x in cards.question_cards if x.selected_flag is True][0:6]
                 question_ids += [0] * (6 - len(question_ids))
 
-                db.Polls.write_poll(teacher.teacher_id, request.POST["poll_name_inp"], requested_assignment_ids[0], requested_assignment_ids[1], requested_assignment_ids[2], requested_assignment_ids[3], requested_assignment_ids[4], question_ids[0], question_ids[1], question_ids[2], question_ids[3], question_ids[4], question_ids[5])
+                db.Polls.write_poll(teacher.teacher_id, request.POST["poll_name_inp"], requested_assignment_ids[0],
+                                    requested_assignment_ids[1], requested_assignment_ids[2],
+                                    requested_assignment_ids[3], requested_assignment_ids[4], question_ids[0],
+                                    question_ids[1], question_ids[2], question_ids[3], question_ids[4], question_ids[5])
                 for q in cards.question_cards:
                     q.selected_flag = False
 
@@ -188,7 +200,8 @@ def create_poll(request):
                                                f"Um die Ergebnisse anzusehen klicken Sie <a href='/teacher/dashboard/results/?pid={poll_id}' class='alert-link'>hier</a>.")
                 return return_(error_msg="Fehler beim Senden der Mails aufgetreten")
 
-            elif [x for x in (teacher.questions + [Question(id) for id in [1,2,3,4]]) if str(x.question_id) in request.POST]:
+            elif [x for x in (teacher.questions + [Question(id) for id in [1, 2, 3, 4]]) if
+                  str(x.question_id) in request.POST]:
                 card = [x for x in cards.question_cards if str(x.btn_name) in request.POST][0]
                 if request.POST[str(card.btn_name)] == "Hinzufügen":
                     if len([x for x in cards.question_cards if x.selected_flag is True]) < 6:
