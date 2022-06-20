@@ -3,23 +3,28 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-  <div class="container-fluid">
-    <div class = "row">
-      <div class = "col-4 my-3">
-        <form action="" method="post" class="card bg-secondary">
-          {%csrf_token%}
-          <h3 class="card-header">Umfragen von: {{user.username}}</h3>
-          <ul class="list-group mb-3" style="list-style: none;">
-            {% for poll in polls %}
-              <li class="mx-3">
-                <a href="/teacher/dashboard/results/?pid={{poll.0}}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-dark text-white mt-3">{{poll.1}}
-                  <span class="badge badge-success badge-pill">{{poll.2}}/{{poll.3}}</span>
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
-        </form>
-      </div>
+  <div class="container-fluid my-3">
+    <div class = "d-flex justify-content-center">
+      <form action="" method="post" class="card bg-secondary">
+        {%csrf_token%}
+        <h3 class="card-header">Umfragen von: {{user.username}}</h3>
+        <ul class="list-group mb-3" style="list-style: none;">
+          {% for poll in polls %}
+            <li class="mx-3">
+              <a href="/teacher/dashboard/results/?pid={{poll.0}}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-dark text-white mt-3">{{poll.1}}
+                <span class="badge badge-success badge-pill">{{poll.2}}/{{poll.3}}</span>
+              </a>
+            </li>
+          {% endfor %}
+          {% if polls|length == 0 %}
+            <li class="mx-3">
+              <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-dark text-white mt-3">Keine Umfragen gefunden
+                <span class="badge badge-success badge-pill">X/X</span>
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </form>
     </div>
   </div>
 {% endblock %}
