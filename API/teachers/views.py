@@ -38,7 +38,7 @@ def dashboard(request):
     def badge_color(value: float):
         if value >= 0.75:
             return "success"
-        if value >= 0.5:
+        if value >= 0.25:
             return "warning"
         return "danger"
     
