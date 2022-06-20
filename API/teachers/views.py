@@ -49,9 +49,11 @@ def results(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/teacher/login/')
     username = request.user.username
+    teacher = Teacher(username)
     if request.method == "GET":
         requested_poll_id = int(request.GET.get("pid"))
-        teacher = Teacher(username)
+        if requested_poll_id not in [x.poll_id for x in teacher.polls]:
+            return render(request, 'error_rocket_page.html', {'error_message': "Diese Umfrage existiert leider nicht"})
 
         poll_name = [x.poll_name for x in teacher.polls if x.poll_id == requested_poll_id][0]
         poll_answers = [x.poll_answers for x in teacher.polls if x.poll_id == requested_poll_id][0]

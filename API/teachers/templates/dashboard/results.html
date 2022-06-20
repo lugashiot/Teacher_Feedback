@@ -5,103 +5,106 @@
 {% block content %}
   <center>
     <div class="container-fluid">
-      <h1 class="mt-3">Ergebnisse für: "{{poll_name}}"</h1>
+      {% if q0a_vals.0 != 0 and q0a_vals.1 != 0 and q0a_vals.2 != 0 and q0a_vals.3 != 0 and q0a_vals.4 != 0 %}
+        <h1 class="mt-3">Ergebnisse für: "{{poll_name}}"</h1>
 
-      <div class="chart_row" {% if hidden_flags_list.0 %}hidden{% endif %}>
-        <h2>{{q0}}</h2>
-        <div class="doughnut">
-          <canvas id="doughnut_chart_q0"></canvas>
+        <div class="chart_row" {% if hidden_flags_list.0 %}hidden{% endif %}>
+          <h2>{{q0}}</h2>
+          <div class="doughnut">
+            <canvas id="doughnut_chart_q0"></canvas>
+          </div>
+          <div class="bar">
+            <canvas id="bar_chart_q0"></canvas>
+          </div>
+          <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
         </div>
-        <div class="bar">
-          <canvas id="bar_chart_q0"></canvas>
-        </div>
-        <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
-      </div>
 
-      <div class="chart_row" {% if hidden_flags_list.1 %}hidden{% endif %}>
-        <h2>{{q1}}</h2>
-        <div class="doughnut">
-          <canvas id="doughnut_chart_q1"></canvas>
+        <div class="chart_row" {% if hidden_flags_list.1 %}hidden{% endif %}>
+          <h2>{{q1}}</h2>
+          <div class="doughnut">
+            <canvas id="doughnut_chart_q1"></canvas>
+          </div>
+          <div class="bar">
+            <canvas id="bar_chart_q1"></canvas>
+          </div>
+          <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
         </div>
-        <div class="bar">
-          <canvas id="bar_chart_q1"></canvas>
-        </div>
-        <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
-      </div>
 
-      <div class="chart_row" {% if hidden_flags_list.2 %}hidden{% endif %}>
-        <h2>{{q2}}</h2>
-        <div class="doughnut">
-          <canvas id="doughnut_chart_q2"></canvas>
+        <div class="chart_row" {% if hidden_flags_list.2 %}hidden{% endif %}>
+          <h2>{{q2}}</h2>
+          <div class="doughnut">
+            <canvas id="doughnut_chart_q2"></canvas>
+          </div>
+          <div class="bar">
+            <canvas id="bar_chart_q2"></canvas>
+          </div>
+          <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
         </div>
-        <div class="bar">
-          <canvas id="bar_chart_q2"></canvas>
-        </div>
-        <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
-      </div>
 
-      <div class="chart_row" {% if hidden_flags_list.3 %}hidden{% endif %}>
-        <h2>{{q3}}</h2>
-        <div class="doughnut">
-          <canvas id="doughnut_chart_q3"></canvas>
+        <div class="chart_row" {% if hidden_flags_list.3 %}hidden{% endif %}>
+          <h2>{{q3}}</h2>
+          <div class="doughnut">
+            <canvas id="doughnut_chart_q3"></canvas>
+          </div>
+          <div class="bar">
+            <canvas id="bar_chart_q3"></canvas>
+          </div>
+          <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
         </div>
-        <div class="bar">
-          <canvas id="bar_chart_q3"></canvas>
-        </div>
-        <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
-      </div>
 
-      <div class="chart_row" {% if hidden_flags_list.4 %}hidden{% endif %}>
-        <h2>{{q4}}</h2>
-        <div class="doughnut">
-          <canvas id="doughnut_chart_q4"></canvas>
+        <div class="chart_row" {% if hidden_flags_list.4 %}hidden{% endif %}>
+          <h2>{{q4}}</h2>
+          <div class="doughnut">
+            <canvas id="doughnut_chart_q4"></canvas>
+          </div>
+          <div class="bar">
+            <canvas id="bar_chart_q4"></canvas>
+          </div>
+          <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
         </div>
-        <div class="bar">
-          <canvas id="bar_chart_q4"></canvas>
-        </div>
-        <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
-      </div>
 
-      <div class="chart_row" {% if hidden_flags_list.5 %}hidden{% endif %}>
-        <h2>{{q5}}</h2>
-        <div class="doughnut">
-          <canvas id="doughnut_chart_q5"></canvas>
+        <div class="chart_row" {% if hidden_flags_list.5 %}hidden{% endif %}>
+          <h2>{{q5}}</h2>
+          <div class="doughnut">
+            <canvas id="doughnut_chart_q5"></canvas>
+          </div>
+          <div class="bar">
+            <canvas id="bar_chart_q5"></canvas>
+          </div>
+          <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
         </div>
-        <div class="bar">
-          <canvas id="bar_chart_q5"></canvas>
+
+        <h2>Schriftliches Feedback</h2>
+        <div class="container mb-5 mt-3">
+          {% for text in texts %}
+            <ul class="list-group" style="list-style: none;">
+              <li class="list-group-item d-flex justify-content-between align-items-center bg-secondary text-white mt-2 mx-3">
+                {{text}}
+              </li>
+            </ul>
+          {% endfor %}
         </div>
-        <hr class="mt-5" style="color:#6C757D;background-color:#6C757D">
-      </div>
 
-      <h2>Schriftliches Feedback</h2>
-      <div class="container mb-5 mt-3">
-        {% for text in texts %}
-          <ul class="list-group" style="list-style: none;">
-            <li class="list-group-item d-flex justify-content-between align-items-center bg-secondary text-white mt-2 mx-3">
-              {{text}}
-            </li>
-          </ul>
-        {% endfor %}
-      </div>
-
-      <form action="" method="post" class="container d-flex justify-content-center mb-5">
-        {%csrf_token%}
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalLong">Umfrage Löschen</button>
-        <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content bg-secondary">
-              <div class="modal-header" style="border-bottom: 1px solid #5C636A;">
-                <h5 class="modal-title" id="exampleModalLongTitle">Wollen Sie die Umfrage: "{{poll_name}}" wirklich löschen?</h5>
-              </div>
-              <div class="modal-footer" style="border-top: 1px solid #5C636A;">
-                <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
-                <input type="submit" name="send_poll" class="btn btn-danger" value="Umfrage Löschen" width="500px" >
+        <form action="" method="post" class="container d-flex justify-content-center mb-5">
+          {%csrf_token%}
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalLong">Umfrage Löschen</button>
+          <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content bg-secondary">
+                <div class="modal-header" style="border-bottom: 1px solid #5C636A;">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Wollen Sie die Umfrage: "{{poll_name}}" wirklich löschen?</h5>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid #5C636A;">
+                  <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                  <input type="submit" name="send_poll" class="btn btn-danger" value="Umfrage Löschen" width="500px" >
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </form>
-
+        </form>
+      {% else %}
+      <h1 class="mt-3">Noch keine Ergebnisse für: "{{poll_name}}" verfügbar. Bitte versuchen Sie es später erneut.</h1>
+      {% endif %}
     </div>
   </center>
 

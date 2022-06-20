@@ -22,11 +22,11 @@ def feedback_page(request):
         
         # uuid not created
         if uuid not in db.UUIDs.get_all_uuids():
-            return render(request, 'error_rocket_page.html', {'error_message': "The UUID is invalid"})
+            return render(request, 'error_rocket_page.html', {'error_message': "Ungültiger Link"})
 
         # uuid used
         if db.UUIDs.is_used(uuid):
-            return HttpResponseRedirect('/feedback/uuid_used/')
+            return render(request, 'error_rocket_page.html', {'error_message': "Dieser Link wurde schon verwendet"})
         
         # uuid unused
         poll_id = db.UUIDs.get_poll_id_by_uuid(uuid)
@@ -64,9 +64,9 @@ def feedback_page(request):
         if querys.split("=")[0] == "uuid":
             uuid = querys.split("=")[1]
         if uuid not in db.UUIDs.get_all_uuids():
-            return render(request, 'error_rocket_page.html', {'error_message': "The UUID is invalid"})
+            return render(request, 'error_rocket_page.html', {'error_message': "Ungültiger Link"})
         if db.UUIDs.is_used(uuid):
-            return render(request, 'error_rocket_page.html', {'error_message': "You can't vote twice, cheater"})
+            return render(request, 'error_rocket_page.html', {'error_message': "Sie können nicht zweimal abstimmen"})
         
         # TODO 
         # uuid check if "GET" accessed in the last 30 mins?
@@ -75,13 +75,8 @@ def feedback_page(request):
         answer_text = "".join([str(data_dict[key][0]) for key in data_dict.keys() if "text_field" in key])
 
         db.UUIDs.write_answers(uuid, answers, answer_text, datetime.now())
-        return HttpResponseRedirect('/feedback/success/')
+        return render(request, 'success_page.html')
 
-def uuid_used_page(request):
-    return render(request, 'error_rocket_page.html', {'error_message': "The UUID was already used"})
-
-def success_page(request):
-    return render(request, 'success_page.html')
 
 def send_mails(request):
     if request.method != "GET":
@@ -112,4 +107,4 @@ def send_mails(request):
             
             # if all went well
             break
-    return HttpResponseRedirect('/feedback/success/')
+    return render(request, 'success_page.html')
