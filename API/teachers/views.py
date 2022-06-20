@@ -121,6 +121,18 @@ def results(request):
         return HttpResponseRedirect('/teacher/dashboard/')
 
 
+def management(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/teacher/login/')
+    if not request.user.is_superuser:
+        return HttpResponseRedirect('/teacher/dashboard/')
+
+    if request.method != "POST":
+        return render(request, "dashboard/management.html")
+    
+    #ab da is da user angemeldet, superuser und hat auf an button probably druckt
+    return None
+
 class QuestionCard:
     def __init__(self, q: str, a: list, btn_name: int, selected_flag=False):
         self.q = q

@@ -1,0 +1,25 @@
+{% extends "dashboard/dashboard_base.html" %}
+
+{% block title %}Teacher Management{% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <div class="row d-flex justify-content-center bg-dark">
+      <a class="bg-dark" style="background-color: #111111;">Teacher Management</a>
+    </div>
+    <div class = "d-flex justify-content-center my-3">
+      <form action="" method="post" class="card bg-secondary">
+        {%csrf_token%}
+        <h3 class="card-header">Teacher Funktionen</h3>
+        <ul class="list-group mb-3" style="list-style: none;">
+          <li class="mx-3">
+            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-dark text-white mt-3 button-success">Lehrerliste parsen</a>
+          </li>
+          <li class="mx-3">
+            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-dark text-white mt-3 button-success">Lehrer mit Liste aktualisieren</a>
+          </li>
+        </ul>
+      </form>
+    </div>
+  </div>
+{% endblock %}

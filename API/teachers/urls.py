@@ -21,6 +21,7 @@ urlpatterns = [
     #path('admin/', admin.site.urls),
     path('', views.redirect_login),
     path('login/', views.login_user),
+    path('management/', views.management),
     path('dashboard/', views.dashboard),
     path('dashboard/logout/', views.logout_user),
     path('dashboard/results/', views.results),
