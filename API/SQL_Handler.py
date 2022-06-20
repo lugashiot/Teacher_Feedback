@@ -231,6 +231,13 @@ class Polls:
         self.cur.execute("Select Poll_ID FROM `Polls` WHERE Teacher_ID = ? AND Poll_Name = ?", (teacher_id, poll_name))
         for out in self.cur:
             return out[0]
+    
+    def delete_poll_recursive(self, poll_id: int):
+        #sql DELETE FROM `Polls` WHERE Poll_ID = poll_id
+        self.cur.execute("DELETE FROM `Polls` WHERE Poll_ID = ?", (poll_id, ))
+        #sql Delete FROM `UUIDs` WHERE Poll_ID = poll_id
+        self.cur.execute("DELETE FROM `UUIDs` WHERE Poll_ID = ?", (poll_id, ))
+        return "Polls.delete_poll_recursive done"
 
 
 # UUIDs
