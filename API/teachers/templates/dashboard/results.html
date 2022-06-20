@@ -5,7 +5,7 @@
 {% block content %}
   <center>
     <div class="container-fluid">
-      {% if q0a_vals.0 != 0 and q0a_vals.1 != 0 and q0a_vals.2 != 0 and q0a_vals.3 != 0 and q0a_vals.4 != 0 %}
+      {% if q0a_vals.0 != 0 or q0a_vals.1 != 0 or q0a_vals.2 != 0 or q0a_vals.3 != 0 or q0a_vals.4 != 0 %}
         <h1 class="mt-3">Ergebnisse für: "{{poll_name}}"</h1>
 
         <div class="chart_row" {% if hidden_flags_list.0 %}hidden{% endif %}>
@@ -103,7 +103,8 @@
           </div>
         </form>
       {% else %}
-      <h1 class="mt-3">Noch keine Ergebnisse für: "{{poll_name}}" verfügbar. Bitte versuchen Sie es später erneut.</h1>
+        <h1 class="mt-3">Noch keine Ergebnisse für: "{{poll_name}}" verfügbar.</h1>
+        <h3>Bitte versuchen Sie es später erneut.</h3>
       {% endif %}
     </div>
   </center>

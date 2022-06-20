@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import AnonymousUser
 from django.contrib import messages
 from dataclasses import dataclass, field
 from SQL_Handler import DBHandler
@@ -24,6 +25,13 @@ def login_user(request):
         return HttpResponseRedirect('/teacher/login/')
     login(request, user)
     return HttpResponseRedirect("/teacher/dashboard")
+
+
+def logout_user(request):
+    if request.user.is_authenticated:
+        request.session.flush()
+        request.user = AnonymousUser()
+    return HttpResponseRedirect('/teacher/login/')
 
 
 def dashboard(request):
