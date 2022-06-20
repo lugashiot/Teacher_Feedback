@@ -165,9 +165,11 @@ def create_poll(request):
             elif "send_poll" in request.POST:
                 if request.POST["poll_name_inp"] in [x.poll_name for x in teacher.polls]:
                     return return_(error_msg="Sie haben bereits eine Umfrage die so heißt!")
-                requested_assignments = [x for x in teacher.assignments if x in request.POST][0:]
+                if len(request.POST["poll_name_inp"]) < 5:   # name der Umfrage muss 5 zeichen lang sein
+                    return return_(error_msg="Der Name der Umfrage muss mindestens 5 Zeichen lang sein!")
+                requested_assignments = [x for x in teacher.assignments if x in request.POST][0:5]
                 if len(requested_assignments) == 0:
-                    return return_(error_msg="Sie müssen eine Klasse auswählen!")
+                    return return_(error_msg="Sie müssen eine oder mehrere Klasse auswählen!")
                 if len(requested_assignments) > 5:
                     return return_(error_msg="Sie können maximal 5 Klassen auswählen!")
                 requested_assignment_ids = [db.Teachers_Assignments.get_assignment_id(teacher.teacher_id, x) for x in requested_assignments]
@@ -182,8 +184,9 @@ def create_poll(request):
 
                 poll_id = db.Polls.get_poll_id_by_arguments(teacher.teacher_id, request.POST["poll_name_inp"])
                 if ms.send_emails(poll_id, teacher.teacher_username):
-                    #return return_(success_msg=f"Umfrage erfolgreich an {', '.join(requested_assignments)} gesendet")
-                    return HttpResponseRedirect(f"/teacher/dashboard/results/?pid={poll_id}")
+                    return return_(success_msg=f"Umfrage erfolgreich an {', '.join(requested_assignments)} gesendet. "
+                                               f"Um die Ergebnisse anzusehen klicken Sie <a href='/teacher/dashboard/results/?pid={poll_id}' class='alert-link'>hier</a>.")
+                    #return HttpResponseRedirect(f"/teacher/dashboard/results/?pid={poll_id}")
                 return return_(error_msg="Fehler beim Senden der Mails aufgetreten")
 
             elif [x for x in (teacher.questions + [Question(id) for id in [1,2,3,4]]) if str(x.question_id) in request.POST]:
