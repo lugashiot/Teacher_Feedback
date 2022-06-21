@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-l5s05#p-o#@)ugax%q-pvpe%m2%e-u_yvukr#wnqh!4@ftomok
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.3', 'www.htlinn.tech']
-
+ALLOWED_HOSTS = ['www.htlinn.tech']
+CSRF_TRUSTED_ORIGINS = ['https://www.htlinn.tech']
 
 # Application definition
 
