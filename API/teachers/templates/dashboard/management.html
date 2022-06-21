@@ -13,11 +13,12 @@
           <div class="card bg-dark mb-3">
             <h5 class="card-header">Lehrer mit Liste aktualisieren</h5>
             <div class="card-body">
-              <form>
-                  <div class="custom-file mb-3">
-                    <input type="file" class="custom-file-input" id="teacher-list">
-                    <label class="custom-file-label" for="teacher-list">Datei auswählen</label>
-                  </div>
+              <form action="" method="post" >
+                {%csrf_token%}
+                <div class="custom-file mb-3">
+                  <input type="file" class="custom-file-input" id="teacher-list">
+                  <label class="custom-file-label" for="teacher-list">Datei auswählen</label>
+                </div>
                 <input type="submit" name="parse_teacher_list" class="btn btn-success" value="Lehrer aktualisieren" width="500px">
               </form>
             </div>
@@ -27,10 +28,11 @@
             <h5 class="card-header">Schüler mit Liste aktualisieren</h5>
             <div class="card-body">
               <form>
-                  <div class="custom-file mb-3">
-                    <input type="file" class="custom-file-input" id="student-list">
-                    <label class="custom-file-label" for="student-list">Datei auswählen</label>
-                  </div>
+                {%csrf_token%}
+                <div class="custom-file mb-3">
+                  <input type="file" class="custom-file-input" id="student-list">
+                  <label class="custom-file-label" for="student-list">Datei auswählen</label>
+                </div>
                 <input type="submit" name="parse_student_list" class="btn btn-success" value="Schüler aktualisieren" width="500px">
               </form>
             </div>
@@ -58,14 +60,16 @@
                   </div>
                   <div class="modal-body">
                     {%csrf_token%}
-                    <h5 class="mb-3">{{ msg }}</h5>
-                    {% if text_inp %}
-                      <input type="text" class="form-control" name="confirmation" placeholder="{{ operation }}">
+                    <h5>{{ msg }}</h5>
+                    {% if confirmation %}
+                      <input type="text" class="form-control bg-dark text-white mt-3" name="confirmation" placeholder="{{ operation }}">
                     {% endif %}
                   </div>
                   <div class="modal-footer" style="border-top: 1px solid #5C636A;">
                     <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
-                    <input type="submit" name="danger_confirm_btn_inp" class="btn btn-danger" value="{{ operation }}" width="500px">
+                    {% if confirmation %}
+                      <input type="submit" name="danger_confirm_btn_inp" class="btn btn-danger" value="{{ operation }}" width="500px">
+                    {% endif %}
                   </div>
                 </form>
               </div>
