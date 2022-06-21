@@ -135,7 +135,7 @@ def management(request):
     if "danger_btn_inp" in request.POST and request.POST["danger_btn_inp"] in danger_operations:
         msg = f"Um zu bestätigen dass Sie \"{ request.POST['danger_btn_inp'] }\" möchten, geben Sie diesen Text ein."
         operation = request.POST['danger_btn_inp']
-        return render(request, "dashboard/management.html", {'successful_submit': True, 'msg': msg, 'operation': operation})
+        return render(request, "dashboard/management.html", {'successful_submit': True, 'text_inp': True, 'msg': msg, 'operation': operation})
     elif "danger_confirm_btn_inp" in request.POST and request.POST["danger_confirm_btn_inp"] in danger_operations:
         if request.POST["danger_confirm_btn_inp"] == request.POST["confirmation"]:
             # todo alles confirmed operation soll durchgeführt werden
@@ -149,7 +149,7 @@ def management(request):
                 pass
             msg = f"Operation \"{request.POST['danger_confirm_btn_inp']}\" erfolgreich ausgeführt"
             operation = request.POST['danger_confirm_btn_inp']
-            return render(request, "dashboard/management.html", {'successful_submit': True, 'msg': msg, 'operation': operation})
+            return render(request, "dashboard/management.html", {'successful_submit': True, 'text_inp': False, 'msg': msg, 'operation': operation})
 
     # ab da is da user angemeldet, superuser und hat auf an button probably druckt
     return None

@@ -59,7 +59,9 @@
                   <div class="modal-body">
                     {%csrf_token%}
                     <h5 class="mb-3">{{ msg }}</h5>
-                    <input type="text" class="form-control" name="confirmation" placeholder="{{ operation }}">
+                    {% if text_inp %}
+                      <input type="text" class="form-control" name="confirmation" placeholder="{{ operation }}">
+                    {% endif %}
                   </div>
                   <div class="modal-footer" style="border-top: 1px solid #5C636A;">
                     <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
