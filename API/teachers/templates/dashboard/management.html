@@ -4,22 +4,90 @@
 
 {% block content %}
   <div class="container-fluid">
-    <div class="container d-flex justify-content-center my-2">
-      <h2 class="bg-dark">Teacher Management</h2>
-    </div>
     <div class = "d-flex justify-content-center my-3">
-      <form action="" method="post" class="card bg-secondary">
+      <div class="card bg-secondary">
         {%csrf_token%}
-        <h3 class="card-header">Teacher Funktionen</h3>
-        <ul class="list-group mb-3" style="list-style: none;">
-          <li class="mx-3">
-            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-dark text-white mt-3 btn btn-success">Lehrerliste parsen</a>
-          </li>
-          <li class="mx-3">
-            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-dark text-white mt-3 btn btn-success">Lehrer mit Liste aktualisieren</a>
-          </li>
-        </ul>
-      </form>
+        <h3 class="card-header">Management Funktionen</h3>
+        <div class="card-body">
+
+          <div class="card bg-dark mb-3">
+            <h5 class="card-header">Lehrer mit Liste aktualisieren</h5>
+            <div class="card-body">
+              <form>
+                  <div class="custom-file mb-3">
+                    <input type="file" class="custom-file-input" id="teacher-list">
+                    <label class="custom-file-label" for="teacher-list">Datei auswählen</label>
+                  </div>
+                <input type="submit" name="parse_teacher_list" class="btn btn-success" value="Lehrer aktualisieren" width="500px">
+              </form>
+            </div>
+          </div>
+
+          <div class="card bg-dark mb-3">
+            <h5 class="card-header">Schüler mit Liste aktualisieren</h5>
+            <div class="card-body">
+              <form>
+                  <div class="custom-file mb-3">
+                    <input type="file" class="custom-file-input" id="student-list">
+                    <label class="custom-file-label" for="student-list">Datei auswählen</label>
+                  </div>
+                <input type="submit" name="parse_student_list" class="btn btn-success" value="Schüler aktualisieren" width="500px">
+              </form>
+            </div>
+          </div>
+
+          <div class="card bg-dark border border-danger">
+            <h5 class="card-header text-danger">Danger Zone</h5>
+            <div class="card-body d-flex justify-content-center">
+              <form action="" method="post" style="width:100%">
+                {%csrf_token%}
+                <input type="submit" name="danger_btn_inp" class="btn btn-danger btn-block" value="Alle Lehrer löschen" width="500px">
+                <input type="submit" name="danger_btn_inp" class="btn btn-danger btn-block" value="Alle Schüler löschen" width="500px">
+                <input type="submit" name="danger_btn_inp" class="btn btn-danger btn-block" value="Alle Umfragen löschen" width="500px">
+                <input type="submit" name="danger_btn_inp" class="btn btn-danger btn-block" value="Alle benutzerdefinierten Fragen löschen" width="500px">
+              </form>
+            </div>
+          </div>
+
+          {% if successful_submit %}
+            <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <form action="" method="post" class="modal-content bg-secondary">
+                  <div class="modal-header" style="border-bottom: 1px solid #5C636A;">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Wollen Sie diese operation wirklich durchführen</h5>
+                  </div>
+                  <div class="modal-body">
+                    {%csrf_token%}
+                    <h5 class="mb-3">{{ msg }}</h5>
+                    <input type="text" class="form-control" name="confirmation" placeholder="{{ operation }}">
+                  </div>
+                  <div class="modal-footer" style="border-top: 1px solid #5C636A;">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                    <input type="submit" name="danger_confirm_btn_inp" class="btn btn-danger" value="{{ operation }}" width="500px">
+                  </div>
+                </form>
+              </div>
+            </div>
+
+
+            <script type="text/javascript">
+              $(document).ready(function(){
+                $("#exampleModalLong").modal('show');
+              });
+            </script>
+          {% endif %}
+
+
+        </div>
+      </div>
     </div>
   </div>
+
+  <script>
+  // Add the following code if you want the name of the file appear on select
+  $(".custom-file-input").on("change", function() {
+    var fileName = $(this).val().split("\\").pop();
+    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+  });
+  </script>
 {% endblock %}

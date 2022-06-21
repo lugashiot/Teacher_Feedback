@@ -46,12 +46,13 @@ def dashboard(request):
         return HttpResponseRedirect('/teacher/login/')
     if not request.user.is_authenticated:
         return HttpResponseRedirect('/teacher/login/')
+    if request.user.is_superuser:
+        return HttpResponseRedirect('/teacher/management/')
+
     username = request.user.username
     teacher = Teacher(username)
 
-    return render(request, "dashboard/dashboard.html", {
-        'polls': [[x.poll_id, x.poll_name, len([y for y in x.poll_answers if y.answers[0] != 0]), len(x.poll_answers), badge_color(len([y for y in x.poll_answers if y.answers[0] != 0])/len(x.poll_answers))]
-                  for x in teacher.polls]})
+    return render(request, "dashboard/dashboard.html", {'polls': [[x.poll_id, x.poll_name, len([y for y in x.poll_answers if y.answers[0] != 0]), len(x.poll_answers), badge_color(len([y for y in x.poll_answers if y.answers[0] != 0])/len(x.poll_answers))] for x in teacher.polls]})
 
 
 def results(request):
@@ -129,9 +130,30 @@ def management(request):
 
     if request.method != "POST":
         return render(request, "dashboard/management.html")
-    
-    #ab da is da user angemeldet, superuser und hat auf an button probably druckt
+
+    danger_operations = ["Alle Lehrer löschen", "Alle Schüler löschen", "Alle Umfragen löschen", "Alle benutzerdefinierten Fragen löschen"]
+    if "danger_btn_inp" in request.POST and request.POST["danger_btn_inp"] in danger_operations:
+        msg = f"Um zu bestätigen dass Sie \"{ request.POST['danger_btn_inp'] }\" möchten, geben Sie diesen Text ein."
+        operation = request.POST['danger_btn_inp']
+        return render(request, "dashboard/management.html", {'successful_submit': True, 'msg': msg, 'operation': operation})
+    elif "danger_confirm_btn_inp" in request.POST and request.POST["danger_confirm_btn_inp"] in danger_operations:
+        if request.POST["danger_confirm_btn_inp"] == request.POST["confirmation"]:
+            # todo alles confirmed operation soll durchgeführt werden
+            if request.POST["danger_confirm_btn_inp"] == danger_operations[0]:
+                pass
+            elif request.POST["danger_confirm_btn_inp"] == danger_operations[1]:
+                pass
+            elif request.POST["danger_confirm_btn_inp"] == danger_operations[2]:
+                pass
+            elif request.POST["danger_confirm_btn_inp"] == danger_operations[3]:
+                pass
+            msg = f"Operation \"{request.POST['danger_confirm_btn_inp']}\" erfolgreich ausgeführt"
+            operation = request.POST['danger_confirm_btn_inp']
+            return render(request, "dashboard/management.html", {'successful_submit': True, 'msg': msg, 'operation': operation})
+
+    # ab da is da user angemeldet, superuser und hat auf an button probably druckt
     return None
+
 
 class QuestionCard:
     def __init__(self, q: str, a: list, btn_name: int, selected_flag=False):
