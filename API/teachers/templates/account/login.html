@@ -12,22 +12,24 @@
             <div class="d-flex justify-content-center mt-3">
                 <img class="CToWUd" alt="HTL Logo" src="https://hub.htlinn.tech/file_hosting/htl_icon_no_bg.png" style="width:154px;display:block" width="154">
             </div>
-            <h1 class="d-flex justify-content-center my-3">HTL Feedback - Lehrer Login</h1>
-            <form action="" method="post" class="container">
-                {% csrf_token %}
-                <div class="container my-2">
-                    <label for="username_inp" class="form-label">Username</label>
-                    <input type="text" class="form-control" name="username" id="username_inp" aria-describedby="emailHelp">
-                    <div id="usernameHelp" class="form-text">Falls Sie noch kein Konto haben wenden Sie sich an den Administrator!</div>
-                </div>
-                <div class="container my-2">
-                    <label for="password_inp" class="form-label">Password</label>
-                    <input type="password" class="form-control" name="password" id="password_inp">
-                </div>
-                <div class="container">
-                    <input type="submit" class="btn btn-outline-success my-2" value="Bestätigen" width="500px">
-                </div>
-            </form>
+            <h1 class="container d-flex justify-content-center my-3">HTL Feedback - Lehrer Login</h1>
+            <div class="container d-flex justify-content-center" style="max-width: 500px;">
+                <form action="" method="post" class="flex-column">
+                    {% csrf_token %}
+                    <div class="container my-2">
+                        <label for="username_inp" class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" id="username_inp" aria-describedby="emailHelp">
+                        <div id="usernameHelp" class="form-text">Falls Sie noch kein Konto haben wenden Sie sich an den Administrator!</div>
+                    </div>
+                    <div class="container my-2">
+                        <label for="password_inp" class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" id="password_inp">
+                    </div>
+                    <div class="container">
+                        <input type="submit" class="btn btn-outline-success my-2" value="Bestätigen" width="500px">
+                    </div>
+                </form>
+            </div>
             <p></p>
             {% if messages %}
                 {% for message in messages %}
