@@ -8,6 +8,21 @@
     <div class="row">
       <div class="col-8 container">
         <div class="card-columns mt-3 mr-3" style="column-count:2">
+          {% for question in questions %}
+            <form action="" method="post" class="card bg-secondary">
+              {%csrf_token%}
+              <div class="card-body">
+                <h5 class="card-title">{{question.q}}</h5>
+                <p class="card-text">{{question.a.0}} | {{question.a.1}} | {{question.a.2}} | {{question.a.3}} | {{question.a.4}}</p>
+                <div class="d-flex justify-content-between">
+                  <input type="submit" class="btn btn-dark" name="{{question.btn_name}}" value="Hinzufügen" width="500px">
+                  {% if question.btn_name > 4 %}
+                    <input type="submit" class="btn btn-danger" name="{{question.btn_name}}" value="Löschen" width="500px">
+                  {% endif %}
+                </div>
+              </div>
+            </form>
+          {% endfor %}
           <form action="" method="post" class="card bg-secondary"> <!-- add question -->
             {%csrf_token%}
             <div class="card-body">
@@ -30,21 +45,6 @@
               <input type="submit" class="btn btn-dark" value="Frage erstellen" width="500px">
             </div>
           </form>
-          {% for question in questions %}
-            <form action="" method="post" class="card bg-secondary">
-              {%csrf_token%}
-              <div class="card-body">
-                <h5 class="card-title">{{question.q}}</h5>
-                <p class="card-text">{{question.a.0}} | {{question.a.1}} | {{question.a.2}} | {{question.a.3}} | {{question.a.4}}</p>
-                <div class="d-flex justify-content-between">
-                  <input type="submit" class="btn btn-dark" name="{{question.btn_name}}" value="Hinzufügen" width="500px">
-                  {% if question.btn_name > 4 %}
-                    <input type="submit" class="btn btn-danger" name="{{question.btn_name}}" value="Löschen" width="500px">
-                  {% endif %}
-                </div>
-              </div>
-            </form>
-          {% endfor %}
         </div>
       </div>
       <div class="col-4 container">
