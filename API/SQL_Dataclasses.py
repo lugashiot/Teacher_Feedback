@@ -35,7 +35,7 @@ class Poll:
     poll_id: int
     teacher_id: int = field(init=False)
     poll_name: str = field(init=False)
-    poll_assignments: list[int] = field(init=False)
+    poll_assignments: list[str] = field(init=False)
     poll_question_ids: list[int] = field(init=False, repr=False)
     poll_questions: list[Question] = field(init=False)    # Question Instances
     poll_answers: list[Answer] = field(init=False)   # Student Answer Instances
@@ -46,7 +46,7 @@ class Poll:
         poll_data = db.Polls.get_poll_by_id(self.poll_id)
         self.teacher_id = poll_data[1]
         self.poll_name = poll_data[2]
-        self.poll_assignments = [i for i in poll_data[3] if i != 0]
+        self.poll_assignments = [db.Teachers_Assignments.get_assignment_by_id(i)[2] for i in poll_data[3] if i != 0]
         self.poll_question_ids = poll_data[4]
         self.poll_time = poll_data[5]
         self.poll_questions = [Question(i) for i in self.poll_question_ids if i != 0]

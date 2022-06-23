@@ -60,15 +60,45 @@ ul, #myUL {
             {% for t in teachers %}
             <li><span class="caret">{{t.teacher_username}}</span>
               <ul class="nested">
-                {% for q in t.questions %}
-                <li><span class="caret">{{q.question_text}}</span>
+                <li><span class="caret">Erstellte Fragen</span>
                   <ul class="nested">
-                    {% for q_op in q.question_answer_opts %}
-                    <li>{{q_op}}</li>
+                    {% for q in t.questions %}
+                    <li>{{q.question_text}}</li>
                     {% endfor %}
                   </ul>
                 </li>
-                {% endfor %}
+                <li><span class="caret">Erstellte Umfragen</span>
+                  <ul class="nested">
+                    {% for p in t.polls %}
+                    <li><span class="caret">{{p.poll_name}}</span>
+                      <ul class="nested">
+                        <li><span class="caret">Fragen</span>
+                          <ul class="nested">
+                            {% for q in p.poll_questions %}
+                            <li>{{q.question_text}}</li>
+                            {% endfor %}
+                          </ul>
+                        </li>
+                        <li><span class="caret">Klassen</span>
+                          <ul class="nested">
+                            {% for pa in p.poll_assignments %}
+                            <li>{{pa}}</li>
+                            {% endfor %}
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>{{q.poll_name}}</li>
+                    {% endfor %}
+                  </ul>
+                </li>
+                <li><span class="caret">Zuweisungen</span>
+                  <ul class="nested">
+                    {% for q in t.assignments %}
+                    <li>{{q}}</li>
+                    {% endfor %}
+                  </ul>
+                </li>
               </ul>
             </li>
             {% endfor %}
