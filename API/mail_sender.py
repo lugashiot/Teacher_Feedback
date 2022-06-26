@@ -4,13 +4,13 @@ from smtplib import SMTP
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import configparser
-sys.path.append("/home/pi/Feedback/API")
+#sys.path.append("/home/pi/Feedback/API")
 from SQL_Handler import DBHandler
 
 
 config = configparser.ConfigParser()
-config.read("config.ini")
-student_email_content_path = "API/feedback/templates/student_email_content.html"
+config.read("../../config.ini")
+student_email_content_path = "./API/feedback/templates/student_email_content.html"
 
 
 class Mail_Sender:

@@ -1,6 +1,6 @@
 from django import forms
 import sys
-sys.path.append('/home/pi/Feedback/API')
+#sys.path.append('/home/pi/Feedback/API')
 from SQL_Dataclasses import Question
 
 

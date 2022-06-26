@@ -2,9 +2,13 @@ from datetime import datetime
 from typing import Optional
 import mariadb
 import sys
+import configparser
 
 # TODO 
 # Look for str lengths bc of sql bullshit
+
+config = configparser.ConfigParser()
+config.read("config.ini")
 
 
 class DBHandler:
@@ -18,11 +22,11 @@ class DBHandler:
         """ # in every init to create a connection
         try:
             self.conn = mariadb.connect(
-                user="feedback",
-                password="susadmin1234",
-                host="localhost",
-                port=3306,
-                database="Feedback"
+                user=config["db"]["user"],
+                password=config["db"]["password"],
+                host=config["db"]["host"],
+                port=config["db"]["port"],
+                database=config["db"]["database"]
             )
             #self.conn.auto_reconnect = True
             #self.conn.autocommit = True
@@ -40,11 +44,11 @@ class Teachers:
     def __init__(self) -> None:
         try:
             self.conn = mariadb.connect(
-                user="feedback",
-                password="susadmin1234",
-                host="localhost",
-                port=3306,
-                database="Feedback"
+                user=config["db"]["user"],
+                password=config["db"]["password"],
+                host=config["db"]["host"],
+                port=config["db"]["port"],
+                database=config["db"]["database"]
             )
             self.conn.auto_reconnect = True
             self.conn.autocommit = True
@@ -99,11 +103,11 @@ class Teachers_Assignments:
     def __init__(self) -> None:
         try:
             self.conn = mariadb.connect(
-                user="feedback",
-                password="susadmin1234",
-                host="localhost",
-                port=3306,
-                database="Feedback"
+                user=config["db"]["user"],
+                password=config["db"]["password"],
+                host=config["db"]["host"],
+                port=config["db"]["port"],
+                database=config["db"]["database"]
             )
             self.conn.auto_reconnect = True
             self.conn.autocommit = True
@@ -144,11 +148,11 @@ class Classes_Emails:
     def __init__(self) -> None:
         try:
             self.conn = mariadb.connect(
-                user="feedback",
-                password="susadmin1234",
-                host="localhost",
-                port=3306,
-                database="Feedback"
+                user=config["db"]["user"],
+                password=config["db"]["password"],
+                host=config["db"]["host"],
+                port=config["db"]["port"],
+                database=config["db"]["database"]
             )
             self.conn.auto_reconnect = True
             self.conn.autocommit = True
@@ -183,11 +187,11 @@ class Polls:
     def __init__(self) -> None:
         try:
             self.conn = mariadb.connect(
-                user="feedback",
-                password="susadmin1234",
-                host="localhost",
-                port=3306,
-                database="Feedback"
+                user=config["db"]["user"],
+                password=config["db"]["password"],
+                host=config["db"]["host"],
+                port=config["db"]["port"],
+                database=config["db"]["database"]
             )
             self.conn.auto_reconnect = True
             self.conn.autocommit = True
@@ -245,11 +249,11 @@ class UUIDs:
     def __init__(self) -> None:
         try:
             self.conn = mariadb.connect(
-                user="feedback",
-                password="susadmin1234",
-                host="localhost",
-                port=3306,
-                database="Feedback"
+                user=config["db"]["user"],
+                password=config["db"]["password"],
+                host=config["db"]["host"],
+                port=config["db"]["port"],
+                database=config["db"]["database"]
             )
             self.conn.auto_reconnect = True
             self.conn.autocommit = True
@@ -336,11 +340,11 @@ class Questions:
     def __init__(self) -> None:
         try:
             self.conn = mariadb.connect(
-                user="feedback",
-                password="susadmin1234",
-                host="localhost",
-                port=3306,
-                database="Feedback"
+                user=config["db"]["user"],
+                password=config["db"]["password"],
+                host=config["db"]["host"],
+                port=config["db"]["port"],
+                database=config["db"]["database"]
             )
             self.conn.auto_reconnect = True
             self.conn.autocommit = True

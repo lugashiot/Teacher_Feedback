@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from .forms import RatingForm1, RatingForm2, RatingForm3, RatingForm4, RatingForm5, RatingForm6, Textfield_Form
 from mail_sender import Mail_Sender
-sys.path.append('/home/pi/Feedback/API')
+#sys.path.append('/home/pi/Feedback/API')
 from SQL_Handler import DBHandler
 import SQL_Dataclasses as sd
 
